@@ -14,8 +14,11 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
+#ifdef Q_OS_WIN
+#include <QtANGLE\GLES3\gl3.h>
+#else
 #include <GL/glew.h>
-
+#endif
 #if defined(__APPLE__)
 
 #include <OpenGL/gl.h>
@@ -24,7 +27,7 @@
 
 #endif
 
-#if defined(WIN32)
+#if defined WIN32 && !defined Q_OS_WINRT
 
 #include <GL/wglew.h>
 
