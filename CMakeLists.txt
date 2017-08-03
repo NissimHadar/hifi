@@ -1,8 +1,8 @@
 # set variables for UWP
 if (UWP)
-  set (MAKE_SYSTEM_NAME WindowsStore)
-  set (MAKE_SYSTEM_VERSION 10.0)
-  	message(STATUS "Building for UWP")
+  set (CMAKE_SYSTEM_NAME WindowsStore)
+  set (CMAKE_SYSTEM_VERSION 10.0)
+  message(STATUS "Building for UWP")
 endif()
 
 if (WIN32)
