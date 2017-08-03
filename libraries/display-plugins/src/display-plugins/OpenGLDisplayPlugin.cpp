@@ -171,7 +171,7 @@ public:
                             QThread::setPriority(newPlugin->getPresentPriority());
                             bool wantVsync = newPlugin->wantVsync();
                             _context->makeCurrent();
-#if defined(Q_OS_WIN)
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
                             wglSwapIntervalEXT(wantVsync ? 1 : 0);
                             hasVsync = wglGetSwapIntervalEXT() != 0;
 #elif defined(Q_OS_MAC)
