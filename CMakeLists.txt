@@ -1,3 +1,10 @@
+# set variables for UWP
+if (UWP)
+  set (MAKE_SYSTEM_NAME WindowsStore)
+  set (MAKE_SYSTEM_VERSION 10.0)
+  	message(STATUS "Building for UWP")
+endif()
+
 if (WIN32)
   cmake_minimum_required(VERSION 3.7)
 else()
@@ -137,6 +144,12 @@ else ()
   if (NOT QT_CMAKE_PREFIX_PATH)
     get_filename_component(QT_CMAKE_PREFIX_PATH "${Qt5_DIR}/.." REALPATH)
   endif ()
+  
+  # use UWP version of Qt in UWP mode
+  if (UWP)
+    set(QT_CMAKE_PREFIX_PATH $ENV{QT_CMAKE_PREFIX_PATH_UWP})
+	message(STATUS "set Qt path to ${QT_CMAKE_PREFIX_PATH}")
+  endif()
 endif ()
 
 set(QT_DIR $ENV{QT_DIR})
