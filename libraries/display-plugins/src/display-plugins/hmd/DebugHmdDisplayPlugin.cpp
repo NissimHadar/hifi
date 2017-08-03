@@ -7,16 +7,21 @@
 //
 #include "DebugHmdDisplayPlugin.h"
 
+#ifndef Q_OS_WINRT
 #include <QtCore/QProcessEnvironment>
+#endif
 
 #include <ViewFrustum.h>
 #include <gpu/Frame.h>
 
 const QString DebugHmdDisplayPlugin::NAME("HMD Simulator");
 
+#ifdef Q_OS_WINRT
+static bool enableDebugHmd = false;
+#else
 static const QString DEBUG_FLAG("HIFI_DEBUG_HMD");
 static bool enableDebugHmd = QProcessEnvironment::systemEnvironment().contains(DEBUG_FLAG);
-
+#endif
 
 bool DebugHmdDisplayPlugin::isSupported() const {
     return enableDebugHmd;
@@ -51,8 +56,11 @@ bool DebugHmdDisplayPlugin::beginFrameRender(uint32_t frameIndex) {
 
 // DLL based display plugins MUST initialize GLEW inside the DLL code.
 void DebugHmdDisplayPlugin::customizeContext() {
+#ifndef Q_OS_WINRT
     glewExperimental = true;
     glewInit();
+#endif
+
     glGetError(); // clear the potential error from glewExperimental
     Parent::customizeContext();
 }
