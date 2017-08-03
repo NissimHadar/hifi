@@ -14,7 +14,12 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+
+// No QProcess in UWP
+#ifndef Q_OS_WINRT
 #include <QtCore/QProcess>
+#endif
+
 #include <QtCore/QUrl>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
@@ -59,7 +64,7 @@ void FileUtils::locateFile(QString filePath) {
     success = QProcess::startDetached("osascript", args);
 #endif
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 
     QStringList args;
     // don't send `select` command switch if `filePath` is folder
