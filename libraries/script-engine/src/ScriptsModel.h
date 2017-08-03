@@ -15,7 +15,11 @@
 #include <QAbstractItemModel>
 #include <QDir>
 #include <QNetworkReply>
+
+// No File system watcher in UWP
+#ifndef Q_OS_WINRT
 #include <QFileSystemWatcher>
+#endif
 
 class TreeNodeFolder;
 
@@ -95,7 +99,11 @@ private:
     friend class ScriptEngines;
     bool _loadingScripts;
     QDir _localDirectory;
+
+#ifndef Q_OS_WINRT
     QFileSystemWatcher _fsWatcher;
+#endif
+
     QList<TreeNodeBase*> _treeNodes;
 };
 

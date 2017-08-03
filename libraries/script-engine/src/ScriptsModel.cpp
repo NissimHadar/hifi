@@ -52,13 +52,19 @@ ScriptsModel::ScriptsModel(QObject* parent) :
     QAbstractItemModel(parent),
     _loadingScripts(false),
     _localDirectory(),
+
+#ifndef Q_OS_WINRT
     _fsWatcher(),
+#endif
     _treeNodes()
 {
     _localDirectory.setFilter(QDir::Files | QDir::Readable);
     _localDirectory.setNameFilters(QStringList("*.js"));
 
+#ifndef Q_OS_WINRT
     connect(&_fsWatcher, &QFileSystemWatcher::directoryChanged, this, &ScriptsModel::reloadLocalFiles);
+#endif
+
     reloadLocalFiles();
     reloadDefaultFiles();
 }
@@ -124,6 +130,7 @@ int ScriptsModel::columnCount(const QModelIndex& parent) const {
 }
 
 void ScriptsModel::updateScriptsLocation(const QString& newPath) {
+#ifndef Q_OS_WINRT
     _fsWatcher.removePath(_localDirectory.absolutePath());
 
     if (!newPath.isEmpty()) {
@@ -133,6 +140,7 @@ void ScriptsModel::updateScriptsLocation(const QString& newPath) {
             _fsWatcher.addPath(_localDirectory.absolutePath());
         }
     }
+#endif
 
     reloadLocalFiles();
 }
