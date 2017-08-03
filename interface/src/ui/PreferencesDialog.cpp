@@ -10,7 +10,11 @@
 
 #include <AudioClient.h>
 #include <avatar/AvatarManager.h>
+
+#ifndef Q_OS_WINRT
 #include <devices/DdeFaceTracker.h>
+#endif
+
 #include <NetworkingConstants.h>
 #include <ScriptEngines.h>
 #include <OffscreenUi.h>
@@ -206,14 +210,18 @@ void setupPreferences() {
         // is a way around this, therefore they're not specified here but in the QML.
     }
     {
+#ifndef Q_OS_WINRT
         auto getter = []()->float { return DependencyManager::get<DdeFaceTracker>()->getEyeClosingThreshold(); };
         auto setter = [](float value) { DependencyManager::get<DdeFaceTracker>()->setEyeClosingThreshold(value); };
         preferences->addPreference(new SliderPreference(AVATAR_TUNING, "Camera binary eyelid threshold", getter, setter));
+#endif
     }
     {
+#ifndef Q_OS_WINRT
         auto getter = []()->float { return FaceTracker::getEyeDeflection(); };
         auto setter = [](float value) { FaceTracker::setEyeDeflection(value); };
         preferences->addPreference(new SliderPreference(AVATAR_TUNING, "Face tracker eye deflection", getter, setter));
+#endif
     }
     {
         auto getter = [=]()->QString { return myAvatar->getAnimGraphOverrideUrl().toString(); };

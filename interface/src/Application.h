@@ -89,7 +89,7 @@ namespace controller {
     class StateController;
 }
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 static const UINT UWM_IDENTIFY_INSTANCES =
     RegisterWindowMessage("UWM_IDENTIFY_INSTANCES_{8AB82783-B74A-4258-955B-8188C22AA0D6}_" + qgetenv("USERNAME"));
 static const UINT UWM_SHOW_APPLICATION =
