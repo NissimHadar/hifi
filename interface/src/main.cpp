@@ -11,7 +11,11 @@
 #include <thread>
 
 #include <QCommandLineParser>
+
+#ifndef Q_OS_WINRT
 #include <QtCore/QProcess>
+#endif
+
 #include <QDebug>
 #include <QDir>
 #include <QLocalSocket>
@@ -96,8 +100,13 @@ int main(int argc, const char* argv[]) {
 #endif
 
     // allow multiple interfaces to run if this environment variable is set.
+#ifdef Q_OS_WINRT
+    bool allowMultipleInstances = false;
+#else
     bool allowMultipleInstances = parser.isSet(allowMultipleInstancesOption) ||
                                   QProcessEnvironment::systemEnvironment().contains("HIFI_ALLOW_MULTIPLE_INSTANCES");
+#endif
+
     if (allowMultipleInstances) {
         instanceMightBeRunning = false;
     }
@@ -180,7 +189,7 @@ int main(int argc, const char* argv[]) {
     // or in the main window ctor, before GL startup.
     Application::initPlugins(arguments);
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
     // If we're running in steam mode, we need to do an explicit check to ensure we're up to the required min spec
     if (parser.isSet(checkMinSpecOption)) {
         QString appPath;
