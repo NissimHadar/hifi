@@ -121,6 +121,7 @@ QList<QUrl> FileDialogHelper::urlToList(const QUrl& url) {
 }
 
 void FileDialogHelper::monitorDirectory(const QString& path) {
+#ifndef Q_OS_WINRT
     if (!_fsWatcherPath.isEmpty()) {
         _fsWatcher.removePath(_fsWatcherPath);
         _fsWatcherPath = "";
@@ -131,4 +132,5 @@ void FileDialogHelper::monitorDirectory(const QString& path) {
         _fsWatcherPath = path;
         connect(&_fsWatcher, &QFileSystemWatcher::directoryChanged, this, &FileDialogHelper::contentsChanged);
     }
+#endif
 }

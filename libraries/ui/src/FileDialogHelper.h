@@ -9,7 +9,11 @@
 #ifndef hifi_ui_FileDialogHelper_h
 #define hifi_ui_FileDialogHelper_h
 
+// No File system watcher in UWP
+#ifndef Q_OS_WINRT
 #include <QtCore/QFileSystemWatcher>
+#endif
+
 #include <QtCore/QObject>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QString>
@@ -70,7 +74,11 @@ signals:
     void contentsChanged();
 
 private:
+
+#ifndef Q_OS_WINRT
     QFileSystemWatcher _fsWatcher;
+#endif
+
     QString _fsWatcherPath;
 };
 
