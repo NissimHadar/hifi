@@ -34,7 +34,11 @@
 #include "audio/AudioScope.h"
 #include "avatar/AvatarManager.h"
 #include "AvatarBookmarks.h"
+
+#ifndef Q_OS_WINRT
 #include "devices/DdeFaceTracker.h"
+#endif
+
 #include "MainWindow.h"
 #include "render/DrawStatus.h"
 #include "scripting/MenuScriptingInterface.h"
