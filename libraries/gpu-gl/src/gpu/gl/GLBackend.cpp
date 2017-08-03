@@ -37,7 +37,9 @@
 using namespace gpu;
 using namespace gpu::gl;
 
-#ifndef Q_OS_WINRT
+#ifdef Q_OS_WINRT
+static bool disableOpenGL45 = true;
+#else
 static const QString DEBUG_FLAG("HIFI_DISABLE_OPENGL_45");
 static bool disableOpenGL45 = QProcessEnvironment::systemEnvironment().contains(DEBUG_FLAG);
 #endif
