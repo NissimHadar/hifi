@@ -49,6 +49,7 @@ extern "C" FILE * __cdecl __iob_func(void) {
 #include <QElapsedTimer>
 #include <QTimer>
 
+// No QProcess in UWP
 #ifndef Q_OS_WINRT
 #include <QProcess>
 #endif
@@ -270,6 +271,7 @@ void setSemiNibbleAt(unsigned char& byte, int bitIndex, int value) {
 }
 
 bool isInEnvironment(const char* environment) {
+// No getenv in UWP
 #ifdef Q_OS_WINRT
     return true;
 #else
@@ -863,7 +865,7 @@ void printSystemInformation() {
         "QTWEBENGINE_REMOTE_DEBUGGING"
     };
 
-
+// No getenv in UWP
 #ifndef Q_OS_WINRT
     auto envVariables = QProcessEnvironment::systemEnvironment();
     for (auto& env : envWhitelist)

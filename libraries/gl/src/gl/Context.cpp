@@ -28,7 +28,7 @@
 #include <GLMHelpers.h>
 #include "GLLogging.h"
 
-#if defined Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 
 #ifdef DEBUG
 static bool enableDebugLogger = true;

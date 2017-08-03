@@ -310,7 +310,7 @@ QAudioDeviceInfo getNamedAudioDeviceForMode(QAudio::Mode mode, const QString& de
     return result;
 }
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 QString getWinDeviceName(IMMDevice* pEndpoint) {
     QString deviceName;
     IPropertyStore* pPropertyStore;
@@ -395,7 +395,7 @@ QAudioDeviceInfo defaultAudioDeviceForMode(QAudio::Mode mode) {
         }
     }
 #endif
-#ifdef WIN32
+#if defined WIN32 && !defined Q_OS_WINRT
     QString deviceName;
     //Check for Windows Vista or higher, IMMDeviceEnumerator doesn't work below that.
     if (!IsWindowsVistaOrGreater()) { // lower then vista
@@ -487,7 +487,7 @@ bool adjustedFormatForAudioDevice(const QAudioDeviceInfo& audioDevice,
     }
 #endif
 
-#if defined(Q_OS_WIN)
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
     if (IsWindows8OrGreater()) {
         // On Windows using WASAPI shared-mode, returns the internal mix format
         if (nativeFormatForAudioDevice(audioDevice, adjustedAudioFormat)) {
@@ -1684,7 +1684,7 @@ int AudioClient::setOutputBufferSize(int numFrames, bool persist) {
 // the way input audio is handled. The audio input buffer size is inversely
 // proportional to the accelerator ratio.
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 const float AudioClient::CALLBACK_ACCELERATOR_RATIO = IsWindows8OrGreater() ? 1.0f : 0.25f;
 #endif
 

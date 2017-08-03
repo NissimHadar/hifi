@@ -516,7 +516,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<tracing::Tracer>();
     PROFILE_SET_THREAD_NAME("Main Thread");
 
-#if defined Q_OS_WIN
+#if defined(Q_OS_WIN)
     // Select appropriate audio DLL
     QString audioDLLPath = QCoreApplication::applicationDirPath();
 

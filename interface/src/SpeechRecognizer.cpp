@@ -15,7 +15,7 @@
 #include "InterfaceLogging.h"
 #include "SpeechRecognizer.h"
 
-#if defined(Q_OS_WIN)
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 
 #include <sapi.h>
 

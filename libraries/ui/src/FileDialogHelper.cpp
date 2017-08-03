@@ -121,6 +121,7 @@ QList<QUrl> FileDialogHelper::urlToList(const QUrl& url) {
 }
 
 void FileDialogHelper::monitorDirectory(const QString& path) {
+// No File system watcher in UWP
 #ifndef Q_OS_WINRT
     if (!_fsWatcherPath.isEmpty()) {
         _fsWatcher.removePath(_fsWatcherPath);
