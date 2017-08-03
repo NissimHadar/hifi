@@ -5,7 +5,10 @@
 #include <QtCore/QObject>
 #include <QtCore/QThread>
 #include <QtCore/QRegularExpression>
+
+#ifndef Q_OS_WINRT
 #include <QtCore/QProcessEnvironment>
+#endif
 
 #include <QtGui/QSurfaceFormat>
 #include <QtGui/QOpenGLContext>

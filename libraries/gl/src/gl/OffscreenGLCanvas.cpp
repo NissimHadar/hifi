@@ -12,7 +12,10 @@
 
 #include "OffscreenGLCanvas.h"
 
+#ifndef Q_OS_WINRT
 #include <QtCore/QProcessEnvironment>
+#endif
+
 #include <QtCore/QDebug>
 #include <QtGui/QOffscreenSurface>
 #include <QtGui/QOpenGLContext>
