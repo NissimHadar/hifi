@@ -13,7 +13,11 @@
 #include <mutex>
 
 #include <QtCore/QDebug>
+
+#ifndef Q_OS_WINRT
 #include <QtCore/QProcessEnvironment>
+#endif
+
 #include <QtCore/QThread>
 
 #include <QtGui/QWindow>
@@ -24,7 +28,7 @@
 #include <GLMHelpers.h>
 #include "GLLogging.h"
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN
 
 #ifdef DEBUG
 static bool enableDebugLogger = true;
@@ -69,7 +73,7 @@ Context::Context(QWindow* window) {
     setWindow(window);
 }
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 void Context::destroyWin32Context(HGLRC hglrc) {
     wglDeleteContext(hglrc);
 }
@@ -77,7 +81,7 @@ void Context::destroyWin32Context(HGLRC hglrc) {
 
 void Context::release() {
     doneCurrent();
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
     if (_wrappedContext) {
         destroyContext(_wrappedContext);
         _wrappedContext = nullptr;
@@ -123,14 +127,14 @@ void Context::setWindow(QWindow* window) {
     release();
     _window = window;
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
     _hwnd = (HWND)window->winId();
 #endif
 
     updateSwapchainMemoryCounter();
 }
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
 
 bool Context::makeCurrent() {
     BOOL result = wglMakeCurrent(_hdc, _hglrc);
