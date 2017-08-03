@@ -13,7 +13,7 @@
 #include "Application.h"
 #include "CrashReporter.h"
 
-#ifdef _WIN32
+#if defined _WIN32 && !defined Q_OS_WINRT
 #include <new.h>
 #include <Windows.h>
 #include <DbgHelp.h>
