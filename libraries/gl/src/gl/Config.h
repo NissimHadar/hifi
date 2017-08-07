@@ -14,7 +14,7 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WINRT
 #include <QtANGLE\GLES3\gl3.h>
 #else
 #include <GL/glew.h>
