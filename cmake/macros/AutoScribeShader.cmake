@@ -80,7 +80,23 @@ function(AUTOSCRIBE_SHADER SHADER_FILE)
     set(GLPROFILE PC_GL)
     set(SCRIBE_ARGS -c++ -D GLPROFILE ${GLPROFILE} ${SCRIBE_INCLUDES} -o ${SHADER_TARGET} ${SHADER_FILE})
 
-    add_custom_command(OUTPUT ${SHADER_TARGET} COMMAND scribe ${SCRIBE_ARGS} DEPENDS scribe ${SHADER_INCLUDE_FILES} ${SHADER_FILE})
+    if (UWP)
+      # for a UWP build, we can't use the scribe that cmake would normally produce as a target,
+      # since it's unrunnable by the cross-compiling build machine
+
+      # so, we require the compiling user to point us at a compiled executable version for their native toolchain
+      find_program(NATIVE_SCRIBE scribe PATHS ${SCRIBE_PATH} ENV SCRIBE_PATH)
+
+      if (NOT NATIVE_SCRIBE)
+        message(FATAL_ERROR "The High Fidelity scribe tool is required for shader pre-processing. \
+          Please compile scribe using your native toolchain and set SCRIBE_PATH to the path containing the scribe executable in your ENV.\
+        ")
+      endif ()
+    
+      add_custom_command(OUTPUT ${SHADER_TARGET} COMMAND ${NATIVE_SCRIBE} ${SCRIBE_ARGS} DEPENDS ${SHADER_INCLUDE_FILES} ${SHADER_FILE})
+    else ()
+      add_custom_command(OUTPUT ${SHADER_TARGET} COMMAND scribe ${SCRIBE_ARGS} DEPENDS scribe ${SHADER_INCLUDE_FILES} ${SHADER_FILE})
+    endif ()
   endif()
 
   #output the generated file name
