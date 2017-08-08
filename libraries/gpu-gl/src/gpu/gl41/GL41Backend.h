@@ -19,7 +19,7 @@
 #define GPU_CORE_41 410
 #define GPU_CORE_43 430
 
-#ifdef Q_OS_MAC
+#if defined Q_OS_MAC || defined Q_OS_WINRT
 #define GPU_INPUT_PROFILE GPU_CORE_41
 #else 
 #define GPU_INPUT_PROFILE GPU_CORE_43

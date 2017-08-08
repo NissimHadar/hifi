@@ -9,6 +9,6 @@ GroupSources("src")
 target_opengl()
 target_nsight()
 
-if (NOT ANDROID)
+if (NOT ANDROID AND NOT UWP)
   target_glew()
 endif ()

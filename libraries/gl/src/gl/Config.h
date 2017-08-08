@@ -14,6 +14,7 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
+#include <QtCore/QtGlobal>
 #ifdef Q_OS_WINRT
 #include <QtANGLE\GLES3\gl3.h>
 #else

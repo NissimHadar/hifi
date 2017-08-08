@@ -863,10 +863,10 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         GLuint fbo[2] {0, 0};
 
         // need mipmaps for blitting texture
-        glGenerateTextureMipmap(sourceTexture);
+//UWP!!!        glGenerateTextureMipmap(sourceTexture);
 
         // create 2 fbos (one for initial texture, second for scaled one)
-        glCreateFramebuffers(2, fbo);
+//UWP!!!        glCreateFramebuffers(2, fbo);
 
         // setup source fbo
         glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
@@ -896,7 +896,7 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         } else {
             newY = (target->height() - newHeight) / 2;
         }
-        glBlitNamedFramebuffer(fbo[0], fbo[1], 0, 0, texWidth, texHeight, newX, newY, newX + newWidth, newY + newHeight, GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT, GL_NEAREST);
+//UWP!!!        glBlitNamedFramebuffer(fbo[0], fbo[1], 0, 0, texWidth, texHeight, newX, newY, newX + newWidth, newY + newHeight, GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
         // don't delete the textures!
         glDeleteFramebuffers(2, fbo);

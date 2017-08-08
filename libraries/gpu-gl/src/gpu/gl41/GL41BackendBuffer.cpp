@@ -63,9 +63,9 @@ namespace gpu {
                 if (!_texBuffer) {
                     glGenTextures(1, &_texBuffer);
                     glActiveTexture(GL_TEXTURE0 + GL41Backend::RESOURCE_BUFFER_TEXBUF_TEX_UNIT);
-                    glBindTexture(GL_TEXTURE_BUFFER, _texBuffer);
-                    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32F, _buffer);
-                    glBindTexture(GL_TEXTURE_BUFFER, 0);
+//UWP!!!                    glBindTexture(GL_TEXTURE_BUFFER, _texBuffer);
+//UWP!!!                    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32F, _buffer);
+//UWP!!!                    glBindTexture(GL_TEXTURE_BUFFER, 0);
                     (void)CHECK_GL_ERROR();
                 }
                 return _texBuffer;
@@ -100,7 +100,7 @@ bool GL41Backend::bindResourceBuffer(uint32_t slot, BufferPointer& buffer) {
     GLuint texBuffer = GL41Backend::getResourceBufferID((*buffer));
     if (texBuffer) {
         glActiveTexture(GL_TEXTURE0 + GL41Backend::RESOURCE_BUFFER_SLOT0_TEX_UNIT + slot); 
-        glBindTexture(GL_TEXTURE_BUFFER, texBuffer);
+//UWP!!!        glBindTexture(GL_TEXTURE_BUFFER, texBuffer);
 
         (void)CHECK_GL_ERROR();
 
@@ -116,7 +116,7 @@ void GL41Backend::releaseResourceBuffer(uint32_t slot) {
     auto& buf = _resource._buffers[slot];
     if (buf) {
         glActiveTexture(GL_TEXTURE0 + GL41Backend::RESOURCE_BUFFER_SLOT0_TEX_UNIT + slot); 
-        glBindTexture(GL_TEXTURE_BUFFER, 0);
+//UWP!!!        glBindTexture(GL_TEXTURE_BUFFER, 0);
         buf.reset();
     }
 }

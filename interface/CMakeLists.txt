@@ -207,7 +207,7 @@ target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_BINARY_DIR}/libraries
 target_bullet()
 target_opengl()
 
-if (NOT ANDROID)
+if (NOT ANDROID AND NOT UWP)
   target_glew()
 endif ()
 
