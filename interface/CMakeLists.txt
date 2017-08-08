@@ -26,8 +26,8 @@ endif()
 file(GLOB_RECURSE INTERFACE_SRCS "src/*.cpp" "src/*.h")
 GroupSources("src")
 
-# Add SpeechRecognizer if on Windows or OS X, otherwise remove
-if (WIN32)
+# Add SpeechRecognizer if on Windows (and not UWP) or OS X, otherwise remove
+if (WIN32 AND NOT UWP)
   # Use .cpp and .h files as is.
 elseif (APPLE)
   file(GLOB INTERFACE_OBJCPP_SRCS "src/SpeechRecognizer.mm")
