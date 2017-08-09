@@ -1,4 +1,4 @@
-if exist build-UWP goto OK
+if exist build-UWP goto dirOK
 mkdir build-UWP
 :dirOK
 cd build-UWP

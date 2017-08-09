@@ -1,4 +1,4 @@
-if exist build-WIN goto OK
+if exist build-WIN goto dirOK
 mkdir build-WIN
 :dirOK
 cd build-WIN
