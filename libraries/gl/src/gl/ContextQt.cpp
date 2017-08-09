@@ -28,7 +28,7 @@ void Context::makeCurrent(QOpenGLContext* context, QSurface* surface) {
 }
 
 QOpenGLContext* Context::qglContext() {
-#if defined Q_OS_WIN && !defined Q_OS_WIN
+#if defined Q_OS_WIN && !defined Q_OS_WINRT
     if (!_wrappedContext) {
         _wrappedContext = new QOpenGLContext();
         _wrappedContext->setNativeHandle(QVariant::fromValue(QWGLNativeContext(_hglrc, _hwnd)));
