@@ -8,6 +8,9 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
+#include <QtCore\QtGlobal>
+#ifndef Q_OS_WINRT
+
 #include "GL41Backend.h"
 
 #include <unordered_set>
@@ -609,3 +612,4 @@ GL41ResourceTexture::GL41ResourceTexture(const std::weak_ptr<GLBackend>& backend
 GL41ResourceTexture::~GL41ResourceTexture() {
 }
 
+#endif
