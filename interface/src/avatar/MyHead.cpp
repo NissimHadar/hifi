@@ -17,10 +17,7 @@
 #include <trackers/FaceTracker.h>
 #include <trackers/EyeTracker.h>
 
-#ifndef Q_OS_WINRT
 #include "devices/DdeFaceTracker.h"
-#endif
-
 #include "Application.h"
 #include "MyAvatar.h"
 
@@ -37,7 +34,7 @@ glm::quat MyHead::getHeadOrientation() const {
     // always the same.
 
     MyAvatar* myAvatar = static_cast<MyAvatar*>(_owningAvatar);
-    auto headPose = myAvatar->getHeadControllerPoseInWorldFrame();
+    auto headPose = myAvatar->getControllerPoseInWorldFrame(controller::Action::HEAD);
     if (headPose.isValid()) {
         return headPose.rotation * Quaternions::Y_180;
     }
@@ -54,7 +51,6 @@ void MyHead::simulate(float deltaTime) {
         if (_isFaceTrackerConnected) {
             _transientBlendshapeCoefficients = faceTracker->getBlendshapeCoefficients();
 
-#ifndef Q_OS_WINRT
             if (typeid(*faceTracker) == typeid(DdeFaceTracker)) {
 
                 if (Menu::getInstance()->isOptionChecked(MenuOption::UseAudioForMouth)) {
@@ -73,7 +69,6 @@ void MyHead::simulate(float deltaTime) {
                 }
                 applyEyelidOffset(getFinalOrientationInWorldFrame());
             }
-#endif
         }
         auto eyeTracker = DependencyManager::get<EyeTracker>();
         _isEyeTrackerConnected = eyeTracker->isTracking();
