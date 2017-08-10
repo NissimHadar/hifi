@@ -862,12 +862,13 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         GLuint targetTexture = target->texture();
         GLuint fbo[2] {0, 0};
 
+#ifndef Q_OS_WINRT
         // need mipmaps for blitting texture
-//UWP!!!        glGenerateTextureMipmap(sourceTexture);
+        glGenerateTextureMipmap(sourceTexture);
 
         // create 2 fbos (one for initial texture, second for scaled one)
-//UWP!!!        glCreateFramebuffers(2, fbo);
-
+        glCreateFramebuffers(2, fbo);
+#endif
         // setup source fbo
         glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sourceTexture, 0);
@@ -881,7 +882,7 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-
+#ifndef Q_OS_WINRT
         // maintain aspect ratio, filling the width first if possible.  If that makes the height too
         // much, fill height instead. TODO: only do this when texture changes
         GLint newX = 0;
@@ -896,8 +897,8 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         } else {
             newY = (target->height() - newHeight) / 2;
         }
-//UWP!!!        glBlitNamedFramebuffer(fbo[0], fbo[1], 0, 0, texWidth, texHeight, newX, newY, newX + newWidth, newY + newHeight, GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
+        glBlitNamedFramebuffer(fbo[0], fbo[1], 0, 0, texWidth, texHeight, newX, newY, newX + newWidth, newY + newHeight, GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT, GL_NEAREST);
+#endif
         // don't delete the textures!
         glDeleteFramebuffers(2, fbo);
         *fenceSync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
