@@ -14,7 +14,9 @@ function(LINK_HIFI_LIBRARIES)
   set(LIBRARIES_TO_LINK ${ARGN})
   foreach(HIFI_LIBRARY ${LIBRARIES_TO_LINK})
     if (NOT TARGET ${HIFI_LIBRARY})
-      if (UWP AND NOT (HIFI_LIBRARY STREQUAL "gpu-gl"))
+      # if not UWP then include subdirectory
+	  # else (it is UWP) then include subdirectory if it is not gpu-gl 
+      if (NOT UWP OR NOT (HIFI_LIBRARY STREQUAL "gpu-gl"))
         add_subdirectory("${RELATIVE_LIBRARY_DIR_PATH}/${HIFI_LIBRARY}" "${RELATIVE_LIBRARY_DIR_PATH}/${HIFI_LIBRARY}")
       endif ()
     endif ()
