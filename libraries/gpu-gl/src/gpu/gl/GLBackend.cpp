@@ -26,10 +26,7 @@
 #include <shared/GlobalAppProperties.h>
 #include <GPUIdent.h>
 #include <gl/QOpenGLContextWrapper.h>
-
-#ifndef Q_OS_WINRT
 #include <QtCore/QProcessEnvironment>
-#endif
 
 #include "GLTexture.h"
 #include "GLShader.h"
@@ -37,12 +34,8 @@
 using namespace gpu;
 using namespace gpu::gl;
 
-#ifdef Q_OS_WINRT
-static bool disableOpenGL45 = true;
-#else
 static const QString DEBUG_FLAG("HIFI_DISABLE_OPENGL_45");
 static bool disableOpenGL45 = QProcessEnvironment::systemEnvironment().contains(DEBUG_FLAG);
-#endif
 
 static GLBackend* INSTANCE{ nullptr };
 
@@ -165,7 +158,6 @@ void GLBackend::init() {
         qCDebug(gpugllogging) << "\tdriver:" << gpu->getDriver();
         qCDebug(gpugllogging) << "\tdedicated memory:" << gpu->getMemory() << "MB";
 
-#ifndef Q_OS_WINRT
         glewExperimental = true;
         GLenum err = glewInit();
         glGetError(); // clear the potential error from glewExperimental
@@ -174,9 +166,8 @@ void GLBackend::init() {
             qCDebug(gpugllogging, "Error: %s\n", glewGetErrorString(err));
         }
         qCDebug(gpugllogging, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-#endif
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined(Q_OS_WIN)
         if (wglewGetExtension("WGL_EXT_swap_control")) {
             int swapInterval = wglGetSwapIntervalEXT();
             qCDebug(gpugllogging, "V-Sync is %s\n", (swapInterval > 0 ? "ON" : "OFF"));

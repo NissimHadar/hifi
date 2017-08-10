@@ -8,8 +8,6 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-#include <QtCore\QtGlobal>
-#ifndef Q_OS_WINRT
 #include "GL45Backend.h"
 
 using namespace gpu;
@@ -104,4 +102,3 @@ void GL45Backend::updateTransform(const Batch& batch) {
 
     (void)CHECK_GL_ERROR();
 }
-#endif

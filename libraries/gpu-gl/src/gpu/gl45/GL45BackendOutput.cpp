@@ -8,8 +8,6 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-#include <QtCore\QtGlobal>
-#ifndef Q_OS_WINRT
 #include "GL45Backend.h"
 #include "../gl/GLFramebuffer.h"
 #include "../gl/GLTexture.h"
@@ -149,4 +147,3 @@ void GL45Backend::do_blit(const Batch& batch, size_t paramOffset) {
 }
 
 } }
-#endif

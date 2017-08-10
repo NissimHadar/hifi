@@ -34,13 +34,8 @@
 // Current preferred is  "instanced" which draw the shape twice but instanced and rely on clipping plane to draw left/right side only
 //#define GPU_STEREO_TECHNIQUE_DOUBLED_SIMPLE
 //#define GPU_STEREO_TECHNIQUE_DOUBLED_SMARTER
-
-// This enables the .cpp to compile cleanly.
-#ifdef Q_OS_WINRT
-#define GPU_STEREO_TECHNIQUE_DOUBLED_SIMPLE
-#else
 #define GPU_STEREO_TECHNIQUE_INSTANCED
-#endif
+
 
 // Let these be configured by the one define picked above
 #ifdef GPU_STEREO_TECHNIQUE_DOUBLED_SIMPLE

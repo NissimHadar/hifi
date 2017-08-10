@@ -92,7 +92,7 @@ gpu::Size getDedicatedMemory() {
     static Size dedicatedMemory { 0 };
     static std::once_flag once;
     std::call_once(once, [&] {
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#ifdef Q_OS_WIN
         if (!dedicatedMemory && wglGetGPUIDsAMD && wglGetGPUInfoAMD) {
             UINT maxCount = wglGetGPUIDsAMD(0, 0);
             std::vector<UINT> ids;
