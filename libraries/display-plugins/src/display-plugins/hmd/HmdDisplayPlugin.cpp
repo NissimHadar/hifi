@@ -25,7 +25,10 @@
 #include <shared/NsightHelpers.h>
 #include <gpu/Context.h>
 #include <gpu/StandardShaderLib.h>
+
+#ifndef Q_OS_WINRT
 #include <gpu/gl/GLBackend.h>
+#endif
 
 #include <TextureCache.h>
 #include <PathUtils.h>
@@ -380,7 +383,10 @@ void HmdDisplayPlugin::updateFrameData() {
         auto batchPose = _currentFrame->pose;
         auto currentPose = _currentPresentFrameInfo.presentPose;
         auto correction = glm::inverse(batchPose) * currentPose;
+
+#ifndef Q_OS_WINRT
         getGLBackend()->setCameraCorrection(correction);
+#endif
     }
 
     withPresentThreadLock([&] {
@@ -594,7 +600,11 @@ void HmdDisplayPlugin::OverlayRenderer::updatePipeline() {
         auto vs = gpu::Shader::createVertex(vsSource.toLocal8Bit().toStdString());
         auto ps = gpu::Shader::createPixel(fsSource.toLocal8Bit().toStdString());
         auto program = gpu::Shader::createProgram(vs, ps);
+
+#ifndef Q_OS_WINRT
         gpu::gl::GLBackend::makeProgram(*program, gpu::Shader::BindingSet());
+#endif
+
         this->uniformsLocation = program->getUniformBuffers().findLocation("overlayBuffer");
 
         gpu::StatePointer state = gpu::StatePointer(new gpu::State());
