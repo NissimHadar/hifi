@@ -9,8 +9,6 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#include <QtCore\QtGlobal>
-#ifndef Q_OS_WINRT
 #include "DdeFaceTracker.h"
 
 #include <SharedUtil.h>
@@ -695,4 +693,3 @@ void DdeFaceTracker::finishCalibration() {
 
     qCDebug(interfaceapp) << "DDE Face Tracker: Calibration finished";
 }
-#endif
