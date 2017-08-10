@@ -82,7 +82,11 @@
 #include <FramebufferCache.h>
 #include <gpu/Batch.h>
 #include <gpu/Context.h>
+
+#ifndef Q_OS_WINRT
 #include <gpu/gl/GLBackend.h>
+#endif
+
 #include <HFActionEvent.h>
 #include <HFBackEvent.h>
 #include <InfoView.h>
@@ -2019,9 +2023,13 @@ void Application::initializeGL() {
     qt_gl_set_global_share_context(_chromiumShareContext->getContext());
 
     _glWidget->makeCurrent();
+#ifndef Q_OS_WINRT
     gpu::Context::init<gpu::gl::GLBackend>();
+
     qApp->setProperty(hifi::properties::gl::MAKE_PROGRAM_CALLBACK,
         QVariant::fromValue((void*)(&gpu::gl::GLBackend::makeProgram)));
+#endif
+
     _gpuContext = std::make_shared<gpu::Context>();
     // The gpu context can make child contexts for transfers, so
     // we need to restore primary rendering context
