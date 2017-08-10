@@ -198,16 +198,28 @@ if (WIN32)
   set_property(TARGET ${TARGET_NAME} APPEND_STRING PROPERTY LINK_FLAGS_DEBUG "/OPT:NOREF /OPT:NOICF")
 endif()
 
-# link required hifi libraries
-link_hifi_libraries(
-  shared octree ktx gpu gl gpu-gl procedural model render
-  recording fbx networking model-networking entities avatars trackers
-  audio audio-client animation script-engine physics
-  render-utils entities-renderer avatars-renderer ui auto-updater midi
-  controllers plugins image trackers
-  ui-plugins display-plugins input-plugins
-  ${NON_ANDROID_LIBRARIES}
-)
+# link required hifi libraries (no gpu-gl in UWP)
+if (UWP)
+  link_hifi_libraries(
+    shared octree ktx gpu gl procedural model render
+    recording fbx networking model-networking entities avatars trackers
+    audio audio-client animation script-engine physics
+    render-utils entities-renderer avatars-renderer ui auto-updater midi
+    controllers plugins image trackers
+    ui-plugins display-plugins input-plugins
+    ${NON_ANDROID_LIBRARIES}
+  )
+else()
+  link_hifi_libraries(
+    shared octree ktx gpu gl gpu-gl procedural model render
+    recording fbx networking model-networking entities avatars trackers
+    audio audio-client animation script-engine physics
+    render-utils entities-renderer avatars-renderer ui auto-updater midi
+    controllers plugins image trackers
+    ui-plugins display-plugins input-plugins
+    ${NON_ANDROID_LIBRARIES}
+  )
+endif ()
 
 # include the binary directory of render-utils for shader includes
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_BINARY_DIR}/libraries/render-utils")
