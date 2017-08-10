@@ -51,6 +51,7 @@ void MyHead::simulate(float deltaTime) {
         if (_isFaceTrackerConnected) {
             _transientBlendshapeCoefficients = faceTracker->getBlendshapeCoefficients();
 
+#ifndef Q_OS_WINRT
             if (typeid(*faceTracker) == typeid(DdeFaceTracker)) {
 
                 if (Menu::getInstance()->isOptionChecked(MenuOption::UseAudioForMouth)) {
@@ -69,6 +70,7 @@ void MyHead::simulate(float deltaTime) {
                 }
                 applyEyelidOffset(getFinalOrientationInWorldFrame());
             }
+#endif
         }
         auto eyeTracker = DependencyManager::get<EyeTracker>();
         _isEyeTrackerConnected = eyeTracker->isTracking();
