@@ -17,7 +17,10 @@
 #include <trackers/FaceTracker.h>
 #include <trackers/EyeTracker.h>
 
+#ifndef Q_OS_WINRT
 #include "devices/DdeFaceTracker.h"
+#endif
+
 #include "Application.h"
 #include "MyAvatar.h"
 
