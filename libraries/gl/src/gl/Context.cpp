@@ -134,7 +134,23 @@ void Context::setWindow(QWindow* window) {
     updateSwapchainMemoryCounter();
 }
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+// Dummy methods have been created for the UWP version
+// These are followed by the WIN32 version.
+// If neither of these, then the methods are defined in ContextQt.cpp
+#ifdef Q_OS_WINRT
+bool Context::makeCurrent() {
+    return true;
+}
+
+void Context::swapBuffers() {
+}
+
+void Context::doneCurrent() {
+}
+
+void Context::create() {
+}
+#elif defined Q_OS_WIN
 
 bool Context::makeCurrent() {
     BOOL result = wglMakeCurrent(_hdc, _hglrc);
