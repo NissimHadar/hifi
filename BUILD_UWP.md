@@ -9,7 +9,8 @@ Note: The prerequisites will require about 10 GB of space on your drive.
 
 If you don’t have Community or Professional edition of Visual Studio 2017, download [Visual Studio Community 2017](https://www.visualstudio.com/downloads/). 
 
-When selecting components, check "Desktop development with C++." Also check "Windows 8.1 SDK and UCRT SDK" and "VC++ 2015.3 v140 toolset (x86,x64)" on the Summary toolbar on the right.
+When selecting components, select both "Desktop development with C++" and "Universal Windows Platform development".
+Also check "Windows 8.1 SDK and UCRT SDK" and "VC++ 2015.3 v140 toolset (x86,x64)" on the Summary toolbar on the right.
 
 ### Step 2. Installing CMake
 
@@ -17,10 +18,35 @@ Download and install the latest version of CMake 3.9. Download the file named  w
 
 ### Step 3. Installing Qt
 
-Download and install the [Qt Online Installer](https://www.qt.io/download-open-source/?hsCtaTracking=f977210e-de67-475f-a32b-65cec207fd03%7Cd62710cd-e1db-46aa-8d4d-2f1c1ffdacea). While installing, you only need to have the following components checked under Qt 5.9.1: "msvc2017 64-bit", "Qt WebEngine", and "Qt Script (Deprecated)".
+Download and install the [Qt Online Installer](https://www.qt.io/download-open-source/?hsCtaTracking=f977210e-de67-475f-a32b-65cec207fd03%7Cd62710cd-e1db-46aa-8d4d-2f1c1ffdacea). While installing, you only need to have the following components checked under Qt 5.9.1:
+
+* "UWP x64 (MSVC2017)
+* "msvc2017 64-bit"
+* "Qt WebEngine"
+* "Qt Script (Deprecated)".
 
 Note: Installing the Sources is optional but recommended if you have room for them (~2GB). 
 
+The UWP version is missing a number of directories.  To solve this:
+
+* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5Script to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5Script
+* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5ScriptTools to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5ScriptTools
+* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5WebEngine to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5WebEngine
+* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5WebEngineCore to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5WebEngine
+* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5WebEngineWidgets to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5WebEngine
+
+* Copy C:\Qt\5.9.1\msvc2017_64\include\QtScript to C:\Qt\5.9.1\winrt_x64_msvc2017\include\QtScript
+* Copy C:\Qt\5.9.1\msvc2017_64\include\QtScriptTools to C:\Qt\5.9.1\winrt_x64_msvc2017\include\QtScriptTools
+* Copy C:\Qt\5.9.1\msvc2017_64\include\Qt5WebEngine to C:\Qt\5.9.1\winrt_x64_msvc2017\include\Qt5WebEngine
+* Copy C:\Qt\5.9.1\msvc2017_64\include\Qt5WebEngineCore to C:\Qt\5.9.1\winrt_x64_msvc2017\include\Qt5WebEngineCore
+* Copy C:\Qt\5.9.1\msvc2017_64\include\Qt5WebEngineWidgets to C:\Qt\5.9.1\winrt_x64_msvc2017\include\Qt5WebEngineWidgets
+
+* Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5Script*.* (8 files)
+* Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5WebEngine*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5WebEngine*.* (12 files)
+
+* Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5Script*.* (8 files)
+* Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5WebEngineCore*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5WebEngineCore*.* (12 files)
+ 
 ### Step 4. Setting Qt Environment Variable
 
 Go to `Control Panel > System > Advanced System Settings > Environment Variables > New...` (or search “Environment Variables” in Start Search).
@@ -35,7 +61,12 @@ As we are using UWP, add another variable (the first is used for non-UWP builds)
 
 Download and install the Win64 OpenSSL v1.0.2 Installer[https://slproweb.com/products/Win32OpenSSL.html].  
 
-### Step 6. Running CMake to Generate Build Files
+### Step 6. Scribe
+
+High Fidelity has a shader pre-processing tool called `scribe` that various libraries will call on during the build process. You must compile scribe using your native toolchain (following the build instructions for your platform) and then pass a CMake variable or set an ENV variable `SCRIBE_PATH` that is a path to the scribe executable.
+
+CMake will fatally error if it does not find the scribe executable while using the android toolchain.
+### Step 7. Running CMake to Generate Build Files
 
 Run Command Prompt from Start and run the following commands:
 ```
@@ -47,7 +78,7 @@ cmake .. -G "Visual Studio 15 Win64" -DUWP=TRUE
     
 Where `%HIFI_DIR%` is the directory for the highfidelity repository.     
 
-### Step 7. Making a Build
+### Step 8. Making a Build
 
 Open `%HIFI_DIR%\build\hifi.sln` using Visual Studio.
 
@@ -55,7 +86,8 @@ Change the Solution Configuration (next to the green play button) from "Debug" t
 
 Run `Build > Build Solution`.
 
-### Step 8. Testing Interface
+Note that Visual Studio may need to install additional components for UWP.  This will require closing Visual Studio.
+### Step 9. Testing Interface
 
 Create another environment variable (see Step #4)
 * Set "Variable name": `_NO_DEBUG_HEAP`
