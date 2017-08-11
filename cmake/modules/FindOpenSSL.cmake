@@ -51,6 +51,11 @@ if (WIN32)
     set(_OPENSSL_ROOT_PATHS "${_programfiles}/OpenSSL" "${_programfiles}/OpenSSL-Win32" "C:/OpenSSL/" "C:/OpenSSL-Win32/")
   endif()
 
+  if (UWP)
+    # Use the OpenSSL version created with vcpkg
+    set(_OPENSSL_ROOT_PATHS "C:/Users/nissi/Documents/GitHub/vcpkg/installed/x64-uwp")
+  endif()
+  
   unset(_programfiles)
   set(_OPENSSL_ROOT_HINTS_AND_PATHS HINTS ${_OPENSSL_ROOT_HINTS} PATHS ${_OPENSSL_ROOT_PATHS})
 
