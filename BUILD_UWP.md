@@ -56,10 +56,18 @@ Go to `Control Panel > System > Advanced System Settings > Environment Variables
 As we are using UWP, add another variable (the first is used for non-UWP builds)
 * Set "Variable name": `QT_CMAKE_PREFIX_PATH_UWP`
 * Set "Variable value": `C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake` 
-* 
+
 ### Step 5. Installing OpenSSL
 
-Download and install the Win64 OpenSSL v1.0.2 Installer[https://slproweb.com/products/Win32OpenSSL.html].  
+Download and install the Win64 OpenSSL v1.0.2 Installer[https://slproweb.com/products/Win32OpenSSL.html].
+
+UWP needs a version of OpenSSL that has been built through vcpgk.
+* Clone GitHub repository for vcpkg (<https://github.com/Microsoft/vcpkg>)
+* Open console and __cd__ to the vcpkg directory
+* Create vcpkg.exe: __>powershell -exec bypass scripts\bootstrap.ps1__
+* Build OpenSSL: __vcpkg install openssl:x64-uwp__.  This will create a folder named x64-uwp in the ..vcpkg/installed folder.  This is the OpenSSL path needed in the next step.
+* Create a new environment variable: Name: VCPKG_OPENSSL_PATH,  Value: the path to OpenSSL (from previous step).
+
 
 ### Step 6. Scribe
 
