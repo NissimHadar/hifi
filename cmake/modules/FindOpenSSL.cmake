@@ -50,11 +50,6 @@ if (WIN32)
     )
     set(_OPENSSL_ROOT_PATHS "${_programfiles}/OpenSSL" "${_programfiles}/OpenSSL-Win32" "C:/OpenSSL/" "C:/OpenSSL-Win32/")
   endif()
-
-  if (UWP)
-    # Use the OpenSSL version created with vcpkg
-    set(_OPENSSL_ROOT_PATHS "C:/Users/nissi/Documents/GitHub/vcpkg/installed/x64-uwp")
-  endif()
   
   unset(_programfiles)
   set(_OPENSSL_ROOT_HINTS_AND_PATHS HINTS ${_OPENSSL_ROOT_HINTS} PATHS ${_OPENSSL_ROOT_PATHS})
@@ -66,10 +61,15 @@ else ()
   set(_OPENSSL_ROOT_HINTS_AND_PATHS ${OPENSSL_SEARCH_DIRS})
 endif ()
 
-find_path(OPENSSL_INCLUDE_DIR NAMES openssl/ssl.h HINTS ${_OPENSSL_ROOT_HINTS_AND_PATHS} ${_OPENSSL_INCLUDEDIR}
-  PATH_SUFFIXES include
-)
-
+if (UWP)
+  # Use the OpenSSL version created with vcpkg
+  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_OPENSSL_PATH}/include")
+else ()
+  find_path(OPENSSL_INCLUDE_DIR NAMES openssl/ssl.h HINTS ${_OPENSSL_ROOT_HINTS_AND_PATHS} ${_OPENSSL_INCLUDEDIR}
+    PATH_SUFFIXES include
+  )
+endif()
+message (STATUS "OPENSSL_INCLUDE_DIR = ${OPENSSL_INCLUDE_DIR}")
 if (WIN32 AND NOT CYGWIN)
   if (MSVC)
 
