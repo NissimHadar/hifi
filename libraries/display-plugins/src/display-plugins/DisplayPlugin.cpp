@@ -15,7 +15,7 @@
 #include "stereo/SideBySideStereoDisplayPlugin.h"
 #include "stereo/InterleavedStereoDisplayPlugin.h"
 
-//#include "hmd/DebugHmdDisplayPlugin.h"
+#include "hmd/DebugHmdDisplayPlugin.h"
 #include "Basic2DWindowOpenGLDisplayPlugin.h"
 #endif
 
