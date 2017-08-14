@@ -69,9 +69,28 @@ else ()
     PATH_SUFFIXES include
   )
 endif()
-message (STATUS "OPENSSL_INCLUDE_DIR = ${OPENSSL_INCLUDE_DIR}")
+
 if (WIN32 AND NOT CYGWIN)
-  if (MSVC)
+  if (UWP)
+    # Use the OpenSSL version created with vcpkg
+    set(LIB_EAY_DEBUG "$ENV{VCPKG_OPENSSL_PATH}/debug/lib/libeay32.lib")
+    set(SSL_EAY_DEBUG "$ENV{VCPKG_OPENSSL_PATH}/debug/lib/ssleay32.lib")
+    set(LIB_EAY_RELEASE "$ENV{VCPKG_OPENSSL_PATH}/lib/libeay32.lib")
+    set(SSL_EAY_RELEASE "$ENV{VCPKG_OPENSSL_PATH}/lib/ssleay32.lib")
+
+    set(LIB_EAY_LIBRARY_DEBUG "${LIB_EAY_DEBUG}")
+    set(LIB_EAY_LIBRARY_RELEASE "${LIB_EAY_RELEASE}")
+    set(SSL_EAY_LIBRARY_DEBUG "${SSL_EAY_DEBUG}")
+    set(SSL_EAY_LIBRARY_RELEASE "${SSL_EAY_RELEASE}")
+  
+    include(SelectLibraryConfigurations)
+    select_library_configurations(LIB_EAY)
+    select_library_configurations(SSL_EAY)
+
+    set(OPENSSL_LIBRARIES ${SSL_EAY_LIBRARY} ${LIB_EAY_LIBRARY})
+    set(OPENSSL_DLL_PATH "$ENV{VCPKG_OPENSSL_PATH}/bin")
+    
+elseif (MSVC)
 
     # In Visual C++ naming convention each of these four kinds of Windows libraries has it's standard suffix:
     #   * MD for dynamic-release
