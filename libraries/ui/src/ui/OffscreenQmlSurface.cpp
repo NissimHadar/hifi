@@ -128,8 +128,8 @@ public:
     size_t getUsedTextureMemory() { return _totalTextureUsage; }
 private:
     static void waitOnFence(GLsync fence) {
-        glWaitSync(fence, 0, GL_TIMEOUT_IGNORED);
-        glDeleteSync(fence);
+//UWP!!!        glWaitSync(fence, 0, GL_TIMEOUT_IGNORED);
+//UWP!!!        glDeleteSync(fence);
     }
 
     static size_t getMemoryForSize(const uvec2& size) {
@@ -385,11 +385,11 @@ void OffscreenQmlSurface::cleanup() {
     delete _renderControl; // and invalidate
 
     if (_depthStencil) {
-        glDeleteRenderbuffers(1, &_depthStencil);
+//UWP!!!        glDeleteRenderbuffers(1, &_depthStencil);
         _depthStencil = 0;
     }
     if (_fbo) {
-        glDeleteFramebuffers(1, &_fbo);
+//UWP!!!        glDeleteFramebuffers(1, &_fbo);
         _fbo = 0;
     }
 
@@ -413,7 +413,7 @@ void OffscreenQmlSurface::render() {
     _quickWindow->setRenderTarget(_fbo, QSize(_size.x, _size.y));
 
     GLuint texture = offscreenTextures.getNextTexture(_size);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+//UWP!!!    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 
 #ifndef Q_OS_WINRT
     glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
@@ -421,9 +421,9 @@ void OffscreenQmlSurface::render() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     _renderControl->render();
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//UWP!!!    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glGenerateMipmap(GL_TEXTURE_2D);
+//UWP!!!    glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 
 
@@ -434,7 +434,7 @@ void OffscreenQmlSurface::render() {
             _latestTextureAndFence = { 0, 0 };
         }
 
-        _latestTextureAndFence = { texture, glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0) };
+//UWP!!!        _latestTextureAndFence = { texture, glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0) };
         // Fence will be used in another thread / context, so a flush is required
         glFlush();
     }
@@ -608,18 +608,18 @@ void OffscreenQmlSurface::resize(const QSize& newSize_, bool forceResize) {
         if (uvec2() != _size) {
             offscreenTextures.acquireSize(_size);
             if (_depthStencil) {
-                glDeleteRenderbuffers(1, &_depthStencil);
+//UWP!!!                glDeleteRenderbuffers(1, &_depthStencil);
                 _depthStencil = 0;
             }
-            glGenRenderbuffers(1, &_depthStencil);
-            glBindRenderbuffer(GL_RENDERBUFFER, _depthStencil);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, _size.x, _size.y);
+//UWP!!!            glGenRenderbuffers(1, &_depthStencil);
+//UWP!!!            glBindRenderbuffer(GL_RENDERBUFFER, _depthStencil);
+//UWP!!!            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, _size.x, _size.y);
             if (!_fbo) {
-                glGenFramebuffers(1, &_fbo);
+//UWP!!!                glGenFramebuffers(1, &_fbo);
             }
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
-            glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthStencil);
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//UWP!!!            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+//UWP!!!            glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthStencil);
+//UWP!!!            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         }
 
         _canvas->doneCurrent();

@@ -994,7 +994,12 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
     auto glContextData = getGLContextData();
     QJsonObject properties = {
         { "version", applicationVersion() },
+
+// No QProcess in UWP
+#ifndef Q_OS_WINRT
         { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
+#endif
+
         { "previousSessionCrashed", _previousSessionCrashed },
         { "previousSessionRuntime", sessionRunTime.get() },
         { "cpu_architecture", QSysInfo::currentCpuArchitecture() },
