@@ -43,10 +43,16 @@ The UWP version is missing a number of directories.  To solve this:
 
 * Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5Script*.* (8 files)
 * Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5WebEngine*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5WebEngine*.* (12 files)
+* Copy C:\Qt\5.9.1\msvc2017_64\bin\QtWebEngine*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\QtWebEngine*.* (4 files)
 
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5Script*.* (8 files)
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5WebEngineCore*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5WebEngineCore*.* (12 files)
- 
+
+* Copy C:\Qt\5.9.1\msvc2017_64\resources to C:\Qt\5.9.1\winrt_x64_msvc2017\resources (1 folder with 5 files)
+
+* Copy C:\Qt\5.9.1\msvc2017_64\translations\qtwebengine_locales\ to C:\Qt\5.9.1\winrt_x64_msvc2017\translations\qtwebengine_locales\ (1 folder with 53 files)
+
+
 ### Step 4. Setting Qt Environment Variable
 
 Go to `Control Panel > System > Advanced System Settings > Environment Variables > New...` (or search “Environment Variables” in Start Search).
@@ -87,6 +93,7 @@ cmake .. -G "Visual Studio 15 Win64" -DUWP=TRUE
 Where `%HIFI_DIR%` is the directory for the highfidelity repository.     
 
 ### Step 8. Making a Build
+Verify that High-Fidelity is not running.
 
 Open `%HIFI_DIR%\build\hifi.sln` using Visual Studio.
 
