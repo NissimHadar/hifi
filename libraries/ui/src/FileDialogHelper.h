@@ -10,7 +10,7 @@
 #define hifi_ui_FileDialogHelper_h
 
 // No File system watcher in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QtCore/QFileSystemWatcher>
 #endif
 
@@ -75,7 +75,7 @@ signals:
 
 private:
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     QFileSystemWatcher _fsWatcher;
 #endif
 

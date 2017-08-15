@@ -26,7 +26,7 @@
 #include <gpu/Context.h>
 #include <gpu/StandardShaderLib.h>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <gpu/gl/GLBackend.h>
 #endif
 
@@ -384,7 +384,7 @@ void HmdDisplayPlugin::updateFrameData() {
         auto currentPose = _currentPresentFrameInfo.presentPose;
         auto correction = glm::inverse(batchPose) * currentPose;
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         getGLBackend()->setCameraCorrection(correction);
 #endif
     }
@@ -601,7 +601,7 @@ void HmdDisplayPlugin::OverlayRenderer::updatePipeline() {
         auto ps = gpu::Shader::createPixel(fsSource.toLocal8Bit().toStdString());
         auto program = gpu::Shader::createProgram(vs, ps);
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         gpu::gl::GLBackend::makeProgram(*program, gpu::Shader::BindingSet());
 #endif
 

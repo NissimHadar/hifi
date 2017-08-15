@@ -14,8 +14,7 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
-#include <QtCore/QtGlobal>
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
 #include <QtANGLE\GLES3\gl3.h>
 #else
 #include <GL/glew.h>
@@ -28,7 +27,7 @@
 
 #endif
 
-#if defined WIN32 && !defined Q_OS_WINRT
+#if defined WIN32 && !defined HIFI_UWP
 
 #include <GL/wglew.h>
 

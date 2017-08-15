@@ -50,7 +50,7 @@ extern "C" FILE * __cdecl __iob_func(void) {
 #include <QTimer>
 
 // No QProcess in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QProcess>
 #endif
 
@@ -272,7 +272,7 @@ void setSemiNibbleAt(unsigned char& byte, int bitIndex, int value) {
 
 bool isInEnvironment(const char* environment) {
 // No getenv in UWP
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     return true;
 #else
     char* environmentString = getenv("HIFI_ENVIRONMENT");
@@ -807,7 +807,7 @@ void printSystemInformation() {
         qCDebug(shared) << "\tWindows Version: " << windowsVersion;
     }
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     SYSTEM_INFO si;
     GetNativeSystemInfo(&si);
 
@@ -866,7 +866,7 @@ void printSystemInformation() {
     };
 
 // No getenv in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     auto envVariables = QProcessEnvironment::systemEnvironment();
     for (auto& env : envWhitelist)
     {
@@ -927,7 +927,7 @@ DWORD CountSetBits(ULONG_PTR bitMask)
 
 bool getProcessorInfo(ProcessorInfo& info) {
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     LPFN_GLPI glpi;
     bool done = false;
     PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer = NULL;
@@ -1050,7 +1050,7 @@ const QString& getInterfaceSharedMemoryName() {
 
 const std::vector<uint8_t>& getAvailableCores() {
     static std::vector<uint8_t> availableCores;
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     static std::once_flag once;
     std::call_once(once, [&] {
         DWORD_PTR defaultProcessAffinity = 0, defaultSystemAffinity = 0;
@@ -1069,7 +1069,7 @@ const std::vector<uint8_t>& getAvailableCores() {
 }
 
 void setMaxCores(uint8_t maxCores) {
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     HANDLE process = GetCurrentProcess();
     auto availableCores = getAvailableCores();
     if (availableCores.size() <= maxCores) {
@@ -1099,7 +1099,7 @@ void quitWithParentProcess() {
     }
 }
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
 VOID CALLBACK parentDiedCallback(PVOID lpParameter, BOOLEAN timerOrWaitFired) {
     if (!timerOrWaitFired) {
         quitWithParentProcess();

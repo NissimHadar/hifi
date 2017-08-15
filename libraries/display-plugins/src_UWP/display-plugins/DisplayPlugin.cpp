@@ -11,7 +11,7 @@
 
 #include "NullDisplayPlugin.h"
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include "stereo/SideBySideStereoDisplayPlugin.h"
 #include "stereo/InterleavedStereoDisplayPlugin.h"
 
@@ -26,7 +26,7 @@ const QString& DisplayPlugin::MENU_PATH() {
 
 // TODO migrate to a DLL model where plugins are discovered and loaded at runtime by the PluginManager class
 DisplayPluginList getDisplayPlugins() {
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
 DisplayPlugin* PLUGIN_POOL[] = {
     new NullDisplayPlugin(),
     nullptr

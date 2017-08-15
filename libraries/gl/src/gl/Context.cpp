@@ -14,7 +14,7 @@
 
 #include <QtCore/QDebug>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QtCore/QProcessEnvironment>
 #endif
 
@@ -28,7 +28,7 @@
 #include <GLMHelpers.h>
 #include "GLLogging.h"
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
 
 #ifdef DEBUG
 static bool enableDebugLogger = true;
@@ -73,7 +73,7 @@ Context::Context(QWindow* window) {
     setWindow(window);
 }
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
 void Context::destroyWin32Context(HGLRC hglrc) {
     wglDeleteContext(hglrc);
 }
@@ -81,7 +81,7 @@ void Context::destroyWin32Context(HGLRC hglrc) {
 
 void Context::release() {
     doneCurrent();
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     if (_wrappedContext) {
         destroyContext(_wrappedContext);
         _wrappedContext = nullptr;
@@ -127,7 +127,7 @@ void Context::setWindow(QWindow* window) {
     release();
     _window = window;
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     _hwnd = (HWND)window->winId();
 #endif
 
@@ -137,7 +137,7 @@ void Context::setWindow(QWindow* window) {
 // Dummy methods have been created for the UWP version
 // These are followed by the WIN32 version.
 // If neither of these, then the methods are defined in ContextQt.cpp
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
 bool Context::makeCurrent() {
     return true;
 }

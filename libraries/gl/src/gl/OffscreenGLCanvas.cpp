@@ -12,7 +12,7 @@
 
 #include "OffscreenGLCanvas.h"
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QtCore/QProcessEnvironment>
 #endif
 

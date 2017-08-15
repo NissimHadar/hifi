@@ -54,7 +54,7 @@ ScriptsModel::ScriptsModel(QObject* parent) :
     _localDirectory(),
 
 // No File system watcher in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     _fsWatcher(),
 #endif
     _treeNodes()
@@ -63,7 +63,7 @@ ScriptsModel::ScriptsModel(QObject* parent) :
     _localDirectory.setNameFilters(QStringList("*.js"));
 
 // No File system watcher in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     connect(&_fsWatcher, &QFileSystemWatcher::directoryChanged, this, &ScriptsModel::reloadLocalFiles);
 #endif
 
@@ -133,7 +133,7 @@ int ScriptsModel::columnCount(const QModelIndex& parent) const {
 
 void ScriptsModel::updateScriptsLocation(const QString& newPath) {
 // No File system watcher in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     _fsWatcher.removePath(_localDirectory.absolutePath());
 
     if (!newPath.isEmpty()) {

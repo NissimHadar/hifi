@@ -6,7 +6,7 @@
 #include <QtCore/QThread>
 #include <QtCore/QRegularExpression>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QtCore/QProcessEnvironment>
 #endif
 

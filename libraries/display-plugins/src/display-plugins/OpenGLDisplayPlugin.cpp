@@ -171,7 +171,7 @@ public:
                             QThread::setPriority(newPlugin->getPresentPriority());
                             bool wantVsync = newPlugin->wantVsync();
                             _context->makeCurrent();
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
                             wglSwapIntervalEXT(wantVsync ? 1 : 0);
                             hasVsync = wglGetSwapIntervalEXT() != 0;
 #elif defined(Q_OS_MAC)
@@ -862,7 +862,7 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         GLuint targetTexture = target->texture();
         GLuint fbo[2] {0, 0};
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         // need mipmaps for blitting texture
         glGenerateTextureMipmap(sourceTexture);
 
@@ -882,7 +882,7 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         // maintain aspect ratio, filling the width first if possible.  If that makes the height too
         // much, fill height instead. TODO: only do this when texture changes
         GLint newX = 0;

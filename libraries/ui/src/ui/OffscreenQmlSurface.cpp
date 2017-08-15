@@ -167,7 +167,7 @@ private:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8.0f);
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.2f);
 #endif
 
@@ -415,7 +415,7 @@ void OffscreenQmlSurface::render() {
     GLuint texture = offscreenTextures.getNextTexture(_size);
 //UWP!!!    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
 #endif
 
