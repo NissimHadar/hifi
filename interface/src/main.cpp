@@ -12,7 +12,7 @@
 
 #include <QCommandLineParser>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QtCore/QProcess>
 #endif
 
@@ -100,7 +100,7 @@ int main(int argc, const char* argv[]) {
 #endif
 
     // allow multiple interfaces to run if this environment variable is set.
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     bool allowMultipleInstances = false;
 #else
     bool allowMultipleInstances = parser.isSet(allowMultipleInstancesOption) ||
@@ -189,7 +189,7 @@ int main(int argc, const char* argv[]) {
     // or in the main window ctor, before GL startup.
     Application::initPlugins(arguments);
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     // If we're running in steam mode, we need to do an explicit check to ensure we're up to the required min spec
     if (parser.isSet(checkMinSpecOption)) {
         QString appPath;

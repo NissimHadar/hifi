@@ -92,7 +92,7 @@ void ResourceImageItemRenderer::render() {
     auto f = QOpenGLContext::currentContext()->extraFunctions();
 
     if (_fenceSync) {
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
 #define GL_TIMEOUT_IGNORED 0xFFFFFFFFFFFFFFFF
 #endif
         f->glWaitSync(_fenceSync, 0, GL_TIMEOUT_IGNORED);

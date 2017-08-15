@@ -17,7 +17,7 @@
 #include <trackers/FaceTracker.h>
 #include <trackers/EyeTracker.h>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include "devices/DdeFaceTracker.h"
 #endif
 
@@ -54,7 +54,7 @@ void MyHead::simulate(float deltaTime) {
         if (_isFaceTrackerConnected) {
             _transientBlendshapeCoefficients = faceTracker->getBlendshapeCoefficients();
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
             if (typeid(*faceTracker) == typeid(DdeFaceTracker)) {
 
                 if (Menu::getInstance()->isOptionChecked(MenuOption::UseAudioForMouth)) {

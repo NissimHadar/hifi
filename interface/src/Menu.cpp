@@ -21,7 +21,7 @@
 #include <DependencyManager.h>
 #include <ui/TabletScriptingInterface.h>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <display-plugins/DisplayPlugin.h>
 #endif
 
@@ -39,7 +39,7 @@
 #include "avatar/AvatarManager.h"
 #include "AvatarBookmarks.h"
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include "devices/DdeFaceTracker.h"
 #endif
 

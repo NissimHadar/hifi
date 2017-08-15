@@ -11,7 +11,7 @@
 #include <AudioClient.h>
 #include <avatar/AvatarManager.h>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <devices/DdeFaceTracker.h>
 #endif
 
@@ -210,14 +210,14 @@ void setupPreferences() {
         // is a way around this, therefore they're not specified here but in the QML.
     }
     {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         auto getter = []()->float { return DependencyManager::get<DdeFaceTracker>()->getEyeClosingThreshold(); };
         auto setter = [](float value) { DependencyManager::get<DdeFaceTracker>()->setEyeClosingThreshold(value); };
         preferences->addPreference(new SliderPreference(AVATAR_TUNING, "Camera binary eyelid threshold", getter, setter));
 #endif
     }
     {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         auto getter = []()->float { return FaceTracker::getEyeDeflection(); };
         auto setter = [](float value) { FaceTracker::setEyeDeflection(value); };
         preferences->addPreference(new SliderPreference(AVATAR_TUNING, "Face tracker eye deflection", getter, setter));

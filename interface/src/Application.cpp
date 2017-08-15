@@ -45,7 +45,7 @@
 
 #include <QFontDatabase>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QProcessEnvironment>
 #endif
 
@@ -83,7 +83,7 @@
 #include <gpu/Batch.h>
 #include <gpu/Context.h>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <gpu/gl/GLBackend.h>
 #endif
 
@@ -154,7 +154,7 @@
 #include "avatar/MyHead.h"
 #include "CrashHandler.h"
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include "devices/DdeFaceTracker.h"
 #endif
 
@@ -179,7 +179,7 @@
 #include "scripting/ControllerScriptingInterface.h"
 #include "scripting/RatesScriptingInterface.h"
 
-#if defined Q_OS_MAC || (defined Q_OS_WIN && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC || (defined Q_OS_WIN && !defined HIFI_UWP)
 #include "SpeechRecognizer.h"
 #endif
 
@@ -384,7 +384,7 @@ std::atomic<uint64_t> DeadlockWatchdogThread::_maxElapsed;
 std::atomic<int> DeadlockWatchdogThread::_maxElapsedAverage;
 ThreadSafeMovingAverage<int, DeadlockWatchdogThread::HEARTBEAT_SAMPLES> DeadlockWatchdogThread::_movingAverage;
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
 class MyNativeEventFilter : public QAbstractNativeEventFilter {
 public:
     static MyNativeEventFilter& getInstance() {
@@ -529,7 +529,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     // Select appropriate audio DLL
     QString audioDLLPath = QCoreApplication::applicationDirPath();
 
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     audioDLLPath += "/audioWin8";
 #else
     if (IsWindows8OrGreater()) {
@@ -562,7 +562,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<ScriptCache>();
     DependencyManager::set<SoundCache>();
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     DependencyManager::set<DdeFaceTracker>();
 #endif
 
@@ -594,7 +594,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<AssetMappingsScriptingInterface>();
     DependencyManager::set<DomainConnectionModel>();
 
-#if defined Q_OS_MAC || (defined Q_OS_WIN  && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC || (defined Q_OS_WIN  && !defined HIFI_UWP)
     DependencyManager::set<SpeechRecognizer>();
 #endif
     DependencyManager::set<DiscoverabilityManager>();
@@ -727,7 +727,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     _entityClipboard->createRootElement();
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     installNativeEventFilter(&MyNativeEventFilter::getInstance());
 #endif
 
@@ -996,7 +996,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
         { "version", applicationVersion() },
 
 // No QProcess in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
 #endif
 
@@ -1056,7 +1056,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
         QJsonObject properties = {
             { "version", applicationVersion() },
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
             { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
 #endif
 
@@ -1887,7 +1887,7 @@ void Application::onAboutToQuit() {
 }
 
 void Application::cleanupBeforeQuit() {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     // add a logline indicating if QTWEBENGINE_REMOTE_DEBUGGING is set or not
     QString webengineRemoteDebugging = QProcessEnvironment::systemEnvironment().value("QTWEBENGINE_REMOTE_DEBUGGING", "false");
     qCDebug(interfaceapp) << "QTWEBENGINE_REMOTE_DEBUGGING =" << webengineRemoteDebugging;
@@ -2080,7 +2080,7 @@ void Application::initializeGL() {
     qt_gl_set_global_share_context(_chromiumShareContext->getContext());
 
     _glWidget->makeCurrent();
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     gpu::Context::init<gpu::gl::GLBackend>();
 
     qApp->setProperty(hifi::properties::gl::MAKE_PROGRAM_CALLBACK,
@@ -2099,7 +2099,7 @@ void Application::initializeGL() {
     render::CullFunctor cullFunctor = LODManager::shouldRender;
     static const QString RENDER_FORWARD = "HIFI_RENDER_FORWARD";
 
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     bool isDeferred = false;
 #else
     bool isDeferred = !QProcessEnvironment::systemEnvironment().contains(RENDER_FORWARD);
@@ -2213,7 +2213,7 @@ void Application::initializeUi() {
 
     surfaceContext->setContextProperty("Camera", &_myCamera);
 
-#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined HIFI_UWP)
     surfaceContext->setContextProperty("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -2238,7 +2238,7 @@ void Application::initializeUi() {
     surfaceContext->setContextProperty("DialogsManager", _dialogsManagerScriptingInterface);
     surfaceContext->setContextProperty("GlobalServices", GlobalServicesScriptingInterface::getInstance());
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     surfaceContext->setContextProperty("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
 #endif
 
@@ -2598,7 +2598,7 @@ void Application::runTests() {
 }
 
 void Application::faceTrackerMuteToggled() {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     QAction* muteAction = Menu::getInstance()->getActionForOption(MenuOption::MuteFaceTracking);
     Q_CHECK_PTR(muteAction);
     bool isMuted = getSelectedFaceTracker()->isMuted();
@@ -3906,7 +3906,7 @@ static ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
 static int numProcessors;
 static HANDLE self;
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 static PDH_HQUERY cpuQuery;
 static PDH_HCOUNTER cpuTotal;
 #endif
@@ -3926,7 +3926,7 @@ void initCpuUsage() {
     memcpy(&lastSysCPU, &fsys, sizeof(FILETIME));
     memcpy(&lastUserCPU, &fuser, sizeof(FILETIME));
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     PdhOpenQuery(NULL, NULL, &cpuQuery);
     PdhAddCounter(cpuQuery, "\\Processor(_Total)\\% Processor Time", NULL, &cpuTotal);
     PdhCollectQueryData(cpuQuery);
@@ -3952,7 +3952,7 @@ void getCpuUsage(vec3& systemAndUser) {
     lastUserCPU = user;
     lastSysCPU = sys;
 
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     systemAndUser.z = 0.0;
 #else
     PDH_FMT_COUNTERVALUE counterVal;
@@ -4134,7 +4134,7 @@ ivec2 Application::getMouse() const {
 }
 
 FaceTracker* Application::getActiveFaceTracker() {
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     return nullptr;
 #else
     auto dde = DependencyManager::get<DdeFaceTracker>();
@@ -4541,7 +4541,7 @@ void Application::updateMyAvatarLookAtPosition() {
             }
         }
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         // Deflect the eyes a bit to match the detected gaze from the face tracker if active.
         if (faceTracker && !faceTracker->isMuted()) {
             float eyePitch = faceTracker->getEstimatedEyePitch();
@@ -4866,7 +4866,7 @@ void Application::update(float deltaTime) {
     {
         PerformanceTimer perfTimer("devices");
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         FaceTracker* tracker = getSelectedFaceTracker();
         if (tracker && Menu::getInstance()->isOptionChecked(MenuOption::MuteFaceTracking) != tracker->isMuted()) {
             tracker->toggleMute();
@@ -5630,7 +5630,7 @@ void Application::displaySide(RenderArgs* renderArgs, Camera& theCamera, bool se
 }
 
 void Application::resetSensors(bool andReload) {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     DependencyManager::get<DdeFaceTracker>()->reset();
 #endif
 
@@ -5958,7 +5958,7 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerGlobalObject("Camera", &_myCamera);
 
-#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined HIFI_UWP)
     scriptEngine->registerGlobalObject("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -6017,7 +6017,7 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     scriptEngine->registerGlobalObject("GlobalServices", GlobalServicesScriptingInterface::getInstance());
     qScriptRegisterMetaType(scriptEngine, DownloadInfoResultToScriptValue, DownloadInfoResultFromScriptValue);
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     scriptEngine->registerGlobalObject("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
 #endif
 
