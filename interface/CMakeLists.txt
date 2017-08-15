@@ -272,13 +272,35 @@ endforeach()
 # include headers for interface and InterfaceConfig.
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
-target_link_libraries(
-  ${TARGET_NAME}
-  Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
-  Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
-  Qt5::WebChannel Qt5::WebEngine
-  ${PLATFORM_QT_LIBRARIES}
-)
+if (UWP)
+  if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+    target_link_libraries(
+      ${TARGET_NAME}
+      Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
+      Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
+      Qt5::WebChannel Qt5::WebEngine
+      $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2d.lib
+      ${PLATFORM_QT_LIBRARIES}
+    )
+  else ()
+     target_link_libraries(
+      ${TARGET_NAME}
+      Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
+      Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
+      Qt5::WebChannel Qt5::WebEngine
+      $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2.lib
+      ${PLATFORM_QT_LIBRARIES}
+    )
+  endif()
+else ()
+  target_link_libraries(
+    ${TARGET_NAME}
+    Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
+    Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
+    Qt5::WebChannel Qt5::WebEngine
+    ${PLATFORM_QT_LIBRARIES}
+  )
+endif()
 
 if (UNIX)
     target_link_libraries(${TARGET_NAME} pthread)
