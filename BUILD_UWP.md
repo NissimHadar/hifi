@@ -71,16 +71,18 @@ UWP needs a version of OpenSSL that has been built through vcpgk.
 * Clone GitHub repository for vcpkg (<https://github.com/Microsoft/vcpkg>)
 * Open console and __cd__ to the vcpkg directory
 * Create vcpkg.exe: __>powershell -exec bypass scripts\bootstrap.ps1__
-* Build OpenSSL: __vcpkg install openssl:x64-uwp__.  This will create a folder named x64-uwp in the ..vcpkg/installed folder.  This is the OpenSSL path needed in the next step.
-* Create a new environment variable: Name: VCPKG_OPENSSL_PATH,  Value: the path to OpenSSL (from previous step).
+* Build OpenSSL: __vcpkg install openssl:x64-uwp__.  This will create a folder named x64-uwp in the ..vcpkg/installed folder.
+* Create a new environment variable: Name: VCPKG_PATH,  Value: the path to the vcpkg 'installed/x64-uwp' folder.
 
-
-### Step 6. Scribe
+### Step 6. zlib
+(Assumes step 5 has been completed)  
+In the vcpkg directory, uild zlib: __vcpkg install zlib:x64-uwp__.
+### Step 7. Scribe
 
 High Fidelity has a shader pre-processing tool called `scribe` that various libraries will call on during the build process. You must compile scribe using your native toolchain (following the build instructions for your platform) and then pass a CMake variable or set an ENV variable `SCRIBE_PATH` that is a path to the scribe executable.
 
 CMake will fatally error if it does not find the scribe executable while using the android toolchain.
-### Step 7. Running CMake to Generate Build Files
+### Step 8. Running CMake to Generate Build Files
 
 Run Command Prompt from Start and run the following commands:
 ```
@@ -92,7 +94,7 @@ cmake .. -G "Visual Studio 15 Win64" -DUWP=TRUE
     
 Where `%HIFI_DIR%` is the directory for the highfidelity repository.     
 
-### Step 8. Making a Build
+### Step 9. Making a Build
 Verify that High-Fidelity is not running.
 
 Open `%HIFI_DIR%\build\hifi.sln` using Visual Studio.
@@ -102,7 +104,7 @@ Change the Solution Configuration (next to the green play button) from "Debug" t
 Run `Build > Build Solution`.
 
 Note that Visual Studio may need to install additional components for UWP.  This will require closing Visual Studio.
-### Step 9. Testing Interface
+### Step 10. Testing Interface
 
 Create another environment variable (see Step #4)
 * Set "Variable name": `_NO_DEBUG_HEAP`
