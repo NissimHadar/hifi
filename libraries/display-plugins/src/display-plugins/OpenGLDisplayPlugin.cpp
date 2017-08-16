@@ -5,6 +5,7 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
+#ifndef HIFI_UWP
 #include "OpenGLDisplayPlugin.h"
 
 #include <condition_variable>
@@ -171,7 +172,7 @@ public:
                             QThread::setPriority(newPlugin->getPresentPriority());
                             bool wantVsync = newPlugin->wantVsync();
                             _context->makeCurrent();
-#if defined Q_OS_WIN && !defined HIFI_UWP
+#if defined(Q_OS_WIN)
                             wglSwapIntervalEXT(wantVsync ? 1 : 0);
                             hasVsync = wglGetSwapIntervalEXT() != 0;
 #elif defined(Q_OS_MAC)
@@ -862,13 +863,12 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         GLuint targetTexture = target->texture();
         GLuint fbo[2] {0, 0};
 
-#ifndef HIFI_UWP
         // need mipmaps for blitting texture
         glGenerateTextureMipmap(sourceTexture);
 
         // create 2 fbos (one for initial texture, second for scaled one)
         glCreateFramebuffers(2, fbo);
-#endif
+
         // setup source fbo
         glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sourceTexture, 0);
@@ -882,7 +882,7 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-#ifndef HIFI_UWP
+
         // maintain aspect ratio, filling the width first if possible.  If that makes the height too
         // much, fill height instead. TODO: only do this when texture changes
         GLint newX = 0;
@@ -898,10 +898,10 @@ void OpenGLDisplayPlugin::copyTextureToQuickFramebuffer(NetworkTexturePointer ne
             newY = (target->height() - newHeight) / 2;
         }
         glBlitNamedFramebuffer(fbo[0], fbo[1], 0, 0, texWidth, texHeight, newX, newY, newX + newWidth, newY + newHeight, GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT, GL_NEAREST);
-#endif
+
         // don't delete the textures!
         glDeleteFramebuffers(2, fbo);
         *fenceSync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
     });
 }
-
+#endif //HIFI_UWP
