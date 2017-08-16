@@ -7,7 +7,7 @@
 //
 #include "DebugHmdDisplayPlugin.h"
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QtCore/QProcessEnvironment>
 #endif
 
@@ -16,7 +16,7 @@
 
 const QString DebugHmdDisplayPlugin::NAME("HMD Simulator");
 
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
 static bool enableDebugHmd = false;
 #else
 static const QString DEBUG_FLAG("HIFI_DEBUG_HMD");
@@ -56,7 +56,7 @@ bool DebugHmdDisplayPlugin::beginFrameRender(uint32_t frameIndex) {
 
 // DLL based display plugins MUST initialize GLEW inside the DLL code.
 void DebugHmdDisplayPlugin::customizeContext() {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     glewExperimental = true;
     glewInit();
 #endif
