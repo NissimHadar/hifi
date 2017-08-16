@@ -194,7 +194,8 @@ endif()
 
 if (UWP)
   # Use the OpenSSL version created with vcpkg
-  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_OPENSSL_PATH}/include")
+  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_PATH}/include")
+  message (STATUS "using vcpkg'ed version of OpenSSL")
 endif()
 
 # include OPENSSL
