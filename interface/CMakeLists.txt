@@ -191,6 +191,12 @@ if (WIN32 AND NOT UWP)
   add_dependency_external_projects(steamworks)
 endif()
 
+
+if (UWP)
+  # Use the OpenSSL version created with vcpkg
+  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_OPENSSL_PATH}/include")
+endif()
+
 # include OPENSSL
 include_directories(SYSTEM "${OPENSSL_INCLUDE_DIR}")
 
