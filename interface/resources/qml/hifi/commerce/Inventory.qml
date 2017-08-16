@@ -29,6 +29,28 @@ Rectangle {
     color: hifi.colors.baseGray;
     Hifi.QmlCommerce {
         id: commerce;
+        onBalanceResult: {
+            if (failureMessage.length) {
+                console.log("Failed to get balance", failureMessage);
+            } else {
+                hfcBalanceText.text = balance;
+            }
+        }
+        onInventoryResult: {
+            if (failureMessage.length) {
+                console.log("Failed to get inventory", failureMessage);
+            } else {
+                inventoryContentsList.model = inventory.assets;
+            }
+        }
+        onSecurityImageResult: {
+            securityImage.source = securityImageSelection.getImagePathFromImageID(imageID);
+        }
+    }
+
+    SecurityImageSelection {
+        id: securityImageSelection;
+        referrerURL: inventoryRoot.referrerURL;
     }
 
     //
@@ -37,11 +59,25 @@ Rectangle {
     Item {
         id: titleBarContainer;
         // Size
-        width: inventoryRoot.width;
+        width: parent.width;
         height: 50;
         // Anchors
         anchors.left: parent.left;
         anchors.top: parent.top;
+
+        // Security Image
+        Image {
+            id: securityImage;
+            // Anchors
+            anchors.top: parent.top;
+            anchors.left: parent.left;
+            anchors.leftMargin: 16;
+            height: parent.height - 5;
+            width: height;
+            anchors.verticalCenter: parent.verticalCenter;
+            fillMode: Image.PreserveAspectFit;
+            mipmap: true;
+        }
 
         // Title Bar text
         RalewaySemiBold {
@@ -50,13 +86,35 @@ Rectangle {
             // Text size
             size: hifi.fontSizes.overlayTitle;
             // Anchors
-            anchors.fill: parent;
+            anchors.top: parent.top;
+            anchors.left: securityImage.right;
             anchors.leftMargin: 16;
+            anchors.bottom: parent.bottom;
+            width: paintedWidth;
             // Style
             color: hifi.colors.lightGrayText;
             // Alignment
             horizontalAlignment: Text.AlignHLeft;
             verticalAlignment: Text.AlignVCenter;
+        }
+
+        // "Change Security Image" button
+        HifiControlsUit.Button {
+            id: changeSecurityImageButton;
+            color: hifi.buttons.black;
+            colorScheme: hifi.colorSchemes.dark;
+            anchors.top: parent.top;
+            anchors.topMargin: 3;
+            anchors.bottom: parent.bottom;
+            anchors.bottomMargin: 3;
+            anchors.right: parent.right;
+            anchors.rightMargin: 20;
+            width: 200;
+            text: "Change Security Image"
+            onClicked: {
+                securityImageSelection.isManuallyChangingSecurityImage = true;
+                securityImageSelection.visible = true;
+            }
         }
 
         // Separator
@@ -101,7 +159,7 @@ Rectangle {
         }
         RalewayRegular {
             id: hfcBalanceText;
-            text: commerce.balance();
+            text: "--";
             // Text size
             size: hfcBalanceTextLabel.size;
             // Anchors
@@ -152,13 +210,13 @@ Rectangle {
         }
         ListView {
             id: inventoryContentsList;
+            clip: true;
             // Anchors
             anchors.top: inventoryContentsLabel.bottom;
             anchors.topMargin: 8;
             anchors.left: parent.left;
             anchors.bottom: parent.bottom;
             width: parent.width;
-            model: commerce.inventory();
             delegate: Item {
                 width: parent.width;
                 height: 30;
@@ -168,7 +226,7 @@ Rectangle {
                     size: 20;
                     // Style
                     color: hifi.colors.blueAccent;
-                    text: modelData;
+                    text: modelData.title;
                     // Alignment
                     horizontalAlignment: Text.AlignHLeft;
                 }
@@ -176,7 +234,7 @@ Rectangle {
                     anchors.fill: parent;
                     hoverEnabled: enabled;
                     onClicked: {
-                        sendToScript({method: 'inventory_itemClicked', itemId: thisItemId.text});
+                        sendToScript({method: 'inventory_itemClicked', itemId: modelData.id});
                     }
                     onEntered: {
                         thisItemId.color = hifi.colors.blueHighlight;
@@ -247,6 +305,9 @@ Rectangle {
         switch (message.method) {
             case 'updateInventory':
                 referrerURL = message.referrerURL;
+                commerce.balance();
+                commerce.inventory();
+                commerce.getSecurityImage();
             break;
             default:
                 console.log('Unrecognized message from marketplaces.js:', JSON.stringify(message));
