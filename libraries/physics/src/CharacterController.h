@@ -64,7 +64,7 @@ public:
     virtual void preStep(btCollisionWorld *collisionWorld) override;
     virtual void playerStep(btCollisionWorld *collisionWorld, btScalar dt) override;
     virtual bool canJump() const override { assert(false); return false; } // never call this
-    virtual void jump() override;
+    virtual void jump(const btVector3& dir = btVector3()) override;
     virtual bool onGround() const override;
 
     void clearMotors();

@@ -327,7 +327,7 @@ void CharacterController::playerStep(btCollisionWorld* collisionWorld, btScalar 
     _ghost.setWorldTransform(_rigidBody->getWorldTransform());
 }
 
-void CharacterController::jump() {
+void CharacterController::jump(const btVector3& dir) {
     _pendingFlags |= PENDING_FLAG_JUMP;
 }
 

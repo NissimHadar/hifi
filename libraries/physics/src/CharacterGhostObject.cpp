@@ -40,6 +40,11 @@ void CharacterGhostObject::getCollisionGroupAndMask(int16_t& group, int16_t& mas
     mask = _collisionFilterMask;
 }
 
+void CharacterGhostObject::getCollisionGroupAndMask(int32_t& group, int32_t& mask) const {
+    group = _collisionFilterGroup;
+    mask = _collisionFilterMask;
+}
+
 void CharacterGhostObject::setRadiusAndHalfHeight(btScalar radius, btScalar halfHeight) {
     _radius = radius;
     _halfHeight = halfHeight;
