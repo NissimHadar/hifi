@@ -63,7 +63,7 @@ endif ()
 
 if (UWP)
   # Use the OpenSSL version created with vcpkg
-  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_OPENSSL_PATH}/include")
+  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_PATH}/include")
 else ()
   find_path(OPENSSL_INCLUDE_DIR NAMES openssl/ssl.h HINTS ${_OPENSSL_ROOT_HINTS_AND_PATHS} ${_OPENSSL_INCLUDEDIR}
     PATH_SUFFIXES include
