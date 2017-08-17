@@ -64,7 +64,14 @@ public:
     virtual void preStep(btCollisionWorld *collisionWorld) override;
     virtual void playerStep(btCollisionWorld *collisionWorld, btScalar dt) override;
     virtual bool canJump() const override { assert(false); return false; } // never call this
+
+// The vcpkg'ed version has a different signature
+#ifdef HIFI_UWP
     virtual void jump(const btVector3& dir = btVector3()) override;
+#else
+    virtual void jump() override;
+#endif
+
     virtual bool onGround() const override;
 
     void clearMotors();
