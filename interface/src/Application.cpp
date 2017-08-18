@@ -5989,7 +5989,11 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     DependencyManager::get<TabletScriptingInterface>().data()->setToolbarScriptingInterface(DependencyManager::get<ToolbarScriptingInterface>().data());
 
     scriptEngine->registerGlobalObject("Window", DependencyManager::get<WindowScriptingInterface>().data());
+
+#ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, CustomPromptResultToScriptValue, CustomPromptResultFromScriptValue);
+#endif
+
     scriptEngine->registerGetterSetter("location", LocationScriptingInterface::locationGetter,
                         LocationScriptingInterface::locationSetter, "Window");
     // register `location` on the global object.
