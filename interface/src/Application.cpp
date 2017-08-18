@@ -6033,8 +6033,11 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     scriptEngine->registerGlobalObject("Paths", DependencyManager::get<PathUtils>().data());
 
     scriptEngine->registerGlobalObject("HMD", DependencyManager::get<HMDScriptingInterface>().data());
+
+#ifndef HIFI_UWP
     scriptEngine->registerFunction("HMD", "getHUDLookAtPosition2D", HMDScriptingInterface::getHUDLookAtPosition2D, 0);
     scriptEngine->registerFunction("HMD", "getHUDLookAtPosition3D", HMDScriptingInterface::getHUDLookAtPosition3D, 0);
+#endif
 
     scriptEngine->registerGlobalObject("Scene", DependencyManager::get<SceneScriptingInterface>().data());
     scriptEngine->registerGlobalObject("Render", _renderEngine->getConfiguration().get());
