@@ -333,10 +333,10 @@ void initializeQmlEngine(QQmlEngine* engine, QQuickWindow* window) {
 
 #ifndef HIFI_UWP
     rootContext->setContextProperty("FileTypeProfile", new FileTypeProfile(rootContext));
-#endif
-
     rootContext->setContextProperty("HFWebEngineProfile", new HFWebEngineProfile(rootContext));
     rootContext->setContextProperty("HFTabletWebEngineProfile", new HFTabletWebEngineProfile(rootContext));
+#endif
+
     rootContext->setContextProperty("Paths", DependencyManager::get<PathUtils>().data());
 }
 
