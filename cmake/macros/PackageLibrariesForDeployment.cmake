@@ -20,15 +20,33 @@ macro(PACKAGE_LIBRARIES_FOR_DEPLOYMENT)
     set(PLUGIN_PATH "plugins")
 
     # add a post-build command to copy DLLs beside the executable
-    add_custom_command(
-      TARGET ${TARGET_NAME}
-      POST_BUILD
-      COMMAND ${CMAKE_COMMAND}
-        -DBUNDLE_EXECUTABLE="$<TARGET_FILE:${TARGET_NAME}>"
-        -DBUNDLE_PLUGIN_DIR="$<TARGET_FILE_DIR:${TARGET_NAME}>/${PLUGIN_PATH}"
-        -P "${CMAKE_CURRENT_BINARY_DIR}/FixupBundlePostBuild.cmake"
-    )
-
+    if (UWP)
+      # bullet
+      add_custom_command(
+        TARGET ${TARGET_NAME}
+        POST_BUILD
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletCollision.dll .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletDynamics.dll .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletSoftBody.dll .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/LinearMath.dll .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy C:/Qt/5.9.1/winrt_x64_msvc2017/bin .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/tbb/project/src/tbb/bin/intel64/vc14 .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/nvtt/project/src/nvtt/Release/x64 .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/quazip/project/lib .
+        COMMAND if exist "C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64" "C:/Program Files/CMake/bin/cmake.exe" -E copy- C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64 .
+      )
+      
+    else ()
+      add_custom_command(
+        TARGET ${TARGET_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND}
+          -DBUNDLE_EXECUTABLE="$<TARGET_FILE:${TARGET_NAME}>"
+          -DBUNDLE_PLUGIN_DIR="$<TARGET_FILE_DIR:${TARGET_NAME}>/${PLUGIN_PATH}"
+          -P "${CMAKE_CURRENT_BINARY_DIR}/FixupBundlePostBuild.cmake"
+      )
+    endif ()
+    
     find_program(WINDEPLOYQT_COMMAND windeployqt PATHS ${QT_DIR}/bin NO_DEFAULT_PATH)
 
     if (NOT WINDEPLOYQT_COMMAND)
