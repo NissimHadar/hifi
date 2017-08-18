@@ -12,7 +12,7 @@
 
 #include <QtCore/QObject>
 
-#ifdef HIFI_UWP
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 #endif
 
@@ -23,12 +23,19 @@ namespace controller {
 class ScriptConditional : public QObject, public Conditional {
     Q_OBJECT;
 public:
+#ifdef HIFI_UWP
+    ScriptConditional() {}
+#else
     ScriptConditional(const QScriptValue& callable) : _callable(callable) { }
+#endif
     virtual bool satisfied() override;
 protected:
     Q_INVOKABLE void updateValue();
 private:
+#ifndef HIFI_UWP
     QScriptValue _callable;
+#endif
+
     bool _lastValue { false };
 };
 

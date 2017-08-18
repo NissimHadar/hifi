@@ -25,6 +25,7 @@ void ScriptEndpoint::updateValue() {
         return;
     }
 
+#ifndef HIFI_UWP
     QScriptValue result = _callable.call();
 
     // If the callable ever returns a non-number, we assume it's a pose
@@ -35,6 +36,7 @@ void ScriptEndpoint::updateValue() {
         Pose::fromScriptValue(result, _lastPoseRead);
         _returnPose = true;
     }
+#endif
 }
 
 void ScriptEndpoint::apply(float value, const Pointer& source) {
@@ -52,8 +54,10 @@ void ScriptEndpoint::internalApply(float value, int sourceID) {
             Q_ARG(int, sourceID));
         return;
     }
+#ifndef HIFI_UWP
     _callable.call(QScriptValue(),
         QScriptValueList({ QScriptValue(value), QScriptValue(sourceID) }));
+#endif
 }
 
 Pose ScriptEndpoint::peekPose() const {
@@ -66,8 +70,10 @@ void ScriptEndpoint::updatePose() {
         QMetaObject::invokeMethod(this, "updatePose", Qt::QueuedConnection);
         return;
     }
+#ifndef HIFI_UWP
     QScriptValue result = _callable.call();
     Pose::fromScriptValue(result, _lastPoseRead);
+#endif
 }
 
 void ScriptEndpoint::apply(const Pose& newPose, const Pointer& source) {
@@ -85,6 +91,8 @@ void ScriptEndpoint::internalApply(const Pose& newPose, int sourceID) {
             Q_ARG(int, sourceID));
         return;
     }
+#ifndef HIFI_UWP
     _callable.call(QScriptValue(),
         QScriptValueList({ Pose::toScriptValue(_callable.engine(), newPose), QScriptValue(sourceID) }));
+#endif
 }

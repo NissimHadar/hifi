@@ -30,11 +30,13 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptContextInfo>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptValueIterator>
 
 #include <QtScriptTools/QScriptEngineDebugger>
+#endif
 
 #include <shared/QtHelpers.h>
 #include <AudioConstants.h>
@@ -257,15 +259,19 @@ void ScriptEngine::runDebuggable() {
     init();
     _isRunning = true;
     _debuggable = true;
+#ifndef HIFI_UWP
     _debugger = new QScriptEngineDebugger(this);
     _debugger->attachTo(this);
+#endif
 
     QMenu* parentMenu = scriptDebugMenu;
     QMenu* scriptMenu { nullptr };
     if (parentMenu) {
         ++scriptMenuCount;
         scriptMenu = parentMenu->addMenu(_fileNameString);
+#ifndef HIFI_UWP
         scriptMenu->addMenu(_debugger->createStandardMenu(qApp->activeWindow()));
+#endif
     } else {
         qWarning() << "Unable to add script debug menu";
     }
@@ -577,6 +583,7 @@ void ScriptEngine::resetModuleCache(bool deleteScriptCache) {
     auto cacheMeta = jsRequire.data();
 
     if (deleteScriptCache) {
+#ifndef HIFI_UWP
         QScriptValueIterator it(cache);
         while (it.hasNext()) {
             it.next();
@@ -586,6 +593,7 @@ void ScriptEngine::resetModuleCache(bool deleteScriptCache) {
             qCDebug(scriptengine) << "resetModuleCache(true) -- staging " << it.name() << " for cache reset at next require";
             cacheMeta.setProperty(it.name(), true);
         }
+#endif
     }
     cache = newObject();
     if (!cacheMeta.isObject()) {
@@ -617,7 +625,11 @@ void ScriptEngine::init() {
     registerEventTypes(this);
     registerMenuItemProperties(this);
     registerAnimationTypes(this);
+
+#ifndef HIFI_UWP
     registerAvatarTypes(this);
+#endif
+
     registerAudioMetaTypes(this);
 
     qScriptRegisterMetaType(this, EntityPropertyFlagsToScriptValue, EntityPropertyFlagsFromScriptValue);
@@ -625,7 +637,11 @@ void ScriptEngine::init() {
     qScriptRegisterMetaType(this, EntityItemIDtoScriptValue, EntityItemIDfromScriptValue);
     qScriptRegisterMetaType(this, RayToEntityIntersectionResultToScriptValue, RayToEntityIntersectionResultFromScriptValue);
     qScriptRegisterMetaType(this, RayToAvatarIntersectionResultToScriptValue, RayToAvatarIntersectionResultFromScriptValue);
+
+#ifndef HIFI_UWP
     qScriptRegisterMetaType(this, AvatarEntityMapToScriptValue, AvatarEntityMapFromScriptValue);
+#endif
+
     qScriptRegisterSequenceMetaType<QVector<QUuid>>(this);
     qScriptRegisterSequenceMetaType<QVector<EntityItemID>>(this);
 
@@ -1362,11 +1378,14 @@ QUrl ScriptEngine::resolvePath(const QString& include) const {
     // to the first absolute URL in the JS scope chain
     QUrl parentURL;
     auto context = currentContext();
+
+#ifndef HIFI_UWP
     do {
         QScriptContextInfo contextInfo { context };
         parentURL = QUrl(contextInfo.fileName());
         context = context->parentContext();
     } while (parentURL.isRelative() && context);
+#endif
 
     if (parentURL.isRelative()) {
         // fallback to the "include" parent (if defined, this will already be absolute)
@@ -1505,10 +1524,14 @@ QScriptValue ScriptEngine::currentModule() {
     auto jsRequire = globalObject().property("Script").property("require");
     auto cache = jsRequire.property("cache");
     auto candidate = QScriptValue();
+
+#ifndef HIFI_UWP
     for (auto c = currentContext(); c && !candidate.isObject(); c = c->parentContext()) {
         QScriptContextInfo contextInfo { c };
         candidate = cache.property(contextInfo.fileName());
     }
+#endif
+
     if (!candidate.isObject()) {
         return QScriptValue();
     }

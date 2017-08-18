@@ -6,8 +6,10 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
+#endif
 
 #include <RegisteredMetaTypes.h>
 
