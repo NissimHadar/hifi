@@ -17,7 +17,9 @@
 
 #include <glm/glm.hpp>
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptEngine>
+#endif
 
 #include <shared/types/AnimationLoop.h> // for Animation, AnimationCache, and AnimationPointer classes
 #include "EntityItemPropertiesMacros.h"
