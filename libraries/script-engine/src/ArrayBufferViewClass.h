@@ -14,11 +14,14 @@
 
 #include <QScriptClass>
 #include <QtCore/QObject>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptClass>
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptString>
 #include <QtScript/QScriptValue>
+#endif
 
 #include "ScriptEngine.h"
 
