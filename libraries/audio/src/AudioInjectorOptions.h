@@ -12,7 +12,11 @@
 #ifndef hifi_AudioInjectorOptions_h
 #define hifi_AudioInjectorOptions_h
 
+#ifdef HIFI_UWP
+#include <QtCore>
+#else
 #include <QtScript/qscriptengine.h>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -31,9 +35,10 @@ public:
     float secondOffset;
 };
 
-Q_DECLARE_METATYPE(AudioInjectorOptions);
+Q_DECLARE_METATYPE(AudioInjectorOptions); 
+#ifndef HIFI_UWP
 
 QScriptValue injectorOptionsToScriptValue(QScriptEngine* engine, const AudioInjectorOptions& injectorOptions);
 void injectorOptionsFromScriptValue(const QScriptValue& object, AudioInjectorOptions& injectorOptions);
-
+#endif
 #endif // hifi_AudioInjectorOptions_h
