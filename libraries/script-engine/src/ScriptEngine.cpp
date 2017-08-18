@@ -641,8 +641,10 @@ void ScriptEngine::init() {
 
     globalObject().setProperty("print", newFunction(debugPrint));
 
+#ifndef HIFI_UWP
     QScriptValue audioEffectOptionsConstructorValue = newFunction(AudioEffectOptions::constructor);
     globalObject().setProperty("AudioEffectOptions", audioEffectOptionsConstructorValue);
+#endif
 
     qScriptRegisterMetaType(this, injectorToScriptValue, injectorFromScriptValue);
     qScriptRegisterMetaType(this, inputControllerToScriptValue, inputControllerFromScriptValue);
