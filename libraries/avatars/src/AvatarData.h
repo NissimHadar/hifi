@@ -45,8 +45,12 @@ typedef unsigned long long quint64;
 #include <QUuid>
 #include <QVariantMap>
 #include <QVector>
+
+#ifdef HIFI_UWP
 #include <QtScript/QScriptable>
 #include <QtScript/QScriptValueIterator>
+#endif
+
 #include <QReadWriteLock>
 
 #include <JointData.h>

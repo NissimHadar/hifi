@@ -13,6 +13,7 @@
 #define hifi_AudioInjectorOptions_h
 
 #ifdef HIFI_UWP
+// Need this for Q_DECLARE_METATYPE
 #include <QtCore>
 #else
 #include <QtScript/qscriptengine.h>
