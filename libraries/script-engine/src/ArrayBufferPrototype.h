@@ -13,9 +13,16 @@
 #define hifi_ArrayBufferPrototype_h
 
 #include <QtCore/QObject>
-#include <QtScript/QScriptable>
 
+#ifndef HIFI_UWP
+#include <QtScript/QScriptable>
+#endif
+
+#ifdef HIFI_UWP
+class ArrayBufferPrototype : public QObject {
+#else
 class ArrayBufferPrototype : public QObject, public QScriptable {
+#endif
     Q_OBJECT
 public:
     ArrayBufferPrototype(QObject* parent = NULL);
