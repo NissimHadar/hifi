@@ -12,7 +12,9 @@
 
 #include <QtCore/QObject>
 
+#ifdef HIFI_UWP
 #include <QtScript/QScriptValue>
+#endif
 
 #include "../Conditional.h"
 
