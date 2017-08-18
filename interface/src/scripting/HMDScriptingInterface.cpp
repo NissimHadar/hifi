@@ -11,7 +11,9 @@
 
 #include "HMDScriptingInterface.h"
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptContext>
+#endif
 
 #include <shared/QtHelpers.h>
 #include <avatar/AvatarManager.h>
