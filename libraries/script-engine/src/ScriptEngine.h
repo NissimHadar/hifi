@@ -316,7 +316,11 @@ protected:
 
     ArrayBufferClass* _arrayBufferClass;
 
+#ifdef HIFI_UWP
+    AssetScriptingInterface _assetScriptingInterface{ };
+#else
     AssetScriptingInterface _assetScriptingInterface{ this };
+#endif
 
     std::function<bool()> _emitScriptUpdates{ []() { return true; }  };
 
