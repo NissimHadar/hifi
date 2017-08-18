@@ -162,7 +162,12 @@ ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const
     _scriptContents(scriptContents),
     _timerFunctionMap(),
     _fileNameString(fileNameString),
+
+#ifdef HIFI_UWP
+    _arrayBufferClass()
+#else    
     _arrayBufferClass(new ArrayBufferClass(this))
+#endif
 {
     DependencyManager::get<ScriptEngines>()->addScriptEngine(this);
 

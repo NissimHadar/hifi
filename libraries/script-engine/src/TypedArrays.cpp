@@ -39,11 +39,14 @@ TypedArray::TypedArray(ScriptEngine* scriptEngine, QString name) : ArrayBufferVi
     engine()->globalObject().setProperty(_name, _ctor);
 }
 
+#ifndef HIFI_UWP
 QScriptValue TypedArray::newInstance(quint32 length) {
     ArrayBufferClass* array = getScriptEngine()->getArrayBufferClass();
+
     QScriptValue buffer = array->newInstance(length * _bytesPerElement);
     return newInstance(buffer, 0, length);
 }
+#endif
 
 QScriptValue TypedArray::newInstance(QScriptValue array) {
     const QString ARRAY_LENGTH_HANDLE = "length";

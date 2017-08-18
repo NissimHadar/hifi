@@ -20,6 +20,11 @@
 
 static const QString CLASS_NAME = "ArrayBuffer";
 
+#ifdef HIFI_UWP
+ArrayBufferClass::ArrayBufferClass() {
+}
+#else
+
 Q_DECLARE_METATYPE(QByteArray*)
 
 ArrayBufferClass::ArrayBufferClass(ScriptEngine* scriptEngine) :
@@ -152,4 +157,4 @@ QScriptValue ArrayBufferClass::toScriptValue(QScriptEngine* engine, const QByteA
 void ArrayBufferClass::fromScriptValue(const QScriptValue& obj, QByteArray& ba) {
     ba = qvariant_cast<QByteArray>(obj.data().toVariant());
 }
-
+#endif
