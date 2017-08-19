@@ -19,6 +19,7 @@
 #include <shared/QtHelpers.h>
 #include "../OffscreenUi.h"
 
+#ifndef HIFI_UWP
 QScriptValue toolbarToScriptValue(QScriptEngine* engine, ToolbarProxy* const &in) {
     if (!in) {
         return engine->undefinedValue();
@@ -40,7 +41,7 @@ QScriptValue toolbarButtonToScriptValue(QScriptEngine* engine, ToolbarButtonProx
 void toolbarButtonFromScriptValue(const QScriptValue& value, ToolbarButtonProxy* &out) {
     out = qobject_cast<ToolbarButtonProxy*>(value.toQObject());
 }
-
+#endif
 
 ToolbarButtonProxy::ToolbarButtonProxy(QObject* qmlObject, QObject* parent) : QmlWrapper(qmlObject, parent) {
     Q_ASSERT(QThread::currentThread() == qApp->thread());
