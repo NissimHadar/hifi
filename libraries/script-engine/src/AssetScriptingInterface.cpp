@@ -11,7 +11,9 @@
 
 #include "AssetScriptingInterface.h"
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptEngine>
+#endif
 
 #include <AssetRequest.h>
 #include <AssetUpload.h>
