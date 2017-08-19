@@ -11,8 +11,11 @@
 #include <mutex>
 
 #include <QtCore/QThread>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
+#endif
 
 #include <QtQuick/QQuickItem>
 #include <QtQml/QQmlContext>
@@ -36,6 +39,7 @@ static const char* const TOOLWINDOW_PROPERTY = "toolWindow";
 static const uvec2 MAX_QML_WINDOW_SIZE { 1280, 720 };
 static const uvec2 MIN_QML_WINDOW_SIZE { 120, 80 };
 
+#ifndef HIFI_UWP
 QVariantMap QmlWindowClass::parseArguments(QScriptContext* context) {
     const auto argumentCount = context->argumentCount();
     QString title;
@@ -68,8 +72,7 @@ QVariantMap QmlWindowClass::parseArguments(QScriptContext* context) {
 
     return properties;
 }
-
-
+#endif
 
 // Method called by Qt scripts to create a new web window in the overlay
 #ifndef HIFI_UWP
