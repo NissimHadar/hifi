@@ -17,7 +17,9 @@ class QmlWebWindowClass : public QmlWindowClass {
     Q_PROPERTY(QString url READ getURL CONSTANT)
 
 public:
+#ifndef HIFI_UWP
     static QScriptValue constructor(QScriptContext* context, QScriptEngine* engine);
+#endif
 
 public slots:
     QString getURL();

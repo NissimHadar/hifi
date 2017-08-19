@@ -10,8 +10,10 @@
 
 #include <QtCore/QThread>
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
+#endif
 
 #include <shared/QtHelpers.h>
 #include "OffscreenUi.h"
@@ -20,6 +22,7 @@ static const char* const URL_PROPERTY = "source";
 static const char* const SCRIPT_PROPERTY = "scriptUrl";
 
 // Method called by Qt scripts to create a new web window in the overlay
+#ifndef HIFI_UWP
 QScriptValue QmlWebWindowClass::constructor(QScriptContext* context, QScriptEngine* engine) {
     auto properties = parseArguments(context);
     auto offscreenUi = DependencyManager::get<OffscreenUi>();
@@ -34,6 +37,7 @@ QScriptValue QmlWebWindowClass::constructor(QScriptContext* context, QScriptEngi
     connect(engine, &QScriptEngine::destroyed, retVal, &QmlWindowClass::deleteLater);
     return engine->newQObject(retVal);
 }
+#endif
 
 QString QmlWebWindowClass::getURL() {
     if (QThread::currentThread() != thread()) {
