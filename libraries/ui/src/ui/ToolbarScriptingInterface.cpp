@@ -10,8 +10,11 @@
 
 #include <QtCore/QThread>
 #include <QtQuick/QQuickItem>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
+#endif
 
 #include <shared/QtHelpers.h>
 #include "../OffscreenUi.h"
