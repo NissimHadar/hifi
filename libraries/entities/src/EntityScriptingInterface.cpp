@@ -1718,6 +1718,7 @@ void EntityScriptingInterface::getMeshes(QUuid entityID, QScriptValue callback) 
     MeshProxyList result;
     bool success = entity->getMeshes(result);
 
+#ifndef HIFI_UWP
     if (success) {
         QScriptValue resultAsScriptValue = meshesToScriptValue(callback.engine(), result);
         QScriptValueList args { resultAsScriptValue, true };
@@ -1726,6 +1727,7 @@ void EntityScriptingInterface::getMeshes(QUuid entityID, QScriptValue callback) 
         QScriptValueList args { callback.engine()->undefinedValue(), false };
         callback.call(QScriptValue(), args);
     }
+#endif
 }
 
 glm::mat4 EntityScriptingInterface::getEntityTransform(const QUuid& entityID) {

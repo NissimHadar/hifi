@@ -15,6 +15,7 @@
 #ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 #endif
+
 #include <QtQuick/QQuickItem>
 
 #include <GLMHelpers.h>

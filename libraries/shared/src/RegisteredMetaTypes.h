@@ -213,12 +213,13 @@ Q_DECLARE_METATYPE(MeshProxy*);
 class MeshProxyList : public QList<MeshProxy*> {}; // typedef and using fight with the Qt macros/templates, do this instead
 Q_DECLARE_METATYPE(MeshProxyList);
 
-
+#ifndef HIFI_UWP
 QScriptValue meshToScriptValue(QScriptEngine* engine, MeshProxy* const &in);
 void meshFromScriptValue(const QScriptValue& value, MeshProxy* &out);
 
 QScriptValue meshesToScriptValue(QScriptEngine* engine, const MeshProxyList &in);
 void meshesFromScriptValue(const QScriptValue& value, MeshProxyList &out);
+#endif
 
 class MeshFace {
 
@@ -233,10 +234,11 @@ public:
 Q_DECLARE_METATYPE(MeshFace)
 Q_DECLARE_METATYPE(QVector<MeshFace>)
 
+#ifndef HIFI_UWP
 QScriptValue meshFaceToScriptValue(QScriptEngine* engine, const MeshFace &meshFace);
 void meshFaceFromScriptValue(const QScriptValue &object, MeshFace& meshFaceResult);
 QScriptValue qVectorMeshFaceToScriptValue(QScriptEngine* engine, const QVector<MeshFace>& vector);
 void qVectorMeshFaceFromScriptValue(const QScriptValue& array, QVector<MeshFace>& result);
-
+#endif
 
 #endif // hifi_RegisteredMetaTypes_h
