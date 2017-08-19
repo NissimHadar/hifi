@@ -20,7 +20,9 @@
 #include <QtCore/QWaitCondition>
 #include <QtCore/QStringList>
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptEngine>
+#endif
 
 #include <AnimationCache.h>
 #include <AnimVariant.h>
