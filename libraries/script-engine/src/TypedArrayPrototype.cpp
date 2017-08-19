@@ -19,10 +19,15 @@ TypedArrayPrototype::TypedArrayPrototype(QObject* parent) : QObject(parent) {
 }
 
 QByteArray* TypedArrayPrototype::thisArrayBuffer() const {
+#ifdef HIFI_UWP
+    return new QByteArray();
+#else
     QScriptValue bufferObject = thisObject().data().property(BUFFER_PROPERTY_NAME);
     return qscriptvalue_cast<QByteArray*>(bufferObject.data());
+#endif
 }
 
+#ifndef HIFI_UWP
 void TypedArrayPrototype::set(QScriptValue array, qint32 offset) {
     TypedArray* typedArray = static_cast<TypedArray*>(parent());
     if (array.isArray() || typedArray) {
@@ -106,3 +111,4 @@ void TypedArrayPrototype::set(quint32 index, QScriptValue& value) {
         typedArray->setProperty(object, name, id, value);
     }
 }
+#endif
