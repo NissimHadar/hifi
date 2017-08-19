@@ -6000,8 +6000,10 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     scriptEngine->registerGetterSetter("location", LocationScriptingInterface::locationGetter,
                                        LocationScriptingInterface::locationSetter);
 
+#ifndef HIFI_UWP
     scriptEngine->registerFunction("OverlayWebWindow", QmlWebWindowClass::constructor);
     scriptEngine->registerFunction("OverlayWindow", QmlWindowClass::constructor);
+#endif
 
     scriptEngine->registerGlobalObject("Menu", MenuScriptingInterface::getInstance());
     scriptEngine->registerGlobalObject("Stats", Stats::getInstance());

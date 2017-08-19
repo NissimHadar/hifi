@@ -72,6 +72,7 @@ QVariantMap QmlWindowClass::parseArguments(QScriptContext* context) {
 
 
 // Method called by Qt scripts to create a new web window in the overlay
+#ifndef HIFI_UWP
 QScriptValue QmlWindowClass::constructor(QScriptContext* context, QScriptEngine* engine) {
     auto properties = parseArguments(context);
     auto offscreenUi = DependencyManager::get<OffscreenUi>();
@@ -86,6 +87,7 @@ QScriptValue QmlWindowClass::constructor(QScriptContext* context, QScriptEngine*
     connect(engine, &QScriptEngine::destroyed, retVal, &QmlWindowClass::deleteLater);
     return engine->newQObject(retVal);
 }
+#endif
 
 QmlWindowClass::QmlWindowClass() {
 
