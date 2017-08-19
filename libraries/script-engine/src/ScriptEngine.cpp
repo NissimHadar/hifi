@@ -626,7 +626,10 @@ void ScriptEngine::init() {
 
     // register various meta-types
     registerMetaTypes(this);
+
+#ifndef HIFI_UWP
     registerMIDIMetaTypes(this);
+#endif    
     registerEventTypes(this);
     registerMenuItemProperties(this);
     registerAnimationTypes(this);
