@@ -41,7 +41,9 @@ void ScriptUUID::print(const QString& label, const QUuid& id) {
     QString message = QString("%1 %2").arg(qPrintable(label));
     message = message.arg(id.toString());
     qCDebug(scriptengine) << message;
+#ifndef HIFI_UWP
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->print(message);
     }
+#endif
 }
