@@ -701,6 +701,8 @@ void ScriptEngine::init() {
     registerGlobalObject("Messages", DependencyManager::get<MessagesClient>().data());
     registerGlobalObject("File", new FileScriptingInterface(this));
     registerGlobalObject("console", &_consoleScriptingInterface);
+
+#ifndef HIFI_UWP
     registerFunction("console", "info", ConsoleScriptingInterface::info, currentContext()->argumentCount());
     registerFunction("console", "log", ConsoleScriptingInterface::log, currentContext()->argumentCount());
     registerFunction("console", "debug", ConsoleScriptingInterface::debug, currentContext()->argumentCount());
@@ -711,6 +713,7 @@ void ScriptEngine::init() {
     registerFunction("console", "group", ConsoleScriptingInterface::group, 1);
     registerFunction("console", "groupCollapsed", ConsoleScriptingInterface::groupCollapsed, 1);
     registerFunction("console", "groupEnd", ConsoleScriptingInterface::groupEnd, 0);
+#endif
 
     qScriptRegisterMetaType(this, animVarMapToScriptValue, animVarMapFromScriptValue);
     qScriptRegisterMetaType(this, resultHandlerToScriptValue, resultHandlerFromScriptValue);
