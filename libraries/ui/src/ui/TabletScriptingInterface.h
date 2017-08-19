@@ -14,9 +14,13 @@
 
 #include <QObject>
 #include <QVariant>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 #include <QScriptEngine>
 #include <QScriptValueIterator>
+#endif
+
 #include <QQuickItem>
 #include <QUuid>
 
