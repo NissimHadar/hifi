@@ -37,9 +37,12 @@ bool BaseScriptEngine::IS_THREADSAFE_INVOCATION(const QThread *thread, const QSt
 
 // engine-aware JS Error copier and factory
 QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QString& type) {
+#ifndef HIFI_UWP
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+#endif
+
     auto other = _other;
     if (other.isString()) {
         other = newObject();
@@ -74,9 +77,12 @@ QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QStri
 
 // check syntax and when there are issues returns an actual "SyntaxError" with the details
 QScriptValue BaseScriptEngine::lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber) {
+#ifndef HIFI_UWP
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+#endif
+
     const auto syntaxCheck = checkSyntax(sourceCode);
     if (syntaxCheck.state() != QScriptSyntaxCheckResult::Valid) {
         auto err = globalObject().property("SyntaxError")
@@ -98,6 +104,7 @@ QScriptValue BaseScriptEngine::lintScript(const QString& sourceCode, const QStri
     return QScriptValue();
 }
 
+#ifndef HIFI_UWP
 // this pulls from the best available information to create a detailed snapshot of the current exception
 QScriptValue BaseScriptEngine::cloneUncaughtException(const QString& extraDetail) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
@@ -106,6 +113,7 @@ QScriptValue BaseScriptEngine::cloneUncaughtException(const QString& extraDetail
     if (!hasUncaughtException()) {
         return unboundNullValue();
     }
+
     auto exception = uncaughtException();
     // ensure the error object is engine-local
     auto err = makeError(exception);
@@ -159,6 +167,7 @@ QScriptValue BaseScriptEngine::cloneUncaughtException(const QString& extraDetail
 #endif
     return err;
 }
+#endif
 
 QString BaseScriptEngine::formatException(const QScriptValue& exception, bool includeExtendedDetails) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
@@ -213,18 +222,25 @@ bool BaseScriptEngine::maybeEmitUncaughtException(const QString& debugHint) {
         return false;
     }
     if (!isEvaluating() && hasUncaughtException()) {
+
+#ifndef HIFI_UWP
         emit unhandledException(cloneUncaughtException(debugHint));
+#endif
+
         clearExceptions();
         return true;
     }
     return false;
 }
 
+#ifndef HIFI_UWP
 QScriptValue BaseScriptEngine::evaluateInClosure(const QScriptValue& closure, const QScriptProgram& program) {
     PROFILE_RANGE(script, "evaluateInClosure");
+
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+
     const auto fileName = program.fileName();
     const auto shortName = QUrl(fileName).fileName();
 
@@ -278,6 +294,7 @@ QScriptValue BaseScriptEngine::evaluateInClosure(const QScriptValue& closure, co
 
     return result;
 }
+#endif
 
 // Lambda
 #ifndef HIFI_UWP

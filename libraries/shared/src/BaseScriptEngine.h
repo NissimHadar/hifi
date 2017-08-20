@@ -23,8 +23,10 @@ public:
     static const QString SCRIPT_EXCEPTION_FORMAT;
     static const QString SCRIPT_BACKTRACE_SEP;
 
+#ifndef HIFI_UWP
     // threadsafe "unbound" version of QScriptEngine::nullValue()
     static const QScriptValue unboundNullValue() { return QScriptValue(0, QScriptValue::NullValue); }
+#endif
 
     BaseScriptEngine() {}
 
@@ -32,8 +34,10 @@ public:
     Q_INVOKABLE QScriptValue makeError(const QScriptValue& other = QScriptValue(), const QString& type = "Error");
     Q_INVOKABLE QString formatException(const QScriptValue& exception, bool includeExtendedDetails);
 
+#ifndef HIFI_UWP
     QScriptValue cloneUncaughtException(const QString& detail = QString());
     QScriptValue evaluateInClosure(const QScriptValue& locals, const QScriptProgram& program);
+#endif
 
     // if there is a pending exception and we are at the top level (non-recursive) stack frame, this emits and resets it
     bool maybeEmitUncaughtException(const QString& debugHint = QString());

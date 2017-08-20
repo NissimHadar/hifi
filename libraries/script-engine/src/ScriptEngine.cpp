@@ -174,7 +174,11 @@ ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const
     connect(this, &QScriptEngine::signalHandlerException, this, [this](const QScriptValue& exception) {
         if (hasUncaughtException()) {
             // the engine's uncaughtException() seems to produce much better stack traces here
+
+#ifndef HIFI_UWP
             emit unhandledException(cloneUncaughtException("signalHandlerException"));
+#endif
+
             clearExceptions();
         } else {
             // ... but may not always be available -- so if needed we fallback to the passed exception
@@ -1193,7 +1197,11 @@ void ScriptEngine::run() {
         if (!isEvaluating() && hasUncaughtException()) {
             qCWarning(scriptengine) << __FUNCTION__ << "---------- UNCAUGHT EXCEPTION --------";
             qCWarning(scriptengine) << "runInThread" << uncaughtException().toString();
+
+#ifndef HIFI_UWP
             emit unhandledException(cloneUncaughtException(__FUNCTION__));
+#endif
+
             clearExceptions();
         }
     }
@@ -1545,9 +1553,13 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
 
 // retrieves the current parent module from the JS scope chain
 QScriptValue ScriptEngine::currentModule() {
+#ifndef HIFI_UWP
+
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+#endif
+
     auto jsRequire = globalObject().property("Script").property("require");
     auto cache = jsRequire.property("cache");
     auto candidate = QScriptValue();
@@ -1687,13 +1699,20 @@ QScriptValue ScriptEngine::instantiateModule(const QScriptValue& module, const Q
     if (module.property("content-type").toString() == "application/json") {
         qCDebug(scriptengine_module) << "... parsing as JSON";
         closure.setProperty("__json", sourceCode);
+
+#ifndef HIFI_UWP
         result = evaluateInClosure(closure, { "module.exports = JSON.parse(__json)", modulePath });
+#endif
+
     } else {
         // scoped vars for consistency with Node.js
         closure.setProperty("require", module.property("require"));
         closure.setProperty("__filename", modulePath, READONLY_HIDDEN_PROP_FLAGS);
         closure.setProperty("__dirname", QString(modulePath).replace(QRegExp("/[^/]*$"), ""), READONLY_HIDDEN_PROP_FLAGS);
+
+#ifndef HIFI_UWP
         result = evaluateInClosure(closure, { sourceCode, modulePath });
+#endif
     }
     maybeEmitUncaughtException(__FUNCTION__);
     return result;
@@ -2315,7 +2334,11 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
         testConstructor = sandbox.evaluate(program);
 
         if (sandbox.hasUncaughtException()) {
+
+#ifndef HIFI_UWP
             exception = sandbox.cloneUncaughtException(QString("(preflight %1)").arg(entityID.toString()));
+#endif
+
             sandbox.clearExceptions();
         } else if (testConstructor.isError()) {
             exception = testConstructor;
@@ -2367,7 +2390,10 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
         entityScriptObject = entityScriptConstructor.construct();
 
         if (hasUncaughtException()) {
+#ifndef HIFI_UWP
             entityScriptObject = cloneUncaughtException("(construct " + entityID.toString() + ")");
+#endif
+
             clearExceptions();
         }
     };
