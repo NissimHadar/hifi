@@ -2319,6 +2319,7 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
     }
 
     // SYNTAX ERRORS
+#ifndef HIFI_UWP
     auto syntaxError = lintScript(contents, fileName);
     if (syntaxError.isError()) {
         auto message = syntaxError.property("formatted").toString();
@@ -2330,6 +2331,8 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
         emit unhandledException(syntaxError);
         return;
     }
+#endif
+
     QScriptProgram program { contents, fileName };
     if (program.isNull()) {
         setError("Bad program (isNull)", EntityScriptStatus::ERROR_RUNNING_SCRIPT);

@@ -77,13 +77,12 @@ QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QStri
 }
 #endif
 
+#ifndef HIFI_UWP
 // check syntax and when there are issues returns an actual "SyntaxError" with the details
 QScriptValue BaseScriptEngine::lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber) {
-#ifndef HIFI_UWP
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
-#endif
 
     const auto syntaxCheck = checkSyntax(sourceCode);
     if (syntaxCheck.state() != QScriptSyntaxCheckResult::Valid) {
@@ -106,7 +105,6 @@ QScriptValue BaseScriptEngine::lintScript(const QString& sourceCode, const QStri
     return QScriptValue();
 }
 
-#ifndef HIFI_UWP
 // this pulls from the best available information to create a detailed snapshot of the current exception
 QScriptValue BaseScriptEngine::cloneUncaughtException(const QString& extraDetail) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {

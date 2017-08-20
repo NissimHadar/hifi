@@ -30,9 +30,9 @@ public:
 
     BaseScriptEngine() {}
 
+#ifndef HIFI_UWP
     Q_INVOKABLE QScriptValue lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber = 1);
 
-#ifndef HIFI_UWP
     Q_INVOKABLE QScriptValue makeError(const QScriptValue& other = QScriptValue(), const QString& type = "Error");
     Q_INVOKABLE QString formatException(const QScriptValue& exception, bool includeExtendedDetails);
 
