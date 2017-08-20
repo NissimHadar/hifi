@@ -5998,7 +5998,6 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
 #ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, CustomPromptResultToScriptValue, CustomPromptResultFromScriptValue);
-#endif
 
     scriptEngine->registerGetterSetter("location", LocationScriptingInterface::locationGetter,
                         LocationScriptingInterface::locationSetter, "Window");
@@ -6006,7 +6005,6 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     scriptEngine->registerGetterSetter("location", LocationScriptingInterface::locationGetter,
                                        LocationScriptingInterface::locationSetter);
 
-#ifndef HIFI_UWP
     scriptEngine->registerFunction("OverlayWebWindow", QmlWebWindowClass::constructor);
     scriptEngine->registerFunction("OverlayWindow", QmlWindowClass::constructor);
 #endif

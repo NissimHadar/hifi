@@ -745,6 +745,7 @@ void ScriptEngine::init() {
     registerGlobalObject("UserActivityLogger", DependencyManager::get<UserActivityLoggerScriptingInterface>().data());
 }
 
+#ifndef HIFI_UWP
 void ScriptEngine::registerValue(const QString& valueName, QScriptValue value) {
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
@@ -774,6 +775,7 @@ void ScriptEngine::registerValue(const QString& valueName, QScriptValue value) {
         partObject = partObject.property(pathPart);
     }
 }
+#endif
 
 void ScriptEngine::registerGlobalObject(const QString& name, QObject* object) {
     if (QThread::currentThread() != thread()) {
@@ -799,6 +801,7 @@ void ScriptEngine::registerGlobalObject(const QString& name, QObject* object) {
     }
 }
 
+#ifndef HIFI_UWP
 void ScriptEngine::registerFunction(const QString& name, QScriptEngine::FunctionSignature functionSignature, int numArguments) {
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
@@ -903,6 +906,8 @@ void ScriptEngine::removeEventHandler(const EntityItemID& entityID, const QStrin
         }
     }
 }
+#endif
+
 // Register the handler.
 void ScriptEngine::addEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler) {
     if (QThread::currentThread() != thread()) {
@@ -936,6 +941,7 @@ void ScriptEngine::addEventHandler(const EntityItemID& entityID, const QString& 
             _registeredHandlers.remove(entityID);
         });
 
+#ifndef HIFI_UWP
         // Two common cases of event handler, differing only in argument signature.
         using SingleEntityHandler = std::function<void(const EntityItemID&)>;
         auto makeSingleEntityHandler = [this](QString eventName) -> SingleEntityHandler {
@@ -975,6 +981,7 @@ void ScriptEngine::addEventHandler(const EntityItemID& entityID, const QString& 
         connect(entities.data(), &EntityScriptingInterface::hoverLeaveEntity, this, makePointerHandler("hoverLeaveEntity"));
 
         connect(entities.data(), &EntityScriptingInterface::collisionWithEntity, this, makeCollisionHandler("collisionWithEntity"));
+#endif
     }
     if (!_registeredHandlers.contains(entityID)) {
         _registeredHandlers[entityID] = RegisteredEventHandlers();
@@ -984,6 +991,7 @@ void ScriptEngine::addEventHandler(const EntityItemID& entityID, const QString& 
     handlersForEvent << handlerData; // Note that the same handler can be added many times. See removeEntityEventHandler().
 }
 
+#ifndef HIFI_UWP
 // this is not redundant -- the version in BaseScriptEngine is specifically not Q_INVOKABLE
 QScriptValue ScriptEngine::evaluateInClosure(const QScriptValue& closure, const QScriptProgram& program) {
     return BaseScriptEngine::evaluateInClosure(closure, program);
@@ -1034,7 +1042,7 @@ QScriptValue ScriptEngine::evaluate(const QString& sourceCode, const QString& fi
     }
     return result;
 }
-
+#endif
 void ScriptEngine::run() {
     auto filenameParts = _fileNameString.split("/");
     auto name = filenameParts.size() > 0 ? filenameParts[filenameParts.size() - 1] : "unknown";
@@ -1317,7 +1325,10 @@ void ScriptEngine::timerFired() {
     if (timerData.function.isValid()) {
         PROFILE_RANGE(script, __FUNCTION__);
         auto preTimer = p_high_resolution_clock::now();
+
+#ifndef HIFI_UWP
         callWithEnvironment(timerData.definingEntityIdentifier, timerData.definingSandboxURL, timerData.function, timerData.function, QScriptValueList());
+#endif
         auto postTimer = p_high_resolution_clock::now();
         auto elapsed = (postTimer - preTimer);
         _totalTimerExecution += std::chrono::duration_cast<std::chrono::microseconds>(elapsed);
@@ -1686,6 +1697,7 @@ QScriptValue ScriptEngine::instantiateModule(const QScriptValue& module, const Q
     return result;
 }
 
+#ifndef HIFI_UWP
 // CommonJS/Node.js like require/module support
 QScriptValue ScriptEngine::require(const QString& moduleId) {
     qCDebug(scriptengine_module) << "ScriptEngine::require(" << moduleId.left(MAX_DEBUG_VALUE_LENGTH) << ")";
@@ -1901,6 +1913,7 @@ void ScriptEngine::include(const QString& includeFile, QScriptValue callback) {
     urls.append(includeFile);
     include(urls, callback);
 }
+#endif
 
 // NOTE: The load() command is similar to the include() command except that it loads the script
 // as a stand-alone script. To accomplish this, the ScriptEngine class just emits a signal which
@@ -1930,6 +1943,7 @@ void ScriptEngine::load(const QString& loadFile) {
     }
 }
 
+#ifndef HIFI_UWP
 // Look up the handler associated with eventName and entityID. If found, evalute the argGenerator thunk and call the handler with those args
 void ScriptEngine::forwardHandlerCall(const EntityItemID& entityID, const QString& eventName, QScriptValueList eventHandlerArgs) {
     if (QThread::currentThread() != thread()) {
@@ -1951,10 +1965,14 @@ void ScriptEngine::forwardHandlerCall(const EntityItemID& entityID, const QStrin
             // and the entity scripts may be for entities other than the one this is a handler for.
             // Fortunately, the definingEntityIdentifier captured the entity script id (if any) when the handler was added.
             CallbackData& handler = handlersForEvent[i];
+
+#ifndef HIFI_UWP
             callWithEnvironment(handler.definingEntityIdentifier, handler.definingSandboxURL, handler.function, QScriptValue(), eventHandlerArgs);
+#endif
         }
     }
 }
+#endif
 
 int ScriptEngine::getNumRunningEntityScripts() const {
     int sum = 0;
@@ -2504,12 +2522,14 @@ void ScriptEngine::doWithEnvironment(const EntityItemID& entityID, const QUrl& s
     currentSandboxURL = oldSandboxURL;
 }
 
+#ifndef HIFI_UWP
 void ScriptEngine::callWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, QScriptValue function, QScriptValue thisObject, QScriptValueList args) {
     auto operation = [&]() {
         function.call(thisObject, args);
     };
     doWithEnvironment(entityID, sandboxURL, operation);
 }
+#endif
 
 void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const QStringList& params) {
     if (QThread::currentThread() != thread()) {
@@ -2539,7 +2559,10 @@ void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QS
             QScriptValueList args;
             args << entityID.toScriptValue(this);
             args << qScriptValueFromSequence(this, params);
+
+#ifndef HIFI_UWP
             callWithEnvironment(entityID, details.definingSandboxURL, entityScript.property(methodName), entityScript, args);
+#endif
         }
 
     }
@@ -2573,7 +2596,10 @@ void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QS
             QScriptValueList args;
             args << entityID.toScriptValue(this);
             args << event.toScriptValue(this);
+
+#ifndef HIFI_UWP
             callWithEnvironment(entityID, details.definingSandboxURL, entityScript.property(methodName), entityScript, args);
+#endif
         }
     }
 }
@@ -2608,7 +2634,10 @@ void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QS
             args << entityID.toScriptValue(this);
             args << otherID.toScriptValue(this);
             args << collisionToScriptValue(this, collision);
+
+#ifndef HIFI_UWP
             callWithEnvironment(entityID, details.definingSandboxURL, entityScript.property(methodName), entityScript, args);
+#endif
         }
     }
 }

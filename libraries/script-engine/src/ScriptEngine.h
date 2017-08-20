@@ -128,6 +128,7 @@ public:
     Q_INVOKABLE void registerGlobalObject(const QString& name, QObject* object);
 
     /// registers a global getter/setter
+#ifndef HIFI_UWP
     Q_INVOKABLE void registerGetterSetter(const QString& name, QScriptEngine::FunctionSignature getter,
                                           QScriptEngine::FunctionSignature setter, const QString& parent = QString(""));
 
@@ -145,6 +146,7 @@ public:
     Q_INVOKABLE QScriptValue evaluate(const QString& program, const QString& fileName, int lineNumber = 1); // this is also used by the script tool widget
 
     Q_INVOKABLE QScriptValue evaluateInClosure(const QScriptValue& locals, const QScriptProgram& program);
+#endif
 
     /// if the script engine is not already running, this will download the URL and start the process of seting it up
     /// to run... NOTE - this is used by Application currently to load the url. We don't really want it to be exposed
@@ -161,15 +163,23 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NOTE - these are intended to be public interfaces available to scripts
     Q_INVOKABLE void addEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
+
+#ifndef HIFI_UWP
     Q_INVOKABLE void removeEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
+#endif
 
     Q_INVOKABLE void load(const QString& loadfile);
+
+#ifndef HIFI_UWP
     Q_INVOKABLE void include(const QStringList& includeFiles, QScriptValue callback = QScriptValue());
     Q_INVOKABLE void include(const QString& includeFile, QScriptValue callback = QScriptValue());
-
+#endif
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MODULE related methods
+#ifndef HIFI_UWP
     Q_INVOKABLE QScriptValue require(const QString& moduleId);
+#endif
+
     Q_INVOKABLE void resetModuleCache(bool deleteScriptCache = false);
     QScriptValue currentModule();
     bool registerModuleWithParent(const QScriptValue& module, const QScriptValue& parent);
@@ -281,13 +291,20 @@ protected:
     void stopTimer(QTimer* timer);
 
     QHash<EntityItemID, RegisteredEventHandlers> _registeredHandlers;
+
+#ifndef HIFI_UWP
     void forwardHandlerCall(const EntityItemID& entityID, const QString& eventName, QScriptValueList eventHanderArgs);
+#endif
+
     Q_INVOKABLE void entityScriptContentAvailable(const EntityItemID& entityID, const QString& scriptOrURL, const QString& contents, bool isURL, bool success, const QString& status);
 
     EntityItemID currentEntityIdentifier {}; // Contains the defining entity script entity id during execution, if any. Empty for interface script execution.
     QUrl currentSandboxURL {}; // The toplevel url string for the entity script that loaded the code being executed, else empty.
     void doWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, std::function<void()> operation);
+
+#ifndef HIFI_UWP
     void callWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, QScriptValue function, QScriptValue thisObject, QScriptValueList args);
+#endif
 
     Context _context;
     QString _scriptContents;
