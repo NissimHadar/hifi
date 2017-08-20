@@ -217,21 +217,21 @@ bool BaseScriptEngine::raiseException(const QScriptValue& exception) {
 }
 #endif
 
+#ifndef HIFI_UWP
 bool BaseScriptEngine::maybeEmitUncaughtException(const QString& debugHint) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return false;
     }
     if (!isEvaluating() && hasUncaughtException()) {
 
-#ifndef HIFI_UWP
         emit unhandledException(cloneUncaughtException(debugHint));
-#endif
 
         clearExceptions();
         return true;
     }
     return false;
 }
+#endif
 
 #ifndef HIFI_UWP
 QScriptValue BaseScriptEngine::evaluateInClosure(const QScriptValue& closure, const QScriptProgram& program) {

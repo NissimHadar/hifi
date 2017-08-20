@@ -1078,7 +1078,10 @@ void ScriptEngine::run() {
     {
         PROFILE_RANGE(script, _fileNameString);
         evaluate(_scriptContents, _fileNameString);
+
+#ifndef HIFI_UWP
         maybeEmitUncaughtException(__FUNCTION__);
+#endif
     }
 #ifdef _WIN32
     // VS13 does not sleep_until unless it uses the system_clock, see:
@@ -1487,9 +1490,9 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
 
 #ifndef HIFI_UWP
         raiseException(error);
+        maybeEmitUncaughtException("require.resolve");
 #endif
 
-        maybeEmitUncaughtException("require.resolve");
         return QString();
     };
 
@@ -1575,7 +1578,10 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
 #endif
     }
 
+#ifndef HIFI_UWP
     maybeEmitUncaughtException(__FUNCTION__);
+#endif
+
     return url.toString();
 }
 
@@ -1742,7 +1748,11 @@ QScriptValue ScriptEngine::instantiateModule(const QScriptValue& module, const Q
         result = evaluateInClosure(closure, { sourceCode, modulePath });
 #endif
     }
+
+#ifndef HIFI_UWP
     maybeEmitUncaughtException(__FUNCTION__);
+#endif
+
     return result;
 }
 
@@ -2593,7 +2603,11 @@ void ScriptEngine::doWithEnvironment(const EntityItemID& entityID, const QUrl& s
 #else
     operation();
 #endif
+
+#ifndef HIFI_UWP
     maybeEmitUncaughtException(!entityID.isNull() ? entityID.toString() : __FUNCTION__);
+#endif
+
     currentEntityIdentifier = oldIdentifier;
     currentSandboxURL = oldSandboxURL;
 }

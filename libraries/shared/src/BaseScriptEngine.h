@@ -38,12 +38,10 @@ public:
 
     QScriptValue cloneUncaughtException(const QString& detail = QString());
     QScriptValue evaluateInClosure(const QScriptValue& locals, const QScriptProgram& program);
-#endif
 
     // if there is a pending exception and we are at the top level (non-recursive) stack frame, this emits and resets it
     bool maybeEmitUncaughtException(const QString& debugHint = QString());
 
-#ifndef HIFI_UWP
     // if the currentContext() is valid then throw the passed exception; otherwise, immediately emit it.
     // note: this is used in cases where C++ code might call into JS API methods directly
     bool raiseException(const QScriptValue& exception);
