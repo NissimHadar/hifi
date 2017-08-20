@@ -739,7 +739,11 @@ bool EntityPropertyMetadataRequest::script(EntityItemID entityID, QScriptValue h
             details["success"] = true;
             result = _engine->toScriptValue(details);
         }
+
+#ifndef HIFI_UWP
         callScopedHandlerObject(handler, err, result);
+#endif
+
         request->deleteLater();
     });
     auto entityScriptingInterface = DependencyManager::get<EntityScriptingInterface>();
@@ -750,7 +754,11 @@ bool EntityPropertyMetadataRequest::script(EntityItemID entityID, QScriptValue h
     });
     if (!request->isStarted()) {
         request->deleteLater();
+
+#ifndef HIFI_UWP
         callScopedHandlerObject(handler, _engine->makeError("Entities Scripting Provider unavailable", "InternalError"), QScriptValue());
+#endif
+
         return false;
     }
     return true;
@@ -784,13 +792,18 @@ bool EntityPropertyMetadataRequest::serverScripts(EntityItemID entityID, QScript
         } else {
             result = engine->toScriptValue(details);
         }
+
+#ifndef HIFI_UWP
         callScopedHandlerObject(handler, err, result);
+#endif
+
         request->deleteLater();
     });
     request->start();
     return true;
 }
 
+#ifndef HIFI_UWP
 bool EntityScriptingInterface::queryPropertyMetadata(QUuid entityID, QScriptValue property, QScriptValue scopeOrCallback, QScriptValue methodOrName) {
     auto name = property.toString();
     auto handler = makeScopedHandlerObject(scopeOrCallback, methodOrName);
@@ -834,6 +847,7 @@ bool EntityScriptingInterface::queryPropertyMetadata(QUuid entityID, QScriptValu
         return false;
     }
 }
+#endif
 
 bool EntityScriptingInterface::getServerScriptStatus(QUuid entityID, QScriptValue callback) {
     auto client = DependencyManager::get<EntityScriptClient>();

@@ -280,6 +280,7 @@ QScriptValue BaseScriptEngine::evaluateInClosure(const QScriptValue& closure, co
 }
 
 // Lambda
+#ifndef HIFI_UWP
 QScriptValue BaseScriptEngine::newLambdaFunction(std::function<QScriptValue(QScriptContext *, QScriptEngine*)> operation, const QScriptValue& data, const QScriptEngine::ValueOwnership& ownership) {
     auto lambda = new Lambda(this, operation, data);
     auto object = newQObject(lambda, ownership);
@@ -288,10 +289,15 @@ QScriptValue BaseScriptEngine::newLambdaFunction(std::function<QScriptValue(QScr
     call.setData(data);        // context->callee().data() will === data param
     return call;
 }
+#endif
+
+#ifndef HIFI_UWP
 QString Lambda::toString() const {
     return QString("[Lambda%1]").arg(data.isValid() ? " " + data.toString() : data.toString());
 }
+#endif
 
+#ifndef HIFI_UWP
 Lambda::~Lambda() {
 #ifdef DEBUG_JS_LAMBDA_FUNCS
     qDebug() << "~Lambda" << "this" << this;
@@ -310,7 +316,9 @@ QScriptValue Lambda::call() {
     }
     return operation(engine->currentContext(), engine);
 }
+#endif
 
+#ifndef HIFI_UWP
 QScriptValue makeScopedHandlerObject(QScriptValue scopeOrCallback, QScriptValue methodOrName) {
     auto engine = scopeOrCallback.engine();
     if (!engine) {
@@ -336,6 +344,7 @@ QScriptValue makeScopedHandlerObject(QScriptValue scopeOrCallback, QScriptValue 
 QScriptValue callScopedHandlerObject(QScriptValue handler, QScriptValue err, QScriptValue result) {
     return handler.property("callback").call(handler.property("scope"), QScriptValueList({ err, result }));
 }
+#endif
 
 #ifdef DEBUG_JS
 void BaseScriptEngine::_debugDump(const QString& header, const QScriptValue& object, const QString& footer) {
