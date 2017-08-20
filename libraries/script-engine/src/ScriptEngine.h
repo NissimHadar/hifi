@@ -47,7 +47,9 @@
 #include "SettingHandle.h"
 #include "Profile.h"
 
+#ifndef HIFI_UWP
 class QScriptEngineDebugger;
+#endif
 
 static const QString NO_SCRIPT("");
 
@@ -187,8 +189,11 @@ public:
     QVariantMap fetchModuleSource(const QString& modulePath, const bool forceDownload = false);
     QScriptValue instantiateModule(const QScriptValue& module, const QString& sourceCode);
 
+#ifndef HIFI_UWP
     Q_INVOKABLE QObject* setInterval(const QScriptValue& function, int intervalMS);
     Q_INVOKABLE QObject* setTimeout(const QScriptValue& function, int timeoutMS);
+#endif
+
     Q_INVOKABLE void clearInterval(QObject* timer) { stopTimer(reinterpret_cast<QTimer*>(timer)); }
     Q_INVOKABLE void clearTimeout(QObject* timer) { stopTimer(reinterpret_cast<QTimer*>(timer)); }
 
@@ -320,7 +325,11 @@ protected:
     QList<DeferredLoadEntity> _deferredEntityLoads;
 
     bool _isThreaded { false };
+
+#ifndef HIFI_UWP
     QScriptEngineDebugger* _debugger { nullptr };
+#endif
+
     bool _debuggable { false };
     qint64 _lastUpdate;
 

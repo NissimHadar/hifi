@@ -1361,6 +1361,7 @@ QObject* ScriptEngine::setupTimerWithInterval(const QScriptValue& function, int 
     return newTimer;
 }
 
+#ifndef HIFI_UWP
 QObject* ScriptEngine::setInterval(const QScriptValue& function, int intervalMS) {
     if (DependencyManager::get<ScriptEngines>()->isStopped()) {
         scriptWarningMessage("Script.setInterval() while shutting down is ignored... parent script:" + getFilename());
@@ -1378,6 +1379,7 @@ QObject* ScriptEngine::setTimeout(const QScriptValue& function, int timeoutMS) {
 
     return setupTimerWithInterval(function, timeoutMS, true);
 }
+#endif
 
 void ScriptEngine::stopTimer(QTimer *timer) {
     if (_timerFunctionMap.contains(timer)) {
