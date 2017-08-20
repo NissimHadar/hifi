@@ -31,10 +31,11 @@ public:
     BaseScriptEngine() {}
 
     Q_INVOKABLE QScriptValue lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber = 1);
+
+#ifndef HIFI_UWP
     Q_INVOKABLE QScriptValue makeError(const QScriptValue& other = QScriptValue(), const QString& type = "Error");
     Q_INVOKABLE QString formatException(const QScriptValue& exception, bool includeExtendedDetails);
 
-#ifndef HIFI_UWP
     QScriptValue cloneUncaughtException(const QString& detail = QString());
     QScriptValue evaluateInClosure(const QScriptValue& locals, const QScriptProgram& program);
 #endif
@@ -42,9 +43,11 @@ public:
     // if there is a pending exception and we are at the top level (non-recursive) stack frame, this emits and resets it
     bool maybeEmitUncaughtException(const QString& debugHint = QString());
 
+#ifndef HIFI_UWP
     // if the currentContext() is valid then throw the passed exception; otherwise, immediately emit it.
     // note: this is used in cases where C++ code might call into JS API methods directly
     bool raiseException(const QScriptValue& exception);
+#endif
 
     // helper to detect and log warnings when other code invokes QScriptEngine/BaseScriptEngine in thread-unsafe ways
     static bool IS_THREADSAFE_INVOCATION(const QThread *thread, const QString& method);

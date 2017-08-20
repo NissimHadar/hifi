@@ -734,7 +734,11 @@ bool EntityPropertyMetadataRequest::script(EntityItemID entityID, QScriptValue h
             if (!details.contains("message")) {
                 details["message"] = details["errorInfo"];
             }
+
+#ifndef HIFI_UWP
             err = _engine->makeError(_engine->toScriptValue(details));
+#endif
+
         } else {
             details["success"] = true;
             result = _engine->toScriptValue(details);
@@ -788,7 +792,11 @@ bool EntityPropertyMetadataRequest::serverScripts(EntityItemID entityID, QScript
             if (details["message"].toString().isEmpty()) {
                 details["message"] = "entity server script details not found";
             }
+
+#ifndef HIFI_UWP
             err = engine->makeError(engine->toScriptValue(details));
+#endif
+
         } else {
             result = engine->toScriptValue(details);
         }

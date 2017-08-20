@@ -282,7 +282,10 @@ protected:
     //   then inside of init() we just have to do "Script.require.resolve = Script._requireResolve;"
     Q_INVOKABLE QString _requireResolve(const QString& moduleId, const QString& relativeTo = QString());
 
+#ifndef HIFI_UWP
     QString logException(const QScriptValue& exception);
+#endif
+
     void timerFired();
     void stopAllTimers();
     void stopAllTimersForEntityScript(const EntityItemID& entityID);

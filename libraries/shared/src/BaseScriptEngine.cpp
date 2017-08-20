@@ -35,6 +35,7 @@ bool BaseScriptEngine::IS_THREADSAFE_INVOCATION(const QThread *thread, const QSt
     return false;
 }
 
+#ifndef HIFI_UWP
 // engine-aware JS Error copier and factory
 QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QString& type) {
 #ifndef HIFI_UWP
@@ -74,6 +75,7 @@ QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QStri
     }
     return err;
 }
+#endif
 
 // check syntax and when there are issues returns an actual "SyntaxError" with the details
 QScriptValue BaseScriptEngine::lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber) {
@@ -167,7 +169,6 @@ QScriptValue BaseScriptEngine::cloneUncaughtException(const QString& extraDetail
 #endif
     return err;
 }
-#endif
 
 QString BaseScriptEngine::formatException(const QScriptValue& exception, bool includeExtendedDetails) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
@@ -216,6 +217,7 @@ bool BaseScriptEngine::raiseException(const QScriptValue& exception) {
     }
     return false;
 }
+#endif
 
 bool BaseScriptEngine::maybeEmitUncaughtException(const QString& debugHint) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {

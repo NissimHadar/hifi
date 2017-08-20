@@ -149,11 +149,15 @@ QString encodeEntityIdIntoEntityUrl(const QString& url, const QString& entityID)
     return url + " [EntityID:" + entityID + "]";
 }
 
+#ifndef HIFI_UWP
 QString ScriptEngine::logException(const QScriptValue& exception) {
     auto message = formatException(exception, _enableExtendedJSExceptions.get());
+
     scriptErrorMessage(message);
+
     return message;
 }
+#endif
 
 int ScriptEngine::processLevelMaxRetries { ScriptRequest::MAX_RETRIES };
 ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const QString& fileNameString) :
@@ -193,6 +197,7 @@ ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const
     }
 
     // this is where all unhandled exceptions end up getting logged
+#ifndef HIFI_UWP
     connect(this, &BaseScriptEngine::unhandledException, this, [this](const QScriptValue& err) {
         auto output = err.engine() == this ? err : makeError(err);
         if (!output.property("detail").isValid()) {
@@ -200,6 +205,7 @@ ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const
         }
         logException(output);
     });
+#endif
 }
 
 QString ScriptEngine::getContext() const {
@@ -333,7 +339,11 @@ void ScriptEngine::runDebuggable() {
         if (!isEvaluating() && hasUncaughtException()) {
             qCWarning(scriptengine) << __FUNCTION__ << "---------- UNCAUGHT EXCEPTION --------";
             qCWarning(scriptengine) << "runDebuggable" << uncaughtException().toString();
+
+#ifndef HIFI_UWP
             logException(__FUNCTION__);
+#endif
+
             clearExceptions();
         }
     });
@@ -1474,7 +1484,11 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
     auto message = QString("Cannot find module '%1' (%2)").arg(displayId);
 
     auto throwResolveError = [&](const QScriptValue& error) -> QString {
+
+#ifndef HIFI_UWP
         raiseException(error);
+#endif
+
         maybeEmitUncaughtException("require.resolve");
         return QString();
     };
@@ -1484,7 +1498,10 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
     if (idLength < 1 || idLength > MAX_MODULE_ID_LENGTH) {
         auto details = QString("rejecting invalid module id size (%1 chars [1,%2])")
             .arg(idLength).arg(MAX_MODULE_ID_LENGTH);
+
+#ifndef HIFI_UWP
         return throwResolveError(makeError(message.arg(details), "RangeError"));
+#endif
     }
 
     // this regex matches: absolute, dotted or path-like URLs
@@ -1511,15 +1528,23 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
                 if (QFileInfo(unanchoredUrl.toLocalFile()).isFile()) {
                     auto msg = QString("relative module ids must be anchored; use './%1' instead")
                         .arg(moduleId);
+
+#ifndef HIFI_UWP
                     return throwResolveError(makeError(message.arg(msg)));
+#endif
+
                 }
             }
+#ifndef HIFI_UWP
             return throwResolveError(makeError(message.arg("system module not found")));
+#endif
         }
     }
 
     if (url.isRelative()) {
+#ifndef HIFI_UWP
         return throwResolveError(makeError(message.arg("could not resolve module id")));
+#endif
     }
 
     // if it looks like a local file, verify that it's an allowed path and really a file
@@ -1531,6 +1556,8 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
         }
 
         bool disallowOutsideFiles = !PathUtils::defaultScriptsLocation().isParentOf(canonical) && !currentSandboxURL.isLocalFile();
+
+#ifndef HIFI_UWP
         if (disallowOutsideFiles && !PathUtils::isDescendantOf(canonical, currentSandboxURL)) {
             return throwResolveError(makeError(message.arg(
                 QString("path '%1' outside of origin script '%2' '%3'")
@@ -1545,6 +1572,7 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
         if (!file.isFile()) {
             return throwResolveError(makeError(message.arg("path is not a file: " + url.toLocalFile())));
         }
+#endif
     }
 
     maybeEmitUncaughtException(__FUNCTION__);
@@ -2305,7 +2333,11 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
     QScriptProgram program { contents, fileName };
     if (program.isNull()) {
         setError("Bad program (isNull)", EntityScriptStatus::ERROR_RUNNING_SCRIPT);
+
+#ifndef HIFI_UWP
         emit unhandledException(makeError("program.isNull"));
+#endif
+
         return; // done processing script
     }
 
@@ -2325,10 +2357,13 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
         connect(&timeout, &QTimer::timeout, [&sandbox, SANDBOX_TIMEOUT, scriptOrURL]{
                 qCDebug(scriptengine) << "ScriptEngine::entityScriptContentAvailable timeout(" << scriptOrURL << ")";
 
+#ifndef HIFI_UWP
                 // Guard against infinite loops and non-performant code
                 sandbox.raiseException(
                     sandbox.makeError(QString("Timed out (entity constructors are limited to %1ms)").arg(SANDBOX_TIMEOUT))
                 );
+#endif
+
         });
 
         testConstructor = sandbox.evaluate(program);
@@ -2347,8 +2382,12 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
 
     if (exception.isError()) {
         // create a local copy using makeError to decouple from the sandbox engine
+
+#ifndef HIFI_UWP
         exception = makeError(exception);
         setError(formatException(exception, _enableExtendedJSExceptions.get()), EntityScriptStatus::ERROR_RUNNING_SCRIPT);
+#endif
+
         emit unhandledException(exception);
         return;
     }
@@ -2366,12 +2405,14 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
         auto message = QString("failed to load entity script -- expected a function, got %1, %2")
             .arg(testConstructorType).arg(testConstructorValue);
 
+#ifndef HIFI_UWP
         auto err = makeError(message);
         err.setProperty("fileName", scriptOrURL);
         err.setProperty("detail", "(constructor " + entityID.toString() + ")");
 
         setError("Could not find constructor (" + testConstructorType + ")", EntityScriptStatus::ERROR_RUNNING_SCRIPT);
         emit unhandledException(err);
+#endif
         return; // done processing script
     }
 
@@ -2402,7 +2443,11 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
 
     if (entityScriptObject.isError()) {
         auto exception = entityScriptObject;
+
+#ifndef HIFI_UWP
         setError(formatException(exception, _enableExtendedJSExceptions.get()), EntityScriptStatus::ERROR_RUNNING_SCRIPT);
+#endif
+
         emit unhandledException(exception);
         return;
     }
