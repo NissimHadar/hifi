@@ -389,7 +389,6 @@ void ScriptEngine::runInThread() {
 
 void ScriptEngine::executeOnScriptThread(std::function<void()> function, const Qt::ConnectionType& type ) {
 #ifndef HIFI_UWP  
-    moveToThread(workerThread);
     if (QThread::currentThread() != thread()) {
         QMetaObject::invokeMethod(this, "executeOnScriptThread", type, Q_ARG(std::function<void()>, function));
         return;

@@ -15,7 +15,7 @@
 #include <functional>
 #include <QtCore/QDebug>
 
-#ifdef HIFI_UWP
+#ifndef HIFI_UWP
 #include <QtScript/QScriptEngine>
 #endif
 

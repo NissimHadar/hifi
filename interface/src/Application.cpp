@@ -5947,9 +5947,9 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
 #ifndef HIFI_UWP
     // give the script engine to the RecordingScriptingInterface for its callbacks
-    DependencyManager::get<RecordingScriptingInterfa
-        ce>()->setScriptEngine(scriptEngine);
+    DependencyManager::get<RecordingScriptingInterface>()->setScriptEngine(scriptEngine);
 #endif
+
     if (property(hifi::properties::TEST).isValid()) {
         scriptEngine->registerGlobalObject("Test", TestScriptingInterface::getInstance());
     }

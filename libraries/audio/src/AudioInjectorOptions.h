@@ -12,7 +12,7 @@
 #ifndef hifi_AudioInjectorOptions_h
 #define hifi_AudioInjectorOptions_h
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
 // Need this for Q_DECLARE_METATYPE
 #include <QtCore>
 #else
