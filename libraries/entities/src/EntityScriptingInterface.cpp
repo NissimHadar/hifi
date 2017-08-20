@@ -741,7 +741,10 @@ bool EntityPropertyMetadataRequest::script(EntityItemID entityID, QScriptValue h
 
         } else {
             details["success"] = true;
+
+#ifndef HIFI_UWP
             result = _engine->toScriptValue(details);
+#endif
         }
 
 #ifndef HIFI_UWP
@@ -798,7 +801,9 @@ bool EntityPropertyMetadataRequest::serverScripts(EntityItemID entityID, QScript
 #endif
 
         } else {
+#ifndef HIFI_UWP
             result = engine->toScriptValue(details);
+#endif
         }
 
 #ifndef HIFI_UWP

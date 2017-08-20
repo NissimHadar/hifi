@@ -14,10 +14,17 @@
 
 #include <functional>
 #include <QtCore/QDebug>
+
+#ifdef HIFI_UWP
 #include <QtScript/QScriptEngine>
+#endif
 
 // common base class for extending QScriptEngine itself
+#ifdef HIFI_UWP
+class BaseScriptEngine : public QObject, public QEnableSharedFromThis<BaseScriptEngine> {
+#else
 class BaseScriptEngine : public QScriptEngine, public QEnableSharedFromThis<BaseScriptEngine> {
+#endif
     Q_OBJECT
 public:
     static const QString SCRIPT_EXCEPTION_FORMAT;
@@ -49,8 +56,10 @@ public:
 
     // helper to detect and log warnings when other code invokes QScriptEngine/BaseScriptEngine in thread-unsafe ways
     static bool IS_THREADSAFE_INVOCATION(const QThread *thread, const QString& method);
+#ifndef HIFI_UWP
 signals:
     void unhandledException(const QScriptValue& exception);
+#endif
 
 protected:
 #ifndef HIFI_UWP

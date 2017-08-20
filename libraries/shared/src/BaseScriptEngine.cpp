@@ -15,9 +15,12 @@
 #include <QtCore/QString>
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptValueIterator>
 #include <QtScript/QScriptContextInfo>
+#endif
 
 #include "Profile.h"
 

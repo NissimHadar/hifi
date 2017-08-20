@@ -59,7 +59,10 @@ static const int DEFAULT_ENTITY_PPS_PER_SCRIPT = 900;
 
 class CallbackData {
 public:
+#ifndef HIFI_UWP
     QScriptValue function;
+#endif
+
     EntityItemID definingEntityIdentifier;
     QUrl definingSandboxURL;
 };
@@ -82,7 +85,11 @@ public:
     QString errorInfo { "" };
 
     QString scriptText { "" };
+
+#ifndef HIFI_UWP
     QScriptValue scriptObject { QScriptValue() };
+#endif
+
     int64_t lastModified { 0 };
     QUrl definingSandboxURL { QUrl("about:EntityScript") };
 };
@@ -162,11 +169,11 @@ public:
     Q_INVOKABLE bool isEntityServerScript() const { return _context == ENTITY_SERVER_SCRIPT; }
     Q_INVOKABLE bool isAgentScript() const { return _context == AGENT_SCRIPT; }
 
+#ifndef HIFI_UWP
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NOTE - these are intended to be public interfaces available to scripts
     Q_INVOKABLE void addEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
 
-#ifndef HIFI_UWP
     Q_INVOKABLE void removeEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
 #endif
 
@@ -183,13 +190,14 @@ public:
 #endif
 
     Q_INVOKABLE void resetModuleCache(bool deleteScriptCache = false);
+
+#ifndef HIFI_UWP
     QScriptValue currentModule();
     bool registerModuleWithParent(const QScriptValue& module, const QScriptValue& parent);
     QScriptValue newModule(const QString& modulePath, const QScriptValue& parent = QScriptValue());
     QVariantMap fetchModuleSource(const QString& modulePath, const bool forceDownload = false);
     QScriptValue instantiateModule(const QScriptValue& module, const QString& sourceCode);
 
-#ifndef HIFI_UWP
     Q_INVOKABLE QObject* setInterval(const QScriptValue& function, int intervalMS);
     Q_INVOKABLE QObject* setTimeout(const QScriptValue& function, int timeoutMS);
 #endif
@@ -217,7 +225,12 @@ public:
     Q_INVOKABLE void callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const PointerEvent& event);
     Q_INVOKABLE void callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const EntityItemID& otherID, const Collision& collision);
 
-    Q_INVOKABLE void requestGarbageCollection() { collectGarbage(); }
+
+    Q_INVOKABLE void requestGarbageCollection() { 
+#ifndef HIFI_UWP
+        collectGarbage(); 
+#endif
+    }
 
     Q_INVOKABLE QUuid generateUUID() { return QUuid::createUuid(); }
 
@@ -295,7 +308,10 @@ protected:
     void setParentURL(const QString& parentURL) { _parentURL = parentURL; }
     void processDeferredEntityLoads(const QString& entityScript, const EntityItemID& leaderID);
 
+#ifndef HIFI_UWP
     QObject* setupTimerWithInterval(const QScriptValue& function, int intervalMS, bool isSingleShot);
+#endif
+
     void stopTimer(QTimer* timer);
 
     QHash<EntityItemID, RegisteredEventHandlers> _registeredHandlers;
