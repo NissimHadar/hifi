@@ -24,12 +24,12 @@ void Ledger::buy(const QString& hfc_key, int cost, const QString& asset_id, cons
     transaction["inventory_key"] = inventory_key;
     transaction["inventory_buyer_username"] = buyerUsername;
     QJsonDocument transactionDoc{ transaction };
-    QString transactionString = transactionDoc.toJson(QJsonDocument::Compact);
-    
+    auto transactionString = transactionDoc.toJson(QJsonDocument::Compact);
+
     auto wallet = DependencyManager::get<Wallet>();
     QString signature = wallet->signWithKey(transactionString, hfc_key);
     QJsonObject request;
-    request["transaction"] = transactionString;
+    request["transaction"] = QString(transactionString);
     request["signature"] = signature;
 
     qCInfo(commerce) << "Transaction:" << QJsonDocument(request).toJson(QJsonDocument::Compact);
@@ -44,7 +44,11 @@ void Ledger::buy(const QString& hfc_key, int cost, const QString& asset_id, cons
         return emit buyResult("Insufficient funds.");
     }
     _balance -= cost;
-    _inventory.push_back(asset_id);
+    QJsonObject inventoryAdditionObject;
+    inventoryAdditionObject["id"] = asset_id;
+    inventoryAdditionObject["title"] = "Test Title";
+    inventoryAdditionObject["preview"] = "https://www.aspca.org/sites/default/files/cat-care_cat-nutrition-tips_overweight_body4_left.jpg";
+    _inventory.push_back(inventoryAdditionObject);
     emit buyResult("");
 }
 
@@ -69,6 +73,9 @@ void Ledger::balance(const QStringList& keys) {
 
 void Ledger::inventory(const QStringList& keys) {
     // FIXME: talk to server instead
-    qCInfo(commerce) << "Inventory:" << _inventory;
-    emit inventoryResult(_inventory, "");
+    QJsonObject inventoryObject;
+    inventoryObject.insert("success", true);
+    inventoryObject.insert("assets", _inventory);
+    qCInfo(commerce) << "Inventory:" << inventoryObject;
+    emit inventoryResult(inventoryObject, "");
 }

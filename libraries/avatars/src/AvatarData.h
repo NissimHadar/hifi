@@ -45,8 +45,12 @@ typedef unsigned long long quint64;
 #include <QUuid>
 #include <QVariantMap>
 #include <QVector>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptable>
 #include <QtScript/QScriptValueIterator>
+#endif
+
 #include <QReadWriteLock>
 
 #include <JointData.h>
@@ -544,7 +548,7 @@ public:
     Q_INVOKABLE void updateAvatarEntity(const QUuid& entityID, const QByteArray& entityData);
     Q_INVOKABLE void clearAvatarEntity(const QUuid& entityID);
 
-    void setForceFaceTrackerConnected(bool connected) { _forceFaceTrackerConnected = connected; }
+    Q_INVOKABLE void setForceFaceTrackerConnected(bool connected) { _forceFaceTrackerConnected = connected; }
 
     // key state
     void setKeyState(KeyState s) { _keyState = s; }
@@ -861,6 +865,7 @@ Q_DECLARE_METATYPE(AttachmentData)
 Q_DECLARE_METATYPE(QVector<AttachmentData>)
 
 /// Scriptable wrapper for attachments.
+#ifndef HIFI_UWP
 class AttachmentDataObject : public QObject, protected QScriptable {
     Q_OBJECT
     Q_PROPERTY(QString modelURL READ getModelURL WRITE setModelURL)
@@ -890,6 +895,7 @@ public:
     Q_INVOKABLE void setIsSoft(bool scale);
     Q_INVOKABLE bool getIsSoft() const;
 };
+#endif
 
 void registerAvatarTypes(QScriptEngine* engine);
 

@@ -45,7 +45,7 @@
 
 #include <QFontDatabase>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <QProcessEnvironment>
 #endif
 
@@ -83,7 +83,7 @@
 #include <gpu/Batch.h>
 #include <gpu/Context.h>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <gpu/gl/GLBackend.h>
 #endif
 
@@ -154,7 +154,7 @@
 #include "avatar/MyHead.h"
 #include "CrashHandler.h"
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include "devices/DdeFaceTracker.h"
 #endif
 
@@ -179,7 +179,7 @@
 #include "scripting/ControllerScriptingInterface.h"
 #include "scripting/RatesScriptingInterface.h"
 
-#if defined Q_OS_MAC || (defined Q_OS_WIN && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC || (defined Q_OS_WIN && !defined HIFI_UWP)
 #include "SpeechRecognizer.h"
 #endif
 
@@ -239,6 +239,7 @@ static const int MIN_PROCESSING_THREAD_POOL_SIZE = 1;
 static const QString SNAPSHOT_EXTENSION  = ".jpg";
 static const QString SVO_EXTENSION  = ".svo";
 static const QString SVO_JSON_EXTENSION = ".svo.json";
+static const QString JSON_GZ_EXTENSION = ".json.gz";
 static const QString JSON_EXTENSION = ".json";
 static const QString JS_EXTENSION  = ".js";
 static const QString FST_EXTENSION  = ".fst";
@@ -272,6 +273,8 @@ static const QString DESKTOP_DISPLAY_PLUGIN_NAME = "Desktop";
 
 static const QString SYSTEM_TABLET = "com.highfidelity.interface.tablet.system";
 
+static const QString DOMAIN_SPAWNING_POINT = "/0, -10, 0";
+
 const QHash<QString, Application::AcceptURLMethod> Application::_acceptedExtensions {
     { SVO_EXTENSION, &Application::importSVOFromURL },
     { SVO_JSON_EXTENSION, &Application::importSVOFromURL },
@@ -279,6 +282,7 @@ const QHash<QString, Application::AcceptURLMethod> Application::_acceptedExtensi
     { JSON_EXTENSION, &Application::importJSONFromURL },
     { JS_EXTENSION, &Application::askToLoadScript },
     { FST_EXTENSION, &Application::askToSetAvatarUrl },
+    { JSON_GZ_EXTENSION, &Application::askToReplaceDomainContent },
     { ZIP_EXTENSION, &Application::importFromZIP }
 };
 
@@ -384,7 +388,7 @@ std::atomic<uint64_t> DeadlockWatchdogThread::_maxElapsed;
 std::atomic<int> DeadlockWatchdogThread::_maxElapsedAverage;
 ThreadSafeMovingAverage<int, DeadlockWatchdogThread::HEARTBEAT_SAMPLES> DeadlockWatchdogThread::_movingAverage;
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
 class MyNativeEventFilter : public QAbstractNativeEventFilter {
 public:
     static MyNativeEventFilter& getInstance() {
@@ -529,7 +533,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     // Select appropriate audio DLL
     QString audioDLLPath = QCoreApplication::applicationDirPath();
 
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     audioDLLPath += "/audioWin8";
 #else
     if (IsWindows8OrGreater()) {
@@ -562,7 +566,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<ScriptCache>();
     DependencyManager::set<SoundCache>();
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     DependencyManager::set<DdeFaceTracker>();
 #endif
 
@@ -594,7 +598,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<AssetMappingsScriptingInterface>();
     DependencyManager::set<DomainConnectionModel>();
 
-#if defined Q_OS_MAC || (defined Q_OS_WIN  && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC || (defined Q_OS_WIN  && !defined HIFI_UWP)
     DependencyManager::set<SpeechRecognizer>();
 #endif
     DependencyManager::set<DiscoverabilityManager>();
@@ -727,7 +731,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     _entityClipboard->createRootElement();
 
-#if defined Q_OS_WIN && !defined Q_OS_WINRT
+#if defined Q_OS_WIN && !defined HIFI_UWP
     installNativeEventFilter(&MyNativeEventFilter::getInstance());
 #endif
 
@@ -996,7 +1000,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
         { "version", applicationVersion() },
 
 // No QProcess in UWP
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
 #endif
 
@@ -1056,7 +1060,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
         QJsonObject properties = {
             { "version", applicationVersion() },
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
             { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
 #endif
 
@@ -1887,7 +1891,7 @@ void Application::onAboutToQuit() {
 }
 
 void Application::cleanupBeforeQuit() {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     // add a logline indicating if QTWEBENGINE_REMOTE_DEBUGGING is set or not
     QString webengineRemoteDebugging = QProcessEnvironment::systemEnvironment().value("QTWEBENGINE_REMOTE_DEBUGGING", "false");
     qCDebug(interfaceapp) << "QTWEBENGINE_REMOTE_DEBUGGING =" << webengineRemoteDebugging;
@@ -2080,7 +2084,7 @@ void Application::initializeGL() {
     qt_gl_set_global_share_context(_chromiumShareContext->getContext());
 
     _glWidget->makeCurrent();
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     gpu::Context::init<gpu::gl::GLBackend>();
 
     qApp->setProperty(hifi::properties::gl::MAKE_PROGRAM_CALLBACK,
@@ -2099,7 +2103,7 @@ void Application::initializeGL() {
     render::CullFunctor cullFunctor = LODManager::shouldRender;
     static const QString RENDER_FORWARD = "HIFI_RENDER_FORWARD";
 
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     bool isDeferred = false;
 #else
     bool isDeferred = !QProcessEnvironment::systemEnvironment().contains(RENDER_FORWARD);
@@ -2213,7 +2217,7 @@ void Application::initializeUi() {
 
     surfaceContext->setContextProperty("Camera", &_myCamera);
 
-#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined HIFI_UWP)
     surfaceContext->setContextProperty("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -2238,7 +2242,7 @@ void Application::initializeUi() {
     surfaceContext->setContextProperty("DialogsManager", _dialogsManagerScriptingInterface);
     surfaceContext->setContextProperty("GlobalServices", GlobalServicesScriptingInterface::getInstance());
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     surfaceContext->setContextProperty("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
 #endif
 
@@ -2598,7 +2602,7 @@ void Application::runTests() {
 }
 
 void Application::faceTrackerMuteToggled() {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     QAction* muteAction = Menu::getInstance()->getActionForOption(MenuOption::MuteFaceTracking);
     Q_CHECK_PTR(muteAction);
     bool isMuted = getSelectedFaceTracker()->isMuted();
@@ -2861,7 +2865,6 @@ void Application::handleSandboxStatus(QNetworkReply* reply) {
 bool Application::importJSONFromURL(const QString& urlString) {
     // we only load files that terminate in just .json (not .svo.json and not .ava.json)
     // if they come from the High Fidelity Marketplace Assets CDN
-
     QUrl jsonURL { urlString };
 
     if (jsonURL.host().endsWith(MARKETPLACE_CDN_HOSTNAME)) {
@@ -3906,7 +3909,7 @@ static ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
 static int numProcessors;
 static HANDLE self;
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 static PDH_HQUERY cpuQuery;
 static PDH_HCOUNTER cpuTotal;
 #endif
@@ -3926,7 +3929,7 @@ void initCpuUsage() {
     memcpy(&lastSysCPU, &fsys, sizeof(FILETIME));
     memcpy(&lastUserCPU, &fuser, sizeof(FILETIME));
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     PdhOpenQuery(NULL, NULL, &cpuQuery);
     PdhAddCounter(cpuQuery, "\\Processor(_Total)\\% Processor Time", NULL, &cpuTotal);
     PdhCollectQueryData(cpuQuery);
@@ -3952,7 +3955,7 @@ void getCpuUsage(vec3& systemAndUser) {
     lastUserCPU = user;
     lastSysCPU = sys;
 
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     systemAndUser.z = 0.0;
 #else
     PDH_FMT_COUNTERVALUE counterVal;
@@ -4134,7 +4137,7 @@ ivec2 Application::getMouse() const {
 }
 
 FaceTracker* Application::getActiveFaceTracker() {
-#ifdef Q_OS_WINRT
+#ifdef HIFI_UWP
     return nullptr;
 #else
     auto dde = DependencyManager::get<DdeFaceTracker>();
@@ -4541,7 +4544,7 @@ void Application::updateMyAvatarLookAtPosition() {
             }
         }
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         // Deflect the eyes a bit to match the detected gaze from the face tracker if active.
         if (faceTracker && !faceTracker->isMuted()) {
             float eyePitch = faceTracker->getEstimatedEyePitch();
@@ -4866,7 +4869,7 @@ void Application::update(float deltaTime) {
     {
         PerformanceTimer perfTimer("devices");
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         FaceTracker* tracker = getSelectedFaceTracker();
         if (tracker && Menu::getInstance()->isOptionChecked(MenuOption::MuteFaceTracking) != tracker->isMuted()) {
             tracker->toggleMute();
@@ -5630,7 +5633,7 @@ void Application::displaySide(RenderArgs* renderArgs, Camera& theCamera, bool se
 }
 
 void Application::resetSensors(bool andReload) {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
     DependencyManager::get<DdeFaceTracker>()->reset();
 #endif
 
@@ -5942,8 +5945,10 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     entityScriptingInterface->setPacketSender(&_entityEditSender);
     entityScriptingInterface->setEntityTree(getEntities()->getTree());
 
+#ifndef HIFI_UWP
     // give the script engine to the RecordingScriptingInterface for its callbacks
     DependencyManager::get<RecordingScriptingInterface>()->setScriptEngine(scriptEngine);
+#endif
 
     if (property(hifi::properties::TEST).isValid()) {
         scriptEngine->registerGlobalObject("Test", TestScriptingInterface::getInstance());
@@ -5951,14 +5956,16 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerGlobalObject("Rates", new RatesScriptingInterface(this));
 
+#ifndef HIFI_UWP
     // hook our avatar and avatar hash map object into this script engine
     getMyAvatar()->registerMetaTypes(scriptEngine);
+#endif
 
     scriptEngine->registerGlobalObject("AvatarList", DependencyManager::get<AvatarManager>().data());
 
     scriptEngine->registerGlobalObject("Camera", &_myCamera);
 
-#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined Q_OS_WINRT)
+#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined HIFI_UWP)
     scriptEngine->registerGlobalObject("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -5967,26 +5974,38 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     connect(scriptEngine, &ScriptEngine::finished, clipboardScriptable, &ClipboardScriptingInterface::deleteLater);
 
     scriptEngine->registerGlobalObject("Overlays", &_overlays);
+
+#ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, OverlayPropertyResultToScriptValue, OverlayPropertyResultFromScriptValue);
     qScriptRegisterMetaType(scriptEngine, RayToOverlayIntersectionResultToScriptValue,
                             RayToOverlayIntersectionResultFromScriptValue);
+#endif
 
     scriptEngine->registerGlobalObject("OffscreenFlags", DependencyManager::get<OffscreenUi>()->getFlags());
     scriptEngine->registerGlobalObject("Desktop", DependencyManager::get<DesktopScriptingInterface>().data());
 
+#ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, wrapperToScriptValue<ToolbarProxy>, wrapperFromScriptValue<ToolbarProxy>);
     qScriptRegisterMetaType(scriptEngine, wrapperToScriptValue<ToolbarButtonProxy>, wrapperFromScriptValue<ToolbarButtonProxy>);
+#endif
+
     scriptEngine->registerGlobalObject("Toolbars", DependencyManager::get<ToolbarScriptingInterface>().data());
 
+#ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, wrapperToScriptValue<TabletProxy>, wrapperFromScriptValue<TabletProxy>);
     qScriptRegisterMetaType(scriptEngine, wrapperToScriptValue<TabletButtonProxy>, wrapperFromScriptValue<TabletButtonProxy>);
+#endif
+
     scriptEngine->registerGlobalObject("Tablet", DependencyManager::get<TabletScriptingInterface>().data());
 
 
     DependencyManager::get<TabletScriptingInterface>().data()->setToolbarScriptingInterface(DependencyManager::get<ToolbarScriptingInterface>().data());
 
     scriptEngine->registerGlobalObject("Window", DependencyManager::get<WindowScriptingInterface>().data());
+
+#ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, CustomPromptResultToScriptValue, CustomPromptResultFromScriptValue);
+
     scriptEngine->registerGetterSetter("location", LocationScriptingInterface::locationGetter,
                         LocationScriptingInterface::locationSetter, "Window");
     // register `location` on the global object.
@@ -5995,6 +6014,7 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerFunction("OverlayWebWindow", QmlWebWindowClass::constructor);
     scriptEngine->registerFunction("OverlayWindow", QmlWindowClass::constructor);
+#endif
 
     scriptEngine->registerGlobalObject("Menu", MenuScriptingInterface::getInstance());
     scriptEngine->registerGlobalObject("Stats", Stats::getInstance());
@@ -6015,9 +6035,9 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     scriptEngine->registerGlobalObject("DialogsManager", _dialogsManagerScriptingInterface);
 
     scriptEngine->registerGlobalObject("GlobalServices", GlobalServicesScriptingInterface::getInstance());
-    qScriptRegisterMetaType(scriptEngine, DownloadInfoResultToScriptValue, DownloadInfoResultFromScriptValue);
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
+    qScriptRegisterMetaType(scriptEngine, DownloadInfoResultToScriptValue, DownloadInfoResultFromScriptValue);
     scriptEngine->registerGlobalObject("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
 #endif
 
@@ -6030,8 +6050,11 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     scriptEngine->registerGlobalObject("Paths", DependencyManager::get<PathUtils>().data());
 
     scriptEngine->registerGlobalObject("HMD", DependencyManager::get<HMDScriptingInterface>().data());
+
+#ifndef HIFI_UWP
     scriptEngine->registerFunction("HMD", "getHUDLookAtPosition2D", HMDScriptingInterface::getHUDLookAtPosition2D, 0);
     scriptEngine->registerFunction("HMD", "getHUDLookAtPosition3D", HMDScriptingInterface::getHUDLookAtPosition3D, 0);
+#endif
 
     scriptEngine->registerGlobalObject("Scene", DependencyManager::get<SceneScriptingInterface>().data());
     scriptEngine->registerGlobalObject("Render", _renderEngine->getConfiguration().get());
@@ -6049,8 +6072,10 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     }
     auto scriptingInterface = DependencyManager::get<controller::ScriptingInterface>();
     scriptEngine->registerGlobalObject("Controller", scriptingInterface.data());
-    UserInputMapper::registerControllerTypes(scriptEngine);
 
+#ifndef HIFI_UWP
+    UserInputMapper::registerControllerTypes(scriptEngine);
+#endif
     auto recordingInterface = DependencyManager::get<RecordingScriptingInterface>();
     scriptEngine->registerGlobalObject("Recording", recordingInterface.data());
 
@@ -6059,7 +6084,9 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
     scriptEngine->registerGlobalObject("AvatarInputs", AvatarInputs::getInstance());
     scriptEngine->registerGlobalObject("ContextOverlay", DependencyManager::get<ContextOverlayInterface>().data());
 
+#ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, OverlayIDtoScriptValue, OverlayIDfromScriptValue);
+#endif
 
     // connect this script engines printedMessage signal to the global ScriptEngines these various messages
     connect(scriptEngine, &ScriptEngine::printedMessage, DependencyManager::get<ScriptEngines>().data(), &ScriptEngines::onPrintedMessage);
@@ -6261,6 +6288,55 @@ bool Application::askToWearAvatarAttachmentUrl(const QString& url) {
         }
         reply->deleteLater();
     });
+    return true;
+}
+
+bool Application::askToReplaceDomainContent(const QString& url) {
+    QString methodDetails;
+    if (DependencyManager::get<NodeList>()->getThisNodeCanReplaceContent()) {
+        QUrl originURL { url };
+        if (originURL.host().endsWith(MARKETPLACE_CDN_HOSTNAME)) {
+            // Create a confirmation dialog when this call is made
+            const int MAX_CHARACTERS_PER_LINE = 90;
+            static const QString infoText = simpleWordWrap("Your domain's content will be replaced with a new content set. "
+                "If you want to save what you have now, create a backup before proceeding. For more information about backing up "
+                "and restoring content, visit the documentation page at: ", MAX_CHARACTERS_PER_LINE) +
+                "\nhttps://docs.highfidelity.com/create-and-explore/start-working-in-your-sandbox/restoring-sandbox-content";
+
+            bool agreeToReplaceContent = false; // assume false
+            agreeToReplaceContent = QMessageBox::Yes == OffscreenUi::question("Are you sure you want to replace this domain's content set?",
+                infoText, QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
+            if (agreeToReplaceContent) {
+                // Given confirmation, send request to domain server to replace content
+                qCDebug(interfaceapp) << "Attempting to replace domain content: " << url;
+                QByteArray urlData(url.toUtf8());
+                auto limitedNodeList = DependencyManager::get<LimitedNodeList>();
+                limitedNodeList->eachMatchingNode([](const SharedNodePointer& node) {
+                    return node->getType() == NodeType::EntityServer && node->getActiveSocket();
+                }, [&urlData, limitedNodeList](const SharedNodePointer& octreeNode) {
+                    auto octreeFilePacket = NLPacket::create(PacketType::OctreeFileReplacementFromUrl, urlData.size(), true);
+                    octreeFilePacket->write(urlData);
+                    limitedNodeList->sendPacket(std::move(octreeFilePacket), *octreeNode);
+                });
+                DependencyManager::get<AddressManager>()->handleLookupString(DOMAIN_SPAWNING_POINT);
+                methodDetails = "SuccessfulRequestToReplaceContent";
+            } else {
+                methodDetails = "UserDeclinedToReplaceContent";
+            }
+        } else {
+            methodDetails = "ContentSetDidNotOriginateFromMarketplace";
+        }
+    } else {
+            methodDetails = "UserDoesNotHavePermissionToReplaceContent";
+            OffscreenUi::warning("Unable to replace content", "You do not have permissions to replace domain content",
+                                 QMessageBox::Ok, QMessageBox::Ok);
+    }
+    QJsonObject messageProperties = { 
+        { "status", methodDetails },
+        { "content_set_url", url }
+    };
+    UserActivityLogger::getInstance().logAction("replace_domain_content", messageProperties);
     return true;
 }
 
@@ -6927,6 +7003,12 @@ void Application::takeSnapshot(bool notify, bool includeAnimated, float aspectRa
             // Get an animated GIF snapshot and save it
             SnapshotAnimated::saveSnapshotAnimated(path, aspectRatio, qApp, DependencyManager::get<WindowScriptingInterface>());
         }
+    });
+}
+
+void Application::takeSecondaryCameraSnapshot() {
+    postLambdaEvent([this] {
+        Snapshot::saveSnapshot(getActiveDisplayPlugin()->getSecondaryCameraScreenshot());
     });
 }
 

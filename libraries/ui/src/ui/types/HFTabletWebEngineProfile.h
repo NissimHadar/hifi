@@ -13,11 +13,12 @@
 #ifndef hifi_HFTabletWebEngineProfile_h
 #define hifi_HFTabletWebEngineProfile_h
 
+#ifndef HIFI_UWP
 #include <QtWebEngine/QQuickWebEngineProfile>
 
 class HFTabletWebEngineProfile : public QQuickWebEngineProfile {
 public:
     HFTabletWebEngineProfile(QObject* parent = Q_NULLPTR);
 };
-
+#endif
 #endif // hifi_HFTabletWebEngineProfile_h

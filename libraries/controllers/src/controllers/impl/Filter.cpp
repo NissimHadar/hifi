@@ -9,7 +9,10 @@
 #include "Filter.h"
 
 #include <QtCore/QObject>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
+#endif
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>

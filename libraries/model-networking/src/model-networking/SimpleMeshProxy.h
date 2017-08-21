@@ -12,9 +12,11 @@
 #ifndef hifi_SimpleMeshProxy_h
 #define hifi_SimpleMeshProxy_h
 
+#ifndef HIFI_UWP
 #include <QScriptEngine>
 #include <QScriptValueIterator>
 #include <QtScript/QScriptValue>
+#endif
 
 #include <RegisteredMetaTypes.h>
 

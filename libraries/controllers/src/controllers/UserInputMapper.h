@@ -18,7 +18,10 @@
 #include <mutex>
 
 #include <QtQml/QJSValue>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
+#endif
 
 #include <DependencyManager.h>
 #include <RegisteredMetaTypes.h>

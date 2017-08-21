@@ -11,7 +11,7 @@
 #include <AudioClient.h>
 #include <avatar/AvatarManager.h>
 
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
 #include <devices/DdeFaceTracker.h>
 #endif
 
@@ -210,14 +210,14 @@ void setupPreferences() {
         // is a way around this, therefore they're not specified here but in the QML.
     }
     {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         auto getter = []()->float { return DependencyManager::get<DdeFaceTracker>()->getEyeClosingThreshold(); };
         auto setter = [](float value) { DependencyManager::get<DdeFaceTracker>()->setEyeClosingThreshold(value); };
         preferences->addPreference(new SliderPreference(AVATAR_TUNING, "Camera binary eyelid threshold", getter, setter));
 #endif
     }
     {
-#ifndef Q_OS_WINRT
+#ifndef HIFI_UWP
         auto getter = []()->float { return FaceTracker::getEyeDeflection(); };
         auto setter = [](float value) { FaceTracker::setEyeDeflection(value); };
         preferences->addPreference(new SliderPreference(AVATAR_TUNING, "Face tracker eye deflection", getter, setter));
@@ -323,21 +323,21 @@ void setupPreferences() {
         static const QString RENDER("Graphics");
         auto renderConfig = qApp->getRenderEngine()->getConfiguration();
         if (renderConfig) {
-            auto ambientOcclusionConfig = renderConfig->getConfig<AmbientOcclusionEffect>();
-            if (ambientOcclusionConfig) {
-                auto getter = [ambientOcclusionConfig]()->QString { return ambientOcclusionConfig->getPreset(); };
-                auto setter = [ambientOcclusionConfig](QString preset) { ambientOcclusionConfig->setPreset(preset); };
+            auto mainViewAmbientOcclusionConfig = renderConfig->getConfig<AmbientOcclusionEffect>("RenderMainView.AmbientOcclusion");
+            if (mainViewAmbientOcclusionConfig) {
+                auto getter = [mainViewAmbientOcclusionConfig]()->QString { return mainViewAmbientOcclusionConfig->getPreset(); };
+                auto setter = [mainViewAmbientOcclusionConfig](QString preset) { mainViewAmbientOcclusionConfig->setPreset(preset); };
                 auto preference = new ComboBoxPreference(RENDER, "Ambient occlusion", getter, setter);
-                preference->setItems(ambientOcclusionConfig->getPresetList());
+                preference->setItems(mainViewAmbientOcclusionConfig->getPresetList());
                 preferences->addPreference(preference);
             }
 
-            auto shadowConfig = renderConfig->getConfig<RenderShadowTask>();
-            if (shadowConfig) {
-                auto getter = [shadowConfig]()->QString { return shadowConfig->getPreset(); };
-                auto setter = [shadowConfig](QString preset) { shadowConfig->setPreset(preset); };
+            auto mainViewShadowConfig = renderConfig->getConfig<RenderShadowTask>("RenderMainView.RenderShadowTask");
+            if (mainViewShadowConfig) {
+                auto getter = [mainViewShadowConfig]()->QString { return mainViewShadowConfig->getPreset(); };
+                auto setter = [mainViewShadowConfig](QString preset) { mainViewShadowConfig->setPreset(preset); };
                 auto preference = new ComboBoxPreference(RENDER, "Shadows", getter, setter);
-                preference->setItems(shadowConfig->getPresetList());
+                preference->setItems(mainViewShadowConfig->getPresetList());
                 preferences->addPreference(preference);
             }
         }

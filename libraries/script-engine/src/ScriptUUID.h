@@ -15,10 +15,17 @@
 #define hifi_ScriptUUID_h
 
 #include <QUuid>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptable>
+#endif
 
 /// Scriptable interface for a UUID helper class object. Used exclusively in the JavaScript API
+#ifdef HIFI_UWP
+class ScriptUUID : public QObject {
+#else
 class ScriptUUID : public QObject, protected QScriptable {
+#endif
     Q_OBJECT
 
 public slots:

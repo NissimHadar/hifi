@@ -327,9 +327,16 @@ void CharacterController::playerStep(btCollisionWorld* collisionWorld, btScalar 
     _ghost.setWorldTransform(_rigidBody->getWorldTransform());
 }
 
+// The vcpkg'ed version has a different signature
+#ifdef HIFI_UWP
+void CharacterController::jump(const btVector3& dir) {
+    _pendingFlags |= PENDING_FLAG_JUMP;
+}
+#else
 void CharacterController::jump() {
     _pendingFlags |= PENDING_FLAG_JUMP;
 }
+#endif
 
 bool CharacterController::onGround() const {
     const btScalar FLOOR_PROXIMITY_THRESHOLD = 0.3f * _radius;

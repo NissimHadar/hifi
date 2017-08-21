@@ -15,7 +15,10 @@
 #define hifi_AssetMappingsScriptingInterface_h
 
 #include <QtCore/QObject>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
+#endif
 
 #include <AssetClient.h>
 #include <QSortFilterProxyModel>

@@ -63,7 +63,7 @@ endif ()
 
 if (UWP)
   # Use the OpenSSL version created with vcpkg
-  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_OPENSSL_PATH}/include")
+  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_PATH}/include")
 else ()
   find_path(OPENSSL_INCLUDE_DIR NAMES openssl/ssl.h HINTS ${_OPENSSL_ROOT_HINTS_AND_PATHS} ${_OPENSSL_INCLUDEDIR}
     PATH_SUFFIXES include
@@ -73,10 +73,10 @@ endif()
 if (WIN32 AND NOT CYGWIN)
   if (UWP)
     # Use the OpenSSL version created with vcpkg
-    set(LIB_EAY_DEBUG "$ENV{VCPKG_OPENSSL_PATH}/debug/lib/libeay32.lib")
-    set(SSL_EAY_DEBUG "$ENV{VCPKG_OPENSSL_PATH}/debug/lib/ssleay32.lib")
-    set(LIB_EAY_RELEASE "$ENV{VCPKG_OPENSSL_PATH}/lib/libeay32.lib")
-    set(SSL_EAY_RELEASE "$ENV{VCPKG_OPENSSL_PATH}/lib/ssleay32.lib")
+    set(LIB_EAY_DEBUG "$ENV{VCPKG_PATH}/debug/lib/libeay32.lib")
+    set(SSL_EAY_DEBUG "$ENV{VCPKG_PATH}/debug/lib/ssleay32.lib")
+    set(LIB_EAY_RELEASE "$ENV{VCPKG_PATH}/lib/libeay32.lib")
+    set(SSL_EAY_RELEASE "$ENV{VCPKG_PATH}/lib/ssleay32.lib")
 
     set(LIB_EAY_LIBRARY_DEBUG "${LIB_EAY_DEBUG}")
     set(LIB_EAY_LIBRARY_RELEASE "${LIB_EAY_RELEASE}")

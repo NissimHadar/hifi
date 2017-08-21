@@ -30,11 +30,13 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptContextInfo>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptValueIterator>
 
 #include <QtScriptTools/QScriptEngineDebugger>
+#endif
 
 #include <shared/QtHelpers.h>
 #include <AudioConstants.h>
@@ -147,11 +149,15 @@ QString encodeEntityIdIntoEntityUrl(const QString& url, const QString& entityID)
     return url + " [EntityID:" + entityID + "]";
 }
 
+#ifndef HIFI_UWP
 QString ScriptEngine::logException(const QScriptValue& exception) {
     auto message = formatException(exception, _enableExtendedJSExceptions.get());
+
     scriptErrorMessage(message);
+
     return message;
 }
+#endif
 
 int ScriptEngine::processLevelMaxRetries { ScriptRequest::MAX_RETRIES };
 ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const QString& fileNameString) :
@@ -160,14 +166,22 @@ ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const
     _scriptContents(scriptContents),
     _timerFunctionMap(),
     _fileNameString(fileNameString),
+
+#ifdef HIFI_UWP
+    _arrayBufferClass()
+#else    
     _arrayBufferClass(new ArrayBufferClass(this))
+#endif
 {
     DependencyManager::get<ScriptEngines>()->addScriptEngine(this);
 
+#ifndef HIFI_UWP
     connect(this, &QScriptEngine::signalHandlerException, this, [this](const QScriptValue& exception) {
         if (hasUncaughtException()) {
             // the engine's uncaughtException() seems to produce much better stack traces here
+
             emit unhandledException(cloneUncaughtException("signalHandlerException"));
+
             clearExceptions();
         } else {
             // ... but may not always be available -- so if needed we fallback to the passed exception
@@ -176,12 +190,15 @@ ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const
     }, Qt::DirectConnection);
 
     setProcessEventsInterval(MSECS_PER_SECOND);
+#endif
+
     if (isEntityServerScript()) {
         qCDebug(scriptengine) << "isEntityServerScript() -- limiting maxRetries to 1";
         processLevelMaxRetries = 1;
     }
 
     // this is where all unhandled exceptions end up getting logged
+#ifndef HIFI_UWP
     connect(this, &BaseScriptEngine::unhandledException, this, [this](const QScriptValue& err) {
         auto output = err.engine() == this ? err : makeError(err);
         if (!output.property("detail").isValid()) {
@@ -189,6 +206,7 @@ ScriptEngine::ScriptEngine(Context context, const QString& scriptContents, const
         }
         logException(output);
     });
+#endif
 }
 
 QString ScriptEngine::getContext() const {
@@ -228,6 +246,7 @@ ScriptEngine::~ScriptEngine() {
 }
 
 void ScriptEngine::disconnectNonEssentialSignals() {
+#ifndef HIFI_UWP
     disconnect();
     QThread* workerThread;
     // Ensure the thread should be running, and does exist
@@ -235,6 +254,7 @@ void ScriptEngine::disconnectNonEssentialSignals() {
         connect(this, &ScriptEngine::doneRunning, workerThread, &QThread::quit);
         connect(this, &QObject::destroyed, workerThread, &QObject::deleteLater);
     }
+#endif
 }
 
 void ScriptEngine::runDebuggable() {
@@ -257,23 +277,29 @@ void ScriptEngine::runDebuggable() {
     init();
     _isRunning = true;
     _debuggable = true;
+#ifndef HIFI_UWP
     _debugger = new QScriptEngineDebugger(this);
     _debugger->attachTo(this);
+#endif
 
     QMenu* parentMenu = scriptDebugMenu;
     QMenu* scriptMenu { nullptr };
     if (parentMenu) {
         ++scriptMenuCount;
         scriptMenu = parentMenu->addMenu(_fileNameString);
+#ifndef HIFI_UWP
         scriptMenu->addMenu(_debugger->createStandardMenu(qApp->activeWindow()));
+#endif
     } else {
         qWarning() << "Unable to add script debug menu";
     }
 
+#ifndef HIFI_UWP
     QScriptValue result = evaluate(_scriptContents, _fileNameString);
 
     _lastUpdate = usecTimestampNow();
     QTimer* timer = new QTimer(this);
+
     connect(this, &ScriptEngine::finished, [this, timer, parentMenu, scriptMenu] {
         if (scriptMenu) {
             parentMenu->removeAction(scriptMenu->menuAction());
@@ -318,12 +344,17 @@ void ScriptEngine::runDebuggable() {
         if (!isEvaluating() && hasUncaughtException()) {
             qCWarning(scriptengine) << __FUNCTION__ << "---------- UNCAUGHT EXCEPTION --------";
             qCWarning(scriptengine) << "runDebuggable" << uncaughtException().toString();
+
+#ifndef HIFI_UWP
             logException(__FUNCTION__);
+#endif
+
             clearExceptions();
         }
     });
 
     timer->start(10);
+#endif
 }
 
 
@@ -341,6 +372,8 @@ void ScriptEngine::runInThread() {
     // the thread cannot have this as a parent.
     QThread* workerThread = new QThread();
     workerThread->setObjectName(QString("js:") + getFilename().replace("about:",""));
+
+#ifndef HIFI_UWP    
     moveToThread(workerThread);
 
     // NOTE: If you connect any essential signals for proper shutdown or cleanup of
@@ -349,20 +382,24 @@ void ScriptEngine::runInThread() {
     connect(workerThread, &QThread::started, this, &ScriptEngine::run);
     connect(this, &ScriptEngine::doneRunning, workerThread, &QThread::quit);
     connect(this, &QObject::destroyed, workerThread, &QObject::deleteLater);
+#endif
 
     workerThread->start();
 }
 
 void ScriptEngine::executeOnScriptThread(std::function<void()> function, const Qt::ConnectionType& type ) {
+#ifndef HIFI_UWP  
     if (QThread::currentThread() != thread()) {
         QMetaObject::invokeMethod(this, "executeOnScriptThread", type, Q_ARG(std::function<void()>, function));
         return;
     }
 
     function();
+#endif
 }
 
 void ScriptEngine::waitTillDoneRunning() {
+#ifndef HIFI_UWP  
     auto workerThread = thread();
 
     if (_isThreaded && workerThread) {
@@ -412,6 +449,7 @@ void ScriptEngine::waitTillDoneRunning() {
 
         scriptInfoMessage("Script Engine has stopped:" + getFilename());
     }
+#endif
 }
 
 QString ScriptEngine::getFilename() const {
@@ -568,6 +606,7 @@ void avatarDataFromScriptValue(const QScriptValue& object, ScriptAvatarData*& ou
 }
 
 void ScriptEngine::resetModuleCache(bool deleteScriptCache) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
         executeOnScriptThread([=]() { resetModuleCache(deleteScriptCache); });
         return;
@@ -599,9 +638,11 @@ void ScriptEngine::resetModuleCache(bool deleteScriptCache) {
     cache.setProperty("__meta__", cacheMeta, READONLY_HIDDEN_PROP_FLAGS);
 #endif
     jsRequire.setProperty("cache", cache, READONLY_PROP_FLAGS);
+#endif
 }
 
 void ScriptEngine::init() {
+#ifndef HIFI_UWP
     if (_isInitialized) {
         return; // only initialize once
     }
@@ -613,11 +654,12 @@ void ScriptEngine::init() {
 
     // register various meta-types
     registerMetaTypes(this);
+
     registerMIDIMetaTypes(this);
     registerEventTypes(this);
     registerMenuItemProperties(this);
     registerAnimationTypes(this);
-    registerAvatarTypes(this);
+
     registerAudioMetaTypes(this);
 
     qScriptRegisterMetaType(this, EntityPropertyFlagsToScriptValue, EntityPropertyFlagsFromScriptValue);
@@ -625,7 +667,9 @@ void ScriptEngine::init() {
     qScriptRegisterMetaType(this, EntityItemIDtoScriptValue, EntityItemIDfromScriptValue);
     qScriptRegisterMetaType(this, RayToEntityIntersectionResultToScriptValue, RayToEntityIntersectionResultFromScriptValue);
     qScriptRegisterMetaType(this, RayToAvatarIntersectionResultToScriptValue, RayToAvatarIntersectionResultFromScriptValue);
+
     qScriptRegisterMetaType(this, AvatarEntityMapToScriptValue, AvatarEntityMapFromScriptValue);
+
     qScriptRegisterSequenceMetaType<QVector<QUuid>>(this);
     qScriptRegisterSequenceMetaType<QVector<EntityItemID>>(this);
 
@@ -678,6 +722,7 @@ void ScriptEngine::init() {
     registerGlobalObject("Messages", DependencyManager::get<MessagesClient>().data());
     registerGlobalObject("File", new FileScriptingInterface(this));
     registerGlobalObject("console", &_consoleScriptingInterface);
+
     registerFunction("console", "info", ConsoleScriptingInterface::info, currentContext()->argumentCount());
     registerFunction("console", "log", ConsoleScriptingInterface::log, currentContext()->argumentCount());
     registerFunction("console", "debug", ConsoleScriptingInterface::debug, currentContext()->argumentCount());
@@ -707,12 +752,15 @@ void ScriptEngine::init() {
     registerGlobalObject("DebugDraw", &DebugDraw::getInstance());
 
     registerGlobalObject("Model", new ModelScriptingInterface(this));
+
     qScriptRegisterMetaType(this, meshToScriptValue, meshFromScriptValue);
     qScriptRegisterMetaType(this, meshesToScriptValue, meshesFromScriptValue);
 
     registerGlobalObject("UserActivityLogger", DependencyManager::get<UserActivityLoggerScriptingInterface>().data());
+#endif
 }
 
+#ifndef HIFI_UWP
 void ScriptEngine::registerValue(const QString& valueName, QScriptValue value) {
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
@@ -742,8 +790,10 @@ void ScriptEngine::registerValue(const QString& valueName, QScriptValue value) {
         partObject = partObject.property(pathPart);
     }
 }
+#endif
 
 void ScriptEngine::registerGlobalObject(const QString& name, QObject* object) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::registerGlobalObject() called on wrong thread [" << QThread::currentThread() << "], invoking on correct thread [" << thread() << "]  name:" << name;
@@ -765,8 +815,10 @@ void ScriptEngine::registerGlobalObject(const QString& name, QObject* object) {
             globalObject().setProperty(name, QScriptValue());
         }
     }
+#endif
 }
 
+#ifndef HIFI_UWP
 void ScriptEngine::registerFunction(const QString& name, QScriptEngine::FunctionSignature functionSignature, int numArguments) {
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
@@ -871,6 +923,9 @@ void ScriptEngine::removeEventHandler(const EntityItemID& entityID, const QStrin
         }
     }
 }
+#endif
+
+#ifndef HIFI_UWP
 // Register the handler.
 void ScriptEngine::addEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler) {
     if (QThread::currentThread() != thread()) {
@@ -1002,6 +1057,7 @@ QScriptValue ScriptEngine::evaluate(const QString& sourceCode, const QString& fi
     }
     return result;
 }
+#endif
 
 void ScriptEngine::run() {
     auto filenameParts = _fileNameString.split("/");
@@ -1023,8 +1079,12 @@ void ScriptEngine::run() {
 
     {
         PROFILE_RANGE(script, _fileNameString);
+
+#ifndef HIFI_UWP
         evaluate(_scriptContents, _fileNameString);
+
         maybeEmitUncaughtException(__FUNCTION__);
+#endif
     }
 #ifdef _WIN32
     // VS13 does not sleep_until unless it uses the system_clock, see:
@@ -1079,7 +1139,11 @@ void ScriptEngine::run() {
                 QEventLoop loop;
                 QTimer timer;
                 timer.setSingleShot(true);
+
+#ifndef HIFI_UWP
                 connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+#endif
+
                 timer.start(sleepFor.count());
                 loop.exec();
             } else {
@@ -1150,12 +1214,16 @@ void ScriptEngine::run() {
         _lastUpdate = now;
 
         // only clear exceptions if we are not in the middle of evaluating
+#ifndef HIFI_UWP
         if (!isEvaluating() && hasUncaughtException()) {
             qCWarning(scriptengine) << __FUNCTION__ << "---------- UNCAUGHT EXCEPTION --------";
             qCWarning(scriptengine) << "runInThread" << uncaughtException().toString();
+
             emit unhandledException(cloneUncaughtException(__FUNCTION__));
+
             clearExceptions();
         }
+#endif
     }
     scriptInfoMessage("Script Engine stopping:" + getFilename());
 
@@ -1219,10 +1287,13 @@ void ScriptEngine::stopAllTimersForEntityScript(const EntityItemID& entityID) {
 void ScriptEngine::stop(bool marshal) {
     _isStopping = true; // this can be done on any thread
 
+#ifndef HIFI_UWP
     if (marshal) {
         QMetaObject::invokeMethod(this, "stop");
         return;
     }
+#endif
+
     if (!_isFinished) {
         _isFinished = true;
         emit runningStateChanged();
@@ -1231,6 +1302,7 @@ void ScriptEngine::stop(bool marshal) {
 
 // Other threads can invoke this through invokeMethod, which causes the callback to be asynchronously executed in this script's thread.
 void ScriptEngine::callAnimationStateHandler(QScriptValue callback, AnimVariantMap parameters, QStringList names, bool useNames, AnimVariantResultHandler resultHandler) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::callAnimationStateHandler() called on wrong thread [" << QThread::currentThread() << "], invoking on correct thread [" << thread() << "]  name:" << name;
@@ -1255,15 +1327,19 @@ void ScriptEngine::callAnimationStateHandler(QScriptValue callback, AnimVariantM
     } else {
         qCWarning(scriptengine) << "ScriptEngine::callAnimationStateHandler invalid return argument from callback, expected an object";
     }
+#endif
 }
 
 void ScriptEngine::updateMemoryCost(const qint64& deltaSize) {
+#ifndef HIFI_UWP
     if (deltaSize > 0) {
         reportAdditionalMemoryCost(deltaSize);
     }
+#endif
 }
 
 void ScriptEngine::timerFired() {
+#ifndef HIFI_UWP
     {
         auto engine = DependencyManager::get<ScriptEngines>();
         if (!engine || engine->isStopped()) {
@@ -1285,15 +1361,19 @@ void ScriptEngine::timerFired() {
     if (timerData.function.isValid()) {
         PROFILE_RANGE(script, __FUNCTION__);
         auto preTimer = p_high_resolution_clock::now();
+
         callWithEnvironment(timerData.definingEntityIdentifier, timerData.definingSandboxURL, timerData.function, timerData.function, QScriptValueList());
+
         auto postTimer = p_high_resolution_clock::now();
         auto elapsed = (postTimer - preTimer);
         _totalTimerExecution += std::chrono::duration_cast<std::chrono::microseconds>(elapsed);
     } else {
         qCWarning(scriptengine) << "timerFired -- invalid function" << timerData.function.toVariant().toString();
     }
+#endif
 }
 
+#ifndef HIFI_UWP
 QObject* ScriptEngine::setupTimerWithInterval(const QScriptValue& function, int intervalMS, bool isSingleShot) {
     // create the timer, add it to the map, and start it
     QTimer* newTimer = new QTimer(this);
@@ -1335,6 +1415,7 @@ QObject* ScriptEngine::setTimeout(const QScriptValue& function, int timeoutMS) {
 
     return setupTimerWithInterval(function, timeoutMS, true);
 }
+#endif
 
 void ScriptEngine::stopTimer(QTimer *timer) {
     if (_timerFunctionMap.contains(timer)) {
@@ -1359,12 +1440,16 @@ QUrl ScriptEngine::resolvePath(const QString& include) const {
     // we apparently weren't a fully qualified url, so, let's assume we're relative
     // to the first absolute URL in the JS scope chain
     QUrl parentURL;
+
+#ifndef HIFI_UWP
     auto context = currentContext();
+
     do {
         QScriptContextInfo contextInfo { context };
         parentURL = QUrl(contextInfo.fileName());
         context = context->parentContext();
     } while (parentURL.isRelative() && context);
+#endif
 
     if (parentURL.isRelative()) {
         // fallback to the "include" parent (if defined, this will already be absolute)
@@ -1405,9 +1490,12 @@ void ScriptEngine::endProfileRange(const QString& label) const {
 
 // Script.require.resolve -- like resolvePath, but performs more validation and throws exceptions on invalid module identifiers (for consistency with Node.js)
 QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& relativeTo) {
+#ifndef HIFI_UWP
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return QString();
     }
+#endif
+
     QUrl defaultScriptsLoc = PathUtils::defaultScriptsLocation();
     QUrl url(moduleId);
 
@@ -1418,8 +1506,12 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
     auto message = QString("Cannot find module '%1' (%2)").arg(displayId);
 
     auto throwResolveError = [&](const QScriptValue& error) -> QString {
+
+#ifndef HIFI_UWP
         raiseException(error);
         maybeEmitUncaughtException("require.resolve");
+#endif
+
         return QString();
     };
 
@@ -1428,7 +1520,10 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
     if (idLength < 1 || idLength > MAX_MODULE_ID_LENGTH) {
         auto details = QString("rejecting invalid module id size (%1 chars [1,%2])")
             .arg(idLength).arg(MAX_MODULE_ID_LENGTH);
+
+#ifndef HIFI_UWP
         return throwResolveError(makeError(message.arg(details), "RangeError"));
+#endif
     }
 
     // this regex matches: absolute, dotted or path-like URLs
@@ -1455,15 +1550,23 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
                 if (QFileInfo(unanchoredUrl.toLocalFile()).isFile()) {
                     auto msg = QString("relative module ids must be anchored; use './%1' instead")
                         .arg(moduleId);
+
+#ifndef HIFI_UWP
                     return throwResolveError(makeError(message.arg(msg)));
+#endif
+
                 }
             }
+#ifndef HIFI_UWP
             return throwResolveError(makeError(message.arg("system module not found")));
+#endif
         }
     }
 
     if (url.isRelative()) {
+#ifndef HIFI_UWP
         return throwResolveError(makeError(message.arg("could not resolve module id")));
+#endif
     }
 
     // if it looks like a local file, verify that it's an allowed path and really a file
@@ -1475,6 +1578,8 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
         }
 
         bool disallowOutsideFiles = !PathUtils::defaultScriptsLocation().isParentOf(canonical) && !currentSandboxURL.isLocalFile();
+
+#ifndef HIFI_UWP
         if (disallowOutsideFiles && !PathUtils::isDescendantOf(canonical, currentSandboxURL)) {
             return throwResolveError(makeError(message.arg(
                 QString("path '%1' outside of origin script '%2' '%3'")
@@ -1489,32 +1594,43 @@ QString ScriptEngine::_requireResolve(const QString& moduleId, const QString& re
         if (!file.isFile()) {
             return throwResolveError(makeError(message.arg("path is not a file: " + url.toLocalFile())));
         }
+#endif
     }
 
+#ifndef HIFI_UWP
     maybeEmitUncaughtException(__FUNCTION__);
+#endif
+
     return url.toString();
 }
 
 // retrieves the current parent module from the JS scope chain
+#ifndef HIFI_UWP
 QScriptValue ScriptEngine::currentModule() {
+
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+
     auto jsRequire = globalObject().property("Script").property("require");
     auto cache = jsRequire.property("cache");
     auto candidate = QScriptValue();
+
     for (auto c = currentContext(); c && !candidate.isObject(); c = c->parentContext()) {
         QScriptContextInfo contextInfo { c };
         candidate = cache.property(contextInfo.fileName());
     }
+
     if (!candidate.isObject()) {
         return QScriptValue();
     }
     return candidate;
 }
+#endif
 
 // replaces or adds "module" to "parent.children[]" array
 // (for consistency with Node.js and userscript cache invalidation without "cache busters")
+#ifndef HIFI_UWP
 bool ScriptEngine::registerModuleWithParent(const QScriptValue& module, const QScriptValue& parent) {
     auto children = parent.property("children");
     if (children.isArray()) {
@@ -1635,15 +1751,26 @@ QScriptValue ScriptEngine::instantiateModule(const QScriptValue& module, const Q
     if (module.property("content-type").toString() == "application/json") {
         qCDebug(scriptengine_module) << "... parsing as JSON";
         closure.setProperty("__json", sourceCode);
+
+#ifndef HIFI_UWP
         result = evaluateInClosure(closure, { "module.exports = JSON.parse(__json)", modulePath });
+#endif
+
     } else {
         // scoped vars for consistency with Node.js
         closure.setProperty("require", module.property("require"));
         closure.setProperty("__filename", modulePath, READONLY_HIDDEN_PROP_FLAGS);
         closure.setProperty("__dirname", QString(modulePath).replace(QRegExp("/[^/]*$"), ""), READONLY_HIDDEN_PROP_FLAGS);
+
+#ifndef HIFI_UWP
         result = evaluateInClosure(closure, { sourceCode, modulePath });
+#endif
     }
+
+#ifndef HIFI_UWP
     maybeEmitUncaughtException(__FUNCTION__);
+#endif
+
     return result;
 }
 
@@ -1862,14 +1989,18 @@ void ScriptEngine::include(const QString& includeFile, QScriptValue callback) {
     urls.append(includeFile);
     include(urls, callback);
 }
+#endif
 
 // NOTE: The load() command is similar to the include() command except that it loads the script
 // as a stand-alone script. To accomplish this, the ScriptEngine class just emits a signal which
 // the Application or other context will connect to in order to know to actually load the script
 void ScriptEngine::load(const QString& loadFile) {
+#ifndef HIFI_UWP
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return;
     }
+#endif
+
     if (DependencyManager::get<ScriptEngines>()->isStopped()) {
         scriptWarningMessage("Script.load() while shutting down is ignored... loadFile:"
                 + loadFile + "parent script:" + getFilename());
@@ -1891,6 +2022,7 @@ void ScriptEngine::load(const QString& loadFile) {
     }
 }
 
+#ifndef HIFI_UWP
 // Look up the handler associated with eventName and entityID. If found, evalute the argGenerator thunk and call the handler with those args
 void ScriptEngine::forwardHandlerCall(const EntityItemID& entityID, const QString& eventName, QScriptValueList eventHandlerArgs) {
     if (QThread::currentThread() != thread()) {
@@ -1912,10 +2044,14 @@ void ScriptEngine::forwardHandlerCall(const EntityItemID& entityID, const QStrin
             // and the entity scripts may be for entities other than the one this is a handler for.
             // Fortunately, the definingEntityIdentifier captured the entity script id (if any) when the handler was added.
             CallbackData& handler = handlersForEvent[i];
+
+#ifndef HIFI_UWP
             callWithEnvironment(handler.definingEntityIdentifier, handler.definingSandboxURL, handler.function, QScriptValue(), eventHandlerArgs);
+#endif
         }
     }
 }
+#endif
 
 int ScriptEngine::getNumRunningEntityScripts() const {
     int sum = 0;
@@ -2052,6 +2188,7 @@ void ScriptEngine::processDeferredEntityLoads(const QString& entityScript, const
 }
 
 void ScriptEngine::loadEntityScript(const EntityItemID& entityID, const QString& entityScript, bool forceRedownload) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
         QMetaObject::invokeMethod(this, "loadEntityScript",
             Q_ARG(const EntityItemID&, entityID),
@@ -2154,11 +2291,13 @@ void ScriptEngine::loadEntityScript(const EntityItemID& entityID, const QString&
                 }
             });
     }, forceRedownload);
+#endif
 }
 
 // since all of these operations can be asynch we will always do the actual work in the response handler
 // for the download
 void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, const QString& scriptOrURL, const QString& contents, bool isURL, bool success , const QString& status) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::entityScriptContentAvailable() called on wrong thread ["
@@ -2224,10 +2363,13 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
         emit unhandledException(syntaxError);
         return;
     }
+
     QScriptProgram program { contents, fileName };
     if (program.isNull()) {
         setError("Bad program (isNull)", EntityScriptStatus::ERROR_RUNNING_SCRIPT);
+
         emit unhandledException(makeError("program.isNull"));
+
         return; // done processing script
     }
 
@@ -2251,12 +2393,15 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
                 sandbox.raiseException(
                     sandbox.makeError(QString("Timed out (entity constructors are limited to %1ms)").arg(SANDBOX_TIMEOUT))
                 );
+
         });
 
         testConstructor = sandbox.evaluate(program);
 
         if (sandbox.hasUncaughtException()) {
+
             exception = sandbox.cloneUncaughtException(QString("(preflight %1)").arg(entityID.toString()));
+
             sandbox.clearExceptions();
         } else if (testConstructor.isError()) {
             exception = testConstructor;
@@ -2265,8 +2410,10 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
 
     if (exception.isError()) {
         // create a local copy using makeError to decouple from the sandbox engine
+
         exception = makeError(exception);
         setError(formatException(exception, _enableExtendedJSExceptions.get()), EntityScriptStatus::ERROR_RUNNING_SCRIPT);
+
         emit unhandledException(exception);
         return;
     }
@@ -2309,6 +2456,7 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
 
         if (hasUncaughtException()) {
             entityScriptObject = cloneUncaughtException("(construct " + entityID.toString() + ")");
+
             clearExceptions();
         }
     };
@@ -2317,7 +2465,9 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
 
     if (entityScriptObject.isError()) {
         auto exception = entityScriptObject;
+
         setError(formatException(exception, _enableExtendedJSExceptions.get()), EntityScriptStatus::ERROR_RUNNING_SCRIPT);
+
         emit unhandledException(exception);
         return;
     }
@@ -2338,9 +2488,11 @@ void ScriptEngine::entityScriptContentAvailable(const EntityItemID& entityID, co
 
     _occupiedScriptURLs.remove(entityScript);
     processDeferredEntityLoads(entityScript, entityID);
+#endif
 }
 
 void ScriptEngine::unloadEntityScript(const EntityItemID& entityID, bool shouldRemoveFromMap) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::unloadEntityScript() called on wrong thread [" << QThread::currentThread() << "], invoking on correct thread [" << thread() << "]  "
@@ -2388,9 +2540,11 @@ void ScriptEngine::unloadEntityScript(const EntityItemID& entityID, bool shouldR
             processDeferredEntityLoads(scriptText, entityID);
         }
     }
+#endif
 }
 
 void ScriptEngine::unloadAllEntityScripts() {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::unloadAllEntityScripts() called on wrong thread [" << QThread::currentThread() << "], invoking on correct thread [" << thread() << "]";
@@ -2416,6 +2570,7 @@ void ScriptEngine::unloadAllEntityScripts() {
         "--------------------------------------------------------"
     );
 #endif // DEBUG_ENGINE_STATE
+#endif
 }
 
 void ScriptEngine::refreshFileScript(const EntityItemID& entityID) {
@@ -2460,19 +2615,26 @@ void ScriptEngine::doWithEnvironment(const EntityItemID& entityID, const QUrl& s
 #else
     operation();
 #endif
+
+#ifndef HIFI_UWP
     maybeEmitUncaughtException(!entityID.isNull() ? entityID.toString() : __FUNCTION__);
+#endif
+
     currentEntityIdentifier = oldIdentifier;
     currentSandboxURL = oldSandboxURL;
 }
 
+#ifndef HIFI_UWP
 void ScriptEngine::callWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, QScriptValue function, QScriptValue thisObject, QScriptValueList args) {
     auto operation = [&]() {
         function.call(thisObject, args);
     };
     doWithEnvironment(entityID, sandboxURL, operation);
 }
+#endif
 
 void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const QStringList& params) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::callEntityScriptMethod() called on wrong thread [" << QThread::currentThread() << "], invoking on correct thread [" << thread() << "]  "
@@ -2500,13 +2662,15 @@ void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QS
             QScriptValueList args;
             args << entityID.toScriptValue(this);
             args << qScriptValueFromSequence(this, params);
+
             callWithEnvironment(entityID, details.definingSandboxURL, entityScript.property(methodName), entityScript, args);
         }
-
     }
+#endif
 }
 
 void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const PointerEvent& event) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::callEntityScriptMethod() called on wrong thread [" << QThread::currentThread() << "], invoking on correct thread [" << thread() << "]  "
@@ -2534,12 +2698,15 @@ void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QS
             QScriptValueList args;
             args << entityID.toScriptValue(this);
             args << event.toScriptValue(this);
+
             callWithEnvironment(entityID, details.definingSandboxURL, entityScript.property(methodName), entityScript, args);
         }
     }
+#endif
 }
 
 void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const EntityItemID& otherID, const Collision& collision) {
+#ifndef HIFI_UWP
     if (QThread::currentThread() != thread()) {
 #ifdef THREAD_DEBUGGING
         qCDebug(scriptengine) << "*** WARNING *** ScriptEngine::callEntityScriptMethod() called on wrong thread [" << QThread::currentThread() << "], invoking on correct thread [" << thread() << "]  "
@@ -2569,8 +2736,10 @@ void ScriptEngine::callEntityScriptMethod(const EntityItemID& entityID, const QS
             args << entityID.toScriptValue(this);
             args << otherID.toScriptValue(this);
             args << collisionToScriptValue(this, collision);
+
             callWithEnvironment(entityID, details.definingSandboxURL, entityScript.property(methodName), entityScript, args);
         }
     }
+#endif
 }
 

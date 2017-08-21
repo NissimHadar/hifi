@@ -5,7 +5,7 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-
+#ifndef HIFI_UWP
 #include "StereoDisplayPlugin.h"
 
 #include <QtGui/QScreen>
@@ -101,3 +101,4 @@ void StereoDisplayPlugin::internalDeactivate() {
 float StereoDisplayPlugin::getRecommendedAspectRatio() const {
     return aspect(Parent::getRecommendedRenderSize());
 }
+#endif //HIFI_UWP

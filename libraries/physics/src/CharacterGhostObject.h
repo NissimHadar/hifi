@@ -30,6 +30,7 @@ public:
 
     void setCollisionGroupAndMask(int16_t group, int16_t mask);
     void getCollisionGroupAndMask(int16_t& group, int16_t& mask) const;
+    void getCollisionGroupAndMask(int32_t& group, int32_t& mask) const;
 
     void setRadiusAndHalfHeight(btScalar radius, btScalar halfHeight);
     void setUpDirection(const btVector3& up);

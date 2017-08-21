@@ -15,6 +15,7 @@
 
 static const QString QML_WEB_ENGINE_STORAGE_NAME = "qmlWebEngine";
 
+#ifndef HIFI_UWP
 FileTypeProfile::FileTypeProfile(QObject* parent) :
     QQuickWebEngineProfile(parent)
 {
@@ -24,3 +25,4 @@ FileTypeProfile::FileTypeProfile(QObject* parent) :
     auto requestInterceptor = new FileTypeRequestInterceptor(this);
     setRequestInterceptor(requestInterceptor);
 }
+#endif

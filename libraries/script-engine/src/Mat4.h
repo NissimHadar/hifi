@@ -16,10 +16,17 @@
 
 #include <QObject>
 #include <QString>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptable>
+#endif
 
 /// Scriptable Mat4 object.  Used exclusively in the JavaScript API
+#ifdef HIFI_UWP
+class Mat4 : public QObject {
+#else
 class Mat4 : public QObject, protected QScriptable {
+#endif
     Q_OBJECT
 
 public slots:

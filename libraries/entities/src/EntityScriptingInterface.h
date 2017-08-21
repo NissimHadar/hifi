@@ -252,7 +252,9 @@ public slots:
      * @param {Object} thisObject The scoping "this" context that callback will be executed within.
      * @param {ResultCallback} callbackOrMethodName Executes thisObject[callbackOrMethodName](err, result) with the query results.
      */
+#ifndef HIFI_UWP
     Q_INVOKABLE bool queryPropertyMetadata(QUuid entityID, QScriptValue property, QScriptValue scopeOrCallback, QScriptValue methodOrName = QScriptValue());
+#endif
 
     Q_INVOKABLE bool getServerScriptStatus(QUuid entityID, QScriptValue callback);
 

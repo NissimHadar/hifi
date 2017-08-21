@@ -15,9 +15,12 @@
 #include <QtCore/QString>
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptValueIterator>
 #include <QtScript/QScriptContextInfo>
+#endif
 
 #include "Profile.h"
 
@@ -35,11 +38,15 @@ bool BaseScriptEngine::IS_THREADSAFE_INVOCATION(const QThread *thread, const QSt
     return false;
 }
 
+#ifndef HIFI_UWP
 // engine-aware JS Error copier and factory
 QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QString& type) {
+#ifndef HIFI_UWP
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+#endif
+
     auto other = _other;
     if (other.isString()) {
         other = newObject();
@@ -71,12 +78,15 @@ QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QStri
     }
     return err;
 }
+#endif
 
+#ifndef HIFI_UWP
 // check syntax and when there are issues returns an actual "SyntaxError" with the details
 QScriptValue BaseScriptEngine::lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+
     const auto syntaxCheck = checkSyntax(sourceCode);
     if (syntaxCheck.state() != QScriptSyntaxCheckResult::Valid) {
         auto err = globalObject().property("SyntaxError")
@@ -106,6 +116,7 @@ QScriptValue BaseScriptEngine::cloneUncaughtException(const QString& extraDetail
     if (!hasUncaughtException()) {
         return unboundNullValue();
     }
+
     auto exception = uncaughtException();
     // ensure the error object is engine-local
     auto err = makeError(exception);
@@ -207,24 +218,32 @@ bool BaseScriptEngine::raiseException(const QScriptValue& exception) {
     }
     return false;
 }
+#endif
 
+#ifndef HIFI_UWP
 bool BaseScriptEngine::maybeEmitUncaughtException(const QString& debugHint) {
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return false;
     }
     if (!isEvaluating() && hasUncaughtException()) {
+
         emit unhandledException(cloneUncaughtException(debugHint));
+
         clearExceptions();
         return true;
     }
     return false;
 }
+#endif
 
+#ifndef HIFI_UWP
 QScriptValue BaseScriptEngine::evaluateInClosure(const QScriptValue& closure, const QScriptProgram& program) {
     PROFILE_RANGE(script, "evaluateInClosure");
+
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
+
     const auto fileName = program.fileName();
     const auto shortName = QUrl(fileName).fileName();
 
@@ -278,8 +297,10 @@ QScriptValue BaseScriptEngine::evaluateInClosure(const QScriptValue& closure, co
 
     return result;
 }
+#endif
 
 // Lambda
+#ifndef HIFI_UWP
 QScriptValue BaseScriptEngine::newLambdaFunction(std::function<QScriptValue(QScriptContext *, QScriptEngine*)> operation, const QScriptValue& data, const QScriptEngine::ValueOwnership& ownership) {
     auto lambda = new Lambda(this, operation, data);
     auto object = newQObject(lambda, ownership);
@@ -288,10 +309,15 @@ QScriptValue BaseScriptEngine::newLambdaFunction(std::function<QScriptValue(QScr
     call.setData(data);        // context->callee().data() will === data param
     return call;
 }
+#endif
+
+#ifndef HIFI_UWP
 QString Lambda::toString() const {
     return QString("[Lambda%1]").arg(data.isValid() ? " " + data.toString() : data.toString());
 }
+#endif
 
+#ifndef HIFI_UWP
 Lambda::~Lambda() {
 #ifdef DEBUG_JS_LAMBDA_FUNCS
     qDebug() << "~Lambda" << "this" << this;
@@ -310,7 +336,9 @@ QScriptValue Lambda::call() {
     }
     return operation(engine->currentContext(), engine);
 }
+#endif
 
+#ifndef HIFI_UWP
 QScriptValue makeScopedHandlerObject(QScriptValue scopeOrCallback, QScriptValue methodOrName) {
     auto engine = scopeOrCallback.engine();
     if (!engine) {
@@ -336,6 +364,7 @@ QScriptValue makeScopedHandlerObject(QScriptValue scopeOrCallback, QScriptValue 
 QScriptValue callScopedHandlerObject(QScriptValue handler, QScriptValue err, QScriptValue result) {
     return handler.property("callback").call(handler.property("scope"), QScriptValueList({ err, result }));
 }
+#endif
 
 #ifdef DEBUG_JS
 void BaseScriptEngine::_debugDump(const QString& header, const QScriptValue& object, const QString& footer) {

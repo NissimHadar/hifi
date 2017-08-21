@@ -11,7 +11,9 @@
 
 #include "AssetScriptingInterface.h"
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptEngine>
+#endif
 
 #include <AssetRequest.h>
 #include <AssetUpload.h>
@@ -19,11 +21,17 @@
 #include <NetworkLogging.h>
 #include <NodeList.h>
 
+#ifdef HIFI_UWP
+AssetScriptingInterface::AssetScriptingInterface() {
+}
+#else
 AssetScriptingInterface::AssetScriptingInterface(QScriptEngine* engine) :
     _engine(engine)
 {
 }
+#endif
 
+#ifndef HIFI_UWP
 void AssetScriptingInterface::uploadData(QString data, QScriptValue callback) {
     QByteArray dataByteArray = data.toUtf8();
     auto upload = DependencyManager::get<AssetClient>()->createUpload(dataByteArray);
@@ -88,6 +96,7 @@ void AssetScriptingInterface::downloadData(QString urlString, QScriptValue callb
 
     assetRequest->start();
 }
+#endif
 
 #if (PR_BUILD || DEV_BUILD)
 void AssetScriptingInterface::sendFakedHandshake() {

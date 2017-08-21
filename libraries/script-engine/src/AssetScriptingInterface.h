@@ -15,7 +15,10 @@
 #define hifi_AssetScriptingInterface_h
 
 #include <QtCore/QObject>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
+#endif
 
 #include <AssetClient.h>
 
@@ -25,7 +28,11 @@
 class AssetScriptingInterface : public QObject {
     Q_OBJECT
 public:
+#ifdef HIFI_UWP
+    AssetScriptingInterface();
+#else
     AssetScriptingInterface(QScriptEngine* engine);
+#endif
 
     /**jsdoc
      * Upload content to the connected domain's asset server.
@@ -42,7 +49,9 @@ public:
      * @param {string} hash
      */
 
+#ifndef HIFI_UWP
     Q_INVOKABLE void uploadData(QString data, QScriptValue callback);
+#endif
 
     /**jsdoc
      * Download data from the connected domain's asset server.
@@ -58,7 +67,9 @@ public:
      * @param data {string} content that was downloaded
      */
 
+#ifndef HIFI_UWP
     Q_INVOKABLE void downloadData(QString url, QScriptValue downloadComplete);
+#endif
 
     /**jsdoc
      * Sets up a path to hash mapping within the connected domain's asset server
@@ -74,7 +85,9 @@ public:
      * @callback Assets~setMappingCallback
      * @param {string} error
      */
+#ifndef HIFI_UWP
     Q_INVOKABLE void setMapping(QString path, QString hash, QScriptValue callback);
+#endif
 
 #if (PR_BUILD || DEV_BUILD)
     Q_INVOKABLE void sendFakedHandshake();
@@ -82,7 +95,10 @@ public:
 
 protected:
     QSet<AssetRequest*> _pendingRequests;
+
+#ifndef HIFI_UWP
     QScriptEngine* _engine;
+#endif
 };
 
 #endif // hifi_AssetScriptingInterface_h

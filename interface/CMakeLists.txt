@@ -191,6 +191,19 @@ if (WIN32 AND NOT UWP)
   add_dependency_external_projects(steamworks)
 endif()
 
+
+if (UWP)
+  # Use the OpenSSL version created with vcpkg
+  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_PATH}/include")
+  message (STATUS "using vcpkg'ed version of OpenSSL")
+endif()
+
+# include OPENSSL
+include_directories(SYSTEM "${OPENSSL_INCLUDE_DIR}")
+
+# append OpenSSL to our list of libraries to link
+target_link_libraries(${TARGET_NAME} ${OPENSSL_LIBRARIES})
+
 # disable /OPT:REF and /OPT:ICF for the Debug builds
 # This will prevent the following linker warnings
 # LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/OPT:ICF' specification
@@ -273,25 +286,14 @@ endforeach()
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
 if (UWP)
-  if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    target_link_libraries(
-      ${TARGET_NAME}
-      Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
-      Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
-      Qt5::WebChannel Qt5::WebEngine
-      $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2d.lib
-      ${PLATFORM_QT_LIBRARIES}
-    )
-  else ()
-     target_link_libraries(
-      ${TARGET_NAME}
-      Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
-      Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
-      Qt5::WebChannel Qt5::WebEngine
-      $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2.lib
-      ${PLATFORM_QT_LIBRARIES}
-    )
-  endif()
+   target_link_libraries(
+    ${TARGET_NAME}
+    Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
+    Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
+    Qt5::WebChannel Qt5::WebEngine
+    $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2.lib
+    ${PLATFORM_QT_LIBRARIES}
+  )
 else ()
   target_link_libraries(
     ${TARGET_NAME}

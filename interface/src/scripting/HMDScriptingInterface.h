@@ -14,9 +14,11 @@
 
 #include <atomic>
 
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 class QScriptContext;
 class QScriptEngine;
+#endif
 
 #include <GLMHelpers.h>
 #include <DependencyManager.h>
@@ -85,8 +87,11 @@ signals:
 
 public:
     HMDScriptingInterface();
+
+#ifndef HIFI_UWP
     static QScriptValue getHUDLookAtPosition2D(QScriptContext* context, QScriptEngine* engine);
     static QScriptValue getHUDLookAtPosition3D(QScriptContext* context, QScriptEngine* engine);
+#endif
 
     bool isMounted() const;
 

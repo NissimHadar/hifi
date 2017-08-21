@@ -330,9 +330,13 @@ void initializeQmlEngine(QQmlEngine* engine, QQuickWindow* window) {
     if (!javaScriptToInject.isEmpty()) {
         rootContext->setContextProperty("eventBridgeJavaScriptToInject", QVariant(javaScriptToInject));
     }
+
+#ifndef HIFI_UWP
     rootContext->setContextProperty("FileTypeProfile", new FileTypeProfile(rootContext));
     rootContext->setContextProperty("HFWebEngineProfile", new HFWebEngineProfile(rootContext));
     rootContext->setContextProperty("HFTabletWebEngineProfile", new HFTabletWebEngineProfile(rootContext));
+#endif
+
     rootContext->setContextProperty("Paths", DependencyManager::get<PathUtils>().data());
 }
 

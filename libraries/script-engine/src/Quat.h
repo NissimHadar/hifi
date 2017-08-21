@@ -18,7 +18,10 @@
 
 #include <QObject>
 #include <QString>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptable>
+#endif
 
 /**jsdoc
  * A Quaternion
@@ -31,8 +34,12 @@
  */
 
 /// Scriptable interface a Quaternion helper class object. Used exclusively in the JavaScript API
+#ifdef HIFI_UWP
+class Quat : public QObject {
+#else
 class Quat : public QObject, protected QScriptable {
-    Q_OBJECT
+#endif
+        Q_OBJECT
 
 public slots:
     glm::quat multiply(const glm::quat& q1, const glm::quat& q2);

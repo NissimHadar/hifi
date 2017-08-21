@@ -22,8 +22,11 @@
 #include <QtGui/QVector3D>
 #include <QtGui/QQuaternion>
 #include <QtNetwork/QAbstractSocket>
+
+#ifndef HIFI_UWP
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptValueIterator>
+#endif
 
 int vec4MetaTypeId = qRegisterMetaType<glm::vec4>();
 int vec3MetaTypeId = qRegisterMetaType<glm::vec3>();
@@ -854,6 +857,7 @@ QScriptValue meshesToScriptValue(QScriptEngine* engine, const MeshProxyList &in)
     return result;
 }
 
+#ifndef HIFI_UWP
 void meshesFromScriptValue(const QScriptValue& value, MeshProxyList &out) {
     QScriptValueIterator itr(value);
 
@@ -869,7 +873,6 @@ void meshesFromScriptValue(const QScriptValue& value, MeshProxyList &out) {
         }
     }
 }
-
 
 QScriptValue meshFaceToScriptValue(QScriptEngine* engine, const MeshFace &meshFace) {
     QScriptValue obj = engine->newObject();
@@ -899,3 +902,4 @@ void qVectorMeshFaceFromScriptValue(const QScriptValue& array, QVector<MeshFace>
         result << meshFace;
     }
 }
+#endif

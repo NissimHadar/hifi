@@ -5,7 +5,7 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-
+#ifndef HIFI_UWP
 #include "HmdDisplayPlugin.h"
 
 #include <memory>
@@ -25,10 +25,7 @@
 #include <shared/NsightHelpers.h>
 #include <gpu/Context.h>
 #include <gpu/StandardShaderLib.h>
-
-#ifndef HIFI_UWP
 #include <gpu/gl/GLBackend.h>
-#endif
 
 #include <TextureCache.h>
 #include <PathUtils.h>
@@ -383,10 +380,7 @@ void HmdDisplayPlugin::updateFrameData() {
         auto batchPose = _currentFrame->pose;
         auto currentPose = _currentPresentFrameInfo.presentPose;
         auto correction = glm::inverse(batchPose) * currentPose;
-
-#ifndef HIFI_UWP
         getGLBackend()->setCameraCorrection(correction);
-#endif
     }
 
     withPresentThreadLock([&] {
@@ -600,11 +594,7 @@ void HmdDisplayPlugin::OverlayRenderer::updatePipeline() {
         auto vs = gpu::Shader::createVertex(vsSource.toLocal8Bit().toStdString());
         auto ps = gpu::Shader::createPixel(fsSource.toLocal8Bit().toStdString());
         auto program = gpu::Shader::createProgram(vs, ps);
-
-#ifndef HIFI_UWP
         gpu::gl::GLBackend::makeProgram(*program, gpu::Shader::BindingSet());
-#endif
-
         this->uniformsLocation = program->getUniformBuffers().findLocation("overlayBuffer");
 
         gpu::StatePointer state = gpu::StatePointer(new gpu::State());
@@ -759,3 +749,4 @@ HmdDisplayPlugin::~HmdDisplayPlugin() {
 float HmdDisplayPlugin::stutterRate() const {
     return _stutterRate.rate();
 }
+#endif //HIFI_UWP
