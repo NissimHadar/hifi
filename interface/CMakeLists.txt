@@ -54,7 +54,7 @@ endif ()
 if (ANDROID)
   set(PLATFORM_QT_COMPONENTS AndroidExtras)
   set(PLATFORM_QT_LIBRARIES Qt5::AndroidExtras)
-else ()
+elseif (NOT UWP)
   set(PLATFORM_QT_COMPONENTS WebEngine WebEngineWidgets)
   set(PLATFORM_QT_LIBRARIES Qt5::WebEngine Qt5::WebEngineWidgets)
 endif ()
@@ -292,7 +292,7 @@ if (UWP)
     ${TARGET_NAME}
     Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
     Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
-    Qt5::WebChannel Qt5::WebEngine
+    Qt5::WebChannel
     $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2.lib
     ${PLATFORM_QT_LIBRARIES}
   )

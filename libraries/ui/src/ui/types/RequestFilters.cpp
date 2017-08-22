@@ -41,6 +41,7 @@ namespace {
 
 }
 
+#ifndef HIFI_UWP
 void RequestFilters::interceptHFWebEngineRequest(QWebEngineUrlRequestInfo& info) {
     // check if this is a request to a highfidelity URL
     bool isAuthable = isAuthableHighFidelityURL(info.requestUrl());
@@ -76,3 +77,4 @@ void RequestFilters::interceptFileType(QWebEngineUrlRequestInfo& info) {
         info.setHttpHeader(CONTENT_HEADER.toLocal8Bit(), TYPE_VALUE.toLocal8Bit());
     }
 }
+#endif

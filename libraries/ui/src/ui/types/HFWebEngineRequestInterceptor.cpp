@@ -16,6 +16,8 @@
 #include "AccountManager.h"
 #include "RequestFilters.h"
 
+#ifndef HIFI_UWP
 void HFWebEngineRequestInterceptor::interceptRequest(QWebEngineUrlRequestInfo& info) {
     RequestFilters::interceptHFWebEngineRequest(info);
 }
+#endif

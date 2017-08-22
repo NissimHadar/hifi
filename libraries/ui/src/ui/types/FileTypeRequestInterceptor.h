@@ -14,6 +14,7 @@
 #ifndef hifi_FileTypeRequestInterceptor_h
 #define hifi_FileTypeRequestInterceptor_h
 
+#ifndef HIFI_UWP
 #include <QWebEngineUrlRequestInterceptor>
 
 class FileTypeRequestInterceptor : public QWebEngineUrlRequestInterceptor {
@@ -22,5 +23,6 @@ public:
 
     virtual void interceptRequest(QWebEngineUrlRequestInfo& info) override;
 };
+#endif
 
 #endif // hifi_FileTypeRequestInterceptor_h

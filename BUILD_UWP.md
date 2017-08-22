@@ -31,27 +31,13 @@ The UWP version is missing a number of directories.  To solve this:
 
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5Script to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5Script
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5ScriptTools to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5ScriptTools
-* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5WebEngine to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5WebEngine
-* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5WebEngineCore to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5WebEngine
-* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5WebEngineWidgets to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5WebEngine
 
 * Copy C:\Qt\5.9.1\msvc2017_64\include\QtScript to C:\Qt\5.9.1\winrt_x64_msvc2017\include\QtScript
 * Copy C:\Qt\5.9.1\msvc2017_64\include\QtScriptTools to C:\Qt\5.9.1\winrt_x64_msvc2017\include\QtScriptTools
-* Copy C:\Qt\5.9.1\msvc2017_64\include\Qt5WebEngine to C:\Qt\5.9.1\winrt_x64_msvc2017\include\Qt5WebEngine
-* Copy C:\Qt\5.9.1\msvc2017_64\include\Qt5WebEngineCore to C:\Qt\5.9.1\winrt_x64_msvc2017\include\Qt5WebEngineCore
-* Copy C:\Qt\5.9.1\msvc2017_64\include\Qt5WebEngineWidgets to C:\Qt\5.9.1\winrt_x64_msvc2017\include\Qt5WebEngineWidgets
 
 * Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5Script*.* (8 files)
-* Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5WebEngine*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5WebEngine*.* (12 files)
-* Copy C:\Qt\5.9.1\msvc2017_64\bin\QtWebEngine*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\QtWebEngine*.* (4 files)
 
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5Script*.* (8 files)
-* Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5WebEngineCore*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5WebEngineCore*.* (12 files)
-
-* Copy C:\Qt\5.9.1\msvc2017_64\resources to C:\Qt\5.9.1\winrt_x64_msvc2017\resources (1 folder with 5 files)
-
-* Copy C:\Qt\5.9.1\msvc2017_64\translations\qtwebengine_locales\ to C:\Qt\5.9.1\winrt_x64_msvc2017\translations\qtwebengine_locales\ (1 folder with 53 files)
-
 
 ### Step 4. Setting Qt Environment Variable
 

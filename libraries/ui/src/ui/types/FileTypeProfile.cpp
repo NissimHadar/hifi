@@ -13,9 +13,9 @@
 
 #include "FileTypeRequestInterceptor.h"
 
+#ifndef HIFI_UWP
 static const QString QML_WEB_ENGINE_STORAGE_NAME = "qmlWebEngine";
 
-#ifndef HIFI_UWP
 FileTypeProfile::FileTypeProfile(QObject* parent) :
     QQuickWebEngineProfile(parent)
 {

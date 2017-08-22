@@ -13,9 +13,9 @@
 
 #include "HFWebEngineRequestInterceptor.h"
 
+#ifndef HIFI_UWP
 static const QString QML_WEB_ENGINE_STORAGE_NAME = "qmlWebEngine";
 
-#ifndef HIFI_UWP
 HFWebEngineProfile::HFWebEngineProfile(QObject* parent) :
     QQuickWebEngineProfile(parent)
 {
