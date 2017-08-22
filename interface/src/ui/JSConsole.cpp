@@ -161,7 +161,12 @@ void JSConsole::commandFinished() {
         _ui->promptTextEdit->setFocus();
     }
 
+#ifdef HIFI_UWP
+    bool error = false;
+#else
     bool error = (_scriptEngine->hasUncaughtException() || result.isError());
+#endif
+
     QString gutter = error ? GUTTER_ERROR : GUTTER_PREVIOUS_COMMAND;
     QString resultColor = error ? RESULT_ERROR_STYLE : RESULT_SUCCESS_STYLE;
     QString resultStr = "<span style='" + resultColor + "'>" + result.toString().toHtmlEscaped() + "</span>";
