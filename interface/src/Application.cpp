@@ -2093,7 +2093,6 @@ void Application::initializeGL() {
     _glWidget->makeCurrent();
 #ifndef HIFI_UWP
     gpu::Context::init<gpu::gl::GLBackend>();
-
     qApp->setProperty(hifi::properties::gl::MAKE_PROGRAM_CALLBACK,
         QVariant::fromValue((void*)(&gpu::gl::GLBackend::makeProgram)));
 #endif
@@ -6041,7 +6040,6 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
 #ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, CustomPromptResultToScriptValue, CustomPromptResultFromScriptValue);
-
     scriptEngine->registerGetterSetter("location", LocationScriptingInterface::locationGetter,
                         LocationScriptingInterface::locationSetter, "Window");
     // register `location` on the global object.
@@ -6077,6 +6075,7 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
 #ifndef HIFI_UWP
     qScriptRegisterMetaType(scriptEngine, DownloadInfoResultToScriptValue, DownloadInfoResultFromScriptValue);
+
     scriptEngine->registerGlobalObject("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
 #endif
 
