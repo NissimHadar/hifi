@@ -1,6 +1,8 @@
 set(TARGET_NAME interface)
 project(${TARGET_NAME})
 
+set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} -bigobj")
+
 # set a default root dir for each of our optional externals if it was not passed
 set(OPTIONAL_EXTERNALS "LeapMotion")
 
