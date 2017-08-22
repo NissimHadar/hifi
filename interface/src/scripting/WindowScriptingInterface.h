@@ -74,6 +74,7 @@ public slots:
 #endif
 
     void showAssetServer(const QString& upload = "");
+    QString checkVersion();
     void copyToClipboard(const QString& text);
     void takeSnapshot(bool notify = true, bool includeAnimated = false, float aspectRatio = 0.0f);
     void takeSecondaryCameraSnapshot();
