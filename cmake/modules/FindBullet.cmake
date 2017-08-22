@@ -65,14 +65,18 @@ macro(_FIND_BULLET_LIBRARY _var)
   mark_as_advanced(${_var}_LIBRARY)
 endmacro()
 
-find_path(BULLET_INCLUDE_DIR NAMES btBulletCollisionCommon.h
-  HINTS
-    ${BULLET_SEARCH_DIRS}/include
-    $ENV{BULLET_ROOT_DIR}
-    ${BULLET_ROOT}/include
-    ${BULLET_ROOT}/src
-  PATH_SUFFIXES bullet
-)
+if (UWP)
+  set (BULLET_INCLUDE_DIR $ENV{VCPKG_PATH}/include/bullet)
+else ()
+  find_path(BULLET_INCLUDE_DIR NAMES btBulletCollisionCommon.h
+    HINTS
+      ${BULLET_SEARCH_DIRS}/include
+      $ENV{BULLET_ROOT_DIR}
+      ${BULLET_ROOT}/include
+      ${BULLET_ROOT}/src
+    PATH_SUFFIXES bullet
+  )
+endif ()
 
 # Find the libraries
 
