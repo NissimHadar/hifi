@@ -20,22 +20,20 @@ macro(PACKAGE_LIBRARIES_FOR_DEPLOYMENT)
     set(PLUGIN_PATH "plugins")
 
     # add a post-build command to copy DLLs beside the executable
-    if (UWP)
-      # bullet
+    if (UWP AND (${TARGET_NAME} STREQUAL "interface"))
       add_custom_command(
         TARGET ${TARGET_NAME}
         POST_BUILD
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletCollision.dll .
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletDynamics.dll .
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletSoftBody.dll .
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/LinearMath.dll .
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy C:/Qt/5.9.1/winrt_x64_msvc2017/bin .
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/tbb/project/src/tbb/bin/intel64/vc14 .
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/nvtt/project/src/nvtt/Release/x64 .
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/quazip/project/lib .
-        COMMAND if exist "C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64" "C:/Program Files/CMake/bin/cmake.exe" -E copy- C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64 .
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletCollision.dll $(Configuration)
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletDynamics.dll $(Configuration)
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletSoftBody.dll $(Configuration)
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/LinearMath.dll $(Configuration)
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy C:/Qt/5.9.1/winrt_x64_msvc2017/bin $(Configuration)
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy ${HIFI_LIBRARY_DIR}/tbb/vc14_ui/tbb.dll $(Configuration)
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/nvtt/project/src/nvtt/Release/x64/nvtt.dll $(Configuration)
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/quazip/project/lib/quazip5.dll $(Configuration)
+        COMMAND if exist "C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64" "C:/Program Files/CMake/bin/cmake.exe" -E copy- C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64 $(Configuration)
       )
-      
     else ()
       add_custom_command(
         TARGET ${TARGET_NAME}
