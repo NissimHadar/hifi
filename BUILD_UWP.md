@@ -27,15 +27,6 @@ Download and install the [Qt Online Installer](https://www.qt.io/download-open-s
 
 Note: Installing the Sources is optional but recommended if you have room for them (~2GB). 
 
-The UWP version is missing a number of directories.  To solve this:
-
-* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5Script to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5Script
-* Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5ScriptTools to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5ScriptTools
-
-* Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5Script*.* (8 files)
-
-* Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5Script*.* (8 files)
-
 ### Step 4. Setting Qt Environment Variable
 
 Go to `Control Panel > System > Advanced System Settings > Environment Variables > New...` (or search “Environment Variables” in Start Search).
