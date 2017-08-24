@@ -13,9 +13,15 @@
 #define hifi_GlobalServicesScriptingInterface_h
 
 #include <QObject>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptContext>
 #include <QScriptEngine>
 #include <QScriptValue>
+#endif
+
 #include <QString>
 #include <QStringList>
 #include <DiscoverabilityManager.h>

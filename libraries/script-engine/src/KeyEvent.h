@@ -13,7 +13,12 @@
 #define hifi_KeyEvent_h
 
 #include <QKeyEvent>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValue>
+#endif
 
 class KeyEvent {
 public:

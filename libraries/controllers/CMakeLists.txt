@@ -1,7 +1,12 @@
 set(TARGET_NAME controllers)
 
 # set a default root dir for each of our optional externals if it was not passed
-setup_hifi_library(Script Qml)
+
+if (UWP)
+  setup_hifi_library(Qml)
+else ()
+  setup_hifi_library(Script Qml)
+endif ()
 
 # use setup_hifi_library macro to setup our project and link appropriate Qt modules
 link_hifi_libraries(shared)

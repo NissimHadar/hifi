@@ -13,7 +13,11 @@
 #define hifi_HFActionEvent_h
 
 
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <qscriptengine.h>
+#endif
 
 #include <RegisteredMetaTypes.h>
 

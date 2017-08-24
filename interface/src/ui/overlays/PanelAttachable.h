@@ -36,8 +36,14 @@
 
 #include <glm/glm.hpp>
 #include <Transform.h>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValue>
 #include <QScriptEngine>
+#endif
+
 #include <QUuid>
 
 class OverlayPanel;

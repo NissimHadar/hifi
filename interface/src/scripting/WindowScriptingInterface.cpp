@@ -14,7 +14,12 @@
 #include <QClipboard>
 #include <QtCore/QDir>
 #include <QMessageBox>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValue>
+#endif
 
 #include <shared/QtHelpers.h>
 #include <SettingHandle.h>

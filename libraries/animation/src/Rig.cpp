@@ -13,7 +13,13 @@
 
 #include <glm/gtx/vector_angle.hpp>
 #include <queue>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValueIterator>
+#endif
+
 #include <QWriteLocker>
 #include <QReadLocker>
 
@@ -940,12 +946,14 @@ void Rig::updateAnimationStateHandlers() { // called on avatar update thread (wh
         };
         // invokeMethod makes a copy of the args, and copies of AnimVariantMap do copy the underlying map, so this will correctly capture
         // the state of _animVars and allow continued changes to _animVars in this thread without conflict.
+#ifndef HIFI_UWP
         QMetaObject::invokeMethod(function.engine(), "callAnimationStateHandler",  Qt::QueuedConnection,
                                   Q_ARG(QScriptValue, function),
                                   Q_ARG(AnimVariantMap, _animVars),
                                   Q_ARG(QStringList, value.propertyNames),
                                   Q_ARG(bool, value.useNames),
                                   Q_ARG(AnimVariantResultHandler, handleResult));
+#endif
         // It turns out that, for thread-safety reasons, ScriptEngine::callAnimationStateHandler will invoke itself if called from other
         // than the script thread. Thus the above _could_ be replaced with an ordinary call, which will then trigger the same
         // invokeMethod as is done explicitly above. However, the script-engine library depends on this animation library, not vice versa.

@@ -17,7 +17,13 @@
 #include <glm/gtx/quaternion.hpp>
 #include <map>
 #include <set>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValue>
+#endif
+
 #include <StreamUtils.h>
 #include <GLMHelpers.h>
 #include "AnimationLogging.h"

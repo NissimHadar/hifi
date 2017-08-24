@@ -10,9 +10,14 @@
 //
 
 #include <QDebug>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValue>
 #include <QScriptValueList>
 #include <QScriptEngine>
+#endif
 
 #include "UndoStackScriptingInterface.h"
 

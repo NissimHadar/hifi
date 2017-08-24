@@ -2,7 +2,12 @@
 set(TARGET_NAME controllers-test)
  
 # This is not a testcase -- just set it up as a regular hifi project
-setup_hifi_project(Script Qml)
+if (UWP)
+  setup_hifi_project(Qml)
+else ()
+  setup_hifi_project(Script Qml)
+endif ()
+
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Tests/manual-tests/")
 
 setup_memory_debugger()

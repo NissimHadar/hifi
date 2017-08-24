@@ -12,8 +12,11 @@
 #ifndef hifi_LocationScriptingInterface_h
 #define hifi_LocationScriptingInterface_h
 
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <qscriptengine.h>
-
+#endif
 class LocationScriptingInterface : public QObject {
     Q_OBJECT
 public:

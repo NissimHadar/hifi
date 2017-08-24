@@ -1,6 +1,12 @@
 set(TARGET_NAME entities-renderer)
 AUTOSCRIBE_SHADER_LIB(gpu model procedural render render-utils)
-setup_hifi_library(Widgets Network Script)
+
+if (UWP)
+  setup_hifi_library(Widgets Network)
+else ()
+  setup_hifi_library(Widgets Network Script)
+endif ()
+
 link_hifi_libraries(shared gpu procedural model model-networking script-engine render render-utils image ui)
 include_hifi_library_headers(networking)
 include_hifi_library_headers(gl)

@@ -17,7 +17,13 @@
 #include <QDebug>
 #include <QObject>
 #include <QHash>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptEngine>
+#endif
+
 #include <QUuid>
 
 const QUuid UNKNOWN_ENTITY_ID; // null uuid

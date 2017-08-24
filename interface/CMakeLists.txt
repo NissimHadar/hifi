@@ -59,13 +59,21 @@ elseif (NOT UWP)
   set(PLATFORM_QT_LIBRARIES Qt5::WebEngine Qt5::WebEngineWidgets)
 endif ()
 
-find_package(
-  Qt5 COMPONENTS
-  Gui Multimedia Network OpenGL Qml Quick Script Svg
-  ${PLATFORM_QT_COMPONENTS}
-  WebChannel WebSockets
-)
-
+if (UWP)
+  find_package(
+    Qt5 COMPONENTS
+    Gui Multimedia Network OpenGL Qml Quick Svg
+    ${PLATFORM_QT_COMPONENTS}
+    WebChannel WebSockets
+  )
+else ()
+  find_package(
+    Qt5 COMPONENTS
+    Gui Multimedia Network OpenGL Qml Quick Script Svg
+    ${PLATFORM_QT_COMPONENTS}
+    WebChannel WebSockets
+  )
+endif ()
 # grab the ui files in resources/ui
 file (GLOB_RECURSE QT_UI_FILES ui/*.ui)
 source_group("UI Files" FILES ${QT_UI_FILES})
@@ -291,7 +299,7 @@ if (UWP)
    target_link_libraries(
     ${TARGET_NAME}
     Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
-    Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
+    Qt5::Qml Qt5::Quick Qt5::Svg
     Qt5::WebChannel
     $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2.lib
     ${PLATFORM_QT_LIBRARIES}

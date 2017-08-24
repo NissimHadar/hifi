@@ -9,8 +9,12 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <qscriptengine.h>
 #include <qscriptvalue.h>
+#endif
 
 #include "MouseEvent.h"
 

@@ -19,7 +19,9 @@
 
 #include <QtQml/QJSValue>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptValue>
 #endif
 

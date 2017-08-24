@@ -12,7 +12,11 @@
 #ifndef hifi_EventTypes_h
 #define hifi_EventTypes_h
 
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptEngine>
+#endif
 
 void registerEventTypes(QScriptEngine* engine);
 

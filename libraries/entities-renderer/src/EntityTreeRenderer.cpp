@@ -14,7 +14,13 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include <QEventLoop>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptSyntaxCheckResult>
+#endif
+
 #include <QThreadPool>
 
 #include <shared/QtHelpers.h>

@@ -12,7 +12,12 @@
 #ifndef hifi_SceneScriptingInterface_h
 #define hifi_SceneScriptingInterface_h
 
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <qscriptengine.h> // QObject
+#endif
+
 #include <DependencyManager.h> // Dependency
 
 #include "model/Stage.h"

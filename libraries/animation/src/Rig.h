@@ -16,7 +16,13 @@
 
 #include <QObject>
 #include <QMutex>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValue>
+#endif
+
 #include <vector>
 #include <JointData.h>
 #include <QReadWriteLock>

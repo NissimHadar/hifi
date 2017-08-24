@@ -32,9 +32,6 @@ The UWP version is missing a number of directories.  To solve this:
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5Script to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5Script
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\cmake\Qt5ScriptTools to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\cmake\Qt5ScriptTools
 
-* Copy C:\Qt\5.9.1\msvc2017_64\include\QtScript to C:\Qt\5.9.1\winrt_x64_msvc2017\include\QtScript
-* Copy C:\Qt\5.9.1\msvc2017_64\include\QtScriptTools to C:\Qt\5.9.1\winrt_x64_msvc2017\include\QtScriptTools
-
 * Copy C:\Qt\5.9.1\msvc2017_64\bin\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\bin\Qt5Script*.* (8 files)
 
 * Copy C:\Qt\5.9.1\msvc2017_64\lib\Qt5Script*.* to C:\Qt\5.9.1\winrt_x64_msvc2017\lib\Qt5Script*.* (8 files)

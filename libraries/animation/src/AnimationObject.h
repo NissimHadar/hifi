@@ -13,7 +13,10 @@
 #define hifi_AnimationObject_h
 
 #include <QObject>
+
+#ifndef HIFI_UWP
 #include <QScriptable>
+#endif
 
 #include <FBXReader.h>
 

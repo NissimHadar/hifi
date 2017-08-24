@@ -1,5 +1,10 @@
 set(TARGET_NAME script-engine)
-setup_hifi_library(Gui Network Script ScriptTools WebSockets Widgets)
+
+if (UWP)
+  setup_hifi_library(Gui Network WebSockets Widgets)
+else ()
+  setup_hifi_library(Gui Network Script ScriptTools WebSockets Widgets)
+endif ()
 
 target_zlib()
 

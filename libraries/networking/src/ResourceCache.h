@@ -28,7 +28,11 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptEngine>
+#endif
 
 #include <DependencyManager.h>
 

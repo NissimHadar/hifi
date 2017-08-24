@@ -1,7 +1,7 @@
 set(TARGET_NAME ui)
 
 if (UWP)
-  setup_hifi_library(OpenGL Network Qml Quick Script WebChannel WebSockets XmlPatterns)
+  setup_hifi_library(OpenGL Network Qml Quick WebChannel WebSockets XmlPatterns)
 else ()
   setup_hifi_library(OpenGL Network Qml Quick Script WebChannel WebEngine WebSockets XmlPatterns)
 endif ()

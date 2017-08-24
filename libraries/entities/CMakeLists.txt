@@ -1,3 +1,9 @@
 set(TARGET_NAME entities)
-setup_hifi_library(Network Script)
+
+if (UWP)
+  setup_hifi_library(Network)
+else ()
+  setup_hifi_library(Network Script)
+endif ()
+
 link_hifi_libraries(shared networking octree avatars)

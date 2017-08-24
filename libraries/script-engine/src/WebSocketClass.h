@@ -13,7 +13,13 @@
 #define hifi_WebSocketClass_h
 
 #include <QObject>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptEngine>
+#endif
+
 #include <QWebSocket>
 
 class WebSocketClass : public QObject {

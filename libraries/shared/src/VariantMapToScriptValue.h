@@ -10,8 +10,13 @@
 //
 
 #include <QVariant>
+
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QScriptValue>
 #include <QScriptEngine>
+#endif
 
 QScriptValue variantToScriptValue(QVariant& qValue, QScriptEngine& scriptEngine);
 QScriptValue variantMapToScriptValue(QVariantMap& variantMap, QScriptEngine& scriptEngine);

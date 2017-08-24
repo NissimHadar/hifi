@@ -11,8 +11,10 @@
 
 #include "PointerEvent.h"
 
+#ifndef HIFI_UWP
 #include <qscriptengine.h>
 #include <qscriptvalue.h>
+#endif
 
 #include "RegisteredMetaTypes.h"
 
