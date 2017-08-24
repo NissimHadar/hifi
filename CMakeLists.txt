@@ -3,9 +3,10 @@ if (UWP)
   set (CMAKE_SYSTEM_NAME WindowsStore)
   set (CMAKE_SYSTEM_VERSION 10.0)
   
+  # Used by the code to #ifdef out non-UWP code
   add_definitions(-DHIFI_UWP)
   
-  message(STATUS "Building for UWP")
+  message (STATUS "Building for UWP")
 endif()
 
 if (WIN32)
@@ -147,7 +148,7 @@ else ()
   # use UWP version of Qt in UWP mode
   if (UWP)
     set(QT_CMAKE_PREFIX_PATH $ENV{QT_CMAKE_PREFIX_PATH_UWP})
-    message(STATUS "set Qt path to ${QT_CMAKE_PREFIX_PATH}")
+    message(STATUS "set Qt path to ${QT_CMAKE_PREFIX_PATH} for UWP")
   endif()
 endif ()
 
