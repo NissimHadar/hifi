@@ -28,10 +28,16 @@ macro(PACKAGE_LIBRARIES_FOR_DEPLOYMENT)
         COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletDynamics.dll $(Configuration)
         COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletSoftBody.dll $(Configuration)
         COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/LinearMath.dll $(Configuration)
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy C:/Qt/5.9.1/winrt_x64_msvc2017/bin $(Configuration)
+
         COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy ${HIFI_LIBRARY_DIR}/tbb/vc14_ui/tbb.dll $(Configuration)
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/nvtt/project/src/nvtt/Release/x64/nvtt.dll $(Configuration)
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/quazip/project/lib/quazip5.dll $(Configuration)
+
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/nvtt/project/src/nvtt/$(Configuration)/x64/nvtt.dll $(Configuration)
+
+        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/zlib1.dll $(Configuration)
+
+        COMMAND if $(Configuration) == "Release" "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/quazip/project/lib/quazip5.dll  $(Configuration)
+        COMMAND if $(Configuration) == "Debug"   "C:/Program Files/CMake/bin/cmake.exe" -E copy D:/GitHub/hifi-develop/build-UWP/ext/vc14/quazip/project/lib/quazip5d.dll $(Configuration)
+
         COMMAND if exist "C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64" "C:/Program Files/CMake/bin/cmake.exe" -E copy- C:/Program Files/NVIDIA Corporation/NvToolsExt/bin/x64 $(Configuration)
       )
     else ()
