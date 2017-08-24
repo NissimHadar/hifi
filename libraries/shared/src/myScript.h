@@ -1,6 +1,17 @@
+//
+//  myScript.h
+//  libraries/shared/src
+//
+//  Created by Nissim Hadar on 8/23/2014.
+//  Copyright 2014 High Fidelity, Inc.
+//
+//  Distributed under the Apache License, Version 2.0.
+//  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
+//
 #ifndef hifi_MyScript_h
 #define hifi_MyScript_h
 
+#ifdef HIFI_UWP
 #include <QString>
 #include <QVariant>
 #include <QThread>
@@ -246,4 +257,5 @@ int qScriptRegisterSequenceMetaType(
 {
     return 0;
 }
+#endif
 #endif
