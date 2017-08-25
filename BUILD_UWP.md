@@ -20,7 +20,7 @@ Download and install the latest version of CMake 3.9. Download the file named  w
 
 Download and install the [Qt Online Installer](https://www.qt.io/download-open-source/?hsCtaTracking=f977210e-de67-475f-a32b-65cec207fd03%7Cd62710cd-e1db-46aa-8d4d-2f1c1ffdacea). While installing, you only need to have the following components checked under Qt 5.9.1:
 
-* "UWP x64 (MSVC2017)
+* "UWP x64 (MSVC2017)"
 * "msvc2017 64-bit"
 * "Qt WebEngine"
 * "Qt Script (Deprecated)".
@@ -124,3 +124,68 @@ Remove `CMakeCache.txt` found in the `%HIFI_DIR%\build` directory.
 #### Qt is throwing an error
 
 Make sure you have the correct version (5.9.1) installed and `QT_CMAKE_PREFIX_PATH` environment variable is set correctly.
+
+# Modifications implemented for UWP
+## Environment
+### Visual Studio
+* _Universal Windows Platform development_ has also been installed.
+### Qt
+* The UWP 6bit VS2017 version has also been installed.
+* An additional environment variable has been defined that points to the UWP version
+### VCPKG
+vkpg is a free Microsoft tool that can package specific libraries for UWP.  Specifically, it is used for the following:
+* bullet3
+* glm
+* openssl
+* zlib
+### Scribe
+As with Android, we need a natively compiled version of Scribe.
+## CMake
+A single variable is passed to CMake to signal UWP: __-DUWP__.  This creates a C++ define called HIFI_UWP.
+
+## Code
+### Windows
+* getenv is not supported in UWP.   References to getenv have been #ifdef'ed away.
+### Qt
+* QProcess is not supported in UWP.  References to QProcess have been #ifdef'ed away.
+* Same for QFileSystemWatcher.
+* QtWebEngine is not implement in UWP. All references have benn #ifdef'ed out.
+* QCScript has been deprecated in Qt 5.6 and is not implemented in UWP (which is only provided from Qt 5.9.0).  A new include file, __myScript.h__ has been added to _shared_.  This header file provides stubs for all the methods that have been used.
+### Plugins
+All plugins have been removed (via CMake)
+### OpenGL
+UWP does not support OpenGL, so all OpenGL code has been removed via CMake.
+## glew
+The inclusion of __glew.h__ has been replaced with __QtANGLE\GLES3\gl3.h__
+## TBB
+One option is to replace TBB with VS2015 concurrency::concurrent_unordered_map<> and concurrent_unordered_set<>.  I haven't tried this.  
+Another option is to use tbb_ui.
+
+* Download tbb2017_20170604oss_win.zip from <https://github.com/01org/tbb/releases>
+* Use the bin\intel64\vc14_ui folder from this zip.  _I have added this folder to the source tree in libraries\tbb._
+
+## dll's
+I have modified _PackageLibrariesForDeployment.cmake_ to pull in the relevant dll's.
+
+## Work to be done
+When running the program, an Appx directory is created within Release.  This folder includes the executable and some dll's - all copied from the Release folder.  Most of the dll's are not copied, and this seems to be a problem.  
+Install gflags (part of the Windows SDK, download from <https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk>.  Setup gflags to track missing dll's by:
+* cd C:\Program Files (x86)\Windows Kits\10\Debuggers\x64
+* gflags -i interface.exe +sls
+
+Now, the Visual Studio output window will show the missing dll.
+I have manually copied the following dll's:
+* Qt5Core
+* Qt5Gui
+* Qt5Widgets
+* Qt5OpenGl
+* Qt5Network
+* Qt5WebSockets
+* Qt5Quick
+* Qt5Qml
+* Qt5Multimedia
+* nvtt
+* tbb
+* quazip5
+
+Now - there is a fatal exception at _OpenGLVersionChecker::OpenGLVersionChecker_.  After exiting there is a message __"This application failed to start because it could not find or load the Qt platform plugin "winrt"__.  Copying over qwinrt.dll from C:\Qt\5.9.1\winrt_x64_msvc2017\plugins\platforms did not help.
