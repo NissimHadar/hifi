@@ -106,4 +106,3 @@ void TypedArrayPrototype::set(quint32 index, QScriptValue& value) {
         typedArray->setProperty(object, name, id, value);
     }
 }
-

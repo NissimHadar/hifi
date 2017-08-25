@@ -29,17 +29,13 @@
 
 class XMLHttpRequestClass : public QObject {
     Q_OBJECT
-
     Q_PROPERTY(QScriptValue response READ getResponse)
     Q_PROPERTY(QScriptValue responseText READ getResponseText)
     Q_PROPERTY(QString responseType READ getResponseType WRITE setResponseType)
     Q_PROPERTY(QScriptValue status READ getStatus)
-
     Q_PROPERTY(QString statusText READ getStatusText)
-
     Q_PROPERTY(QScriptValue readyState READ getReadyState)
     Q_PROPERTY(QScriptValue errorCode READ getError)
-        
     Q_PROPERTY(int timeout READ getTimeout WRITE setTimeout)
 
     Q_PROPERTY(int UNSENT READ getUnsent)
@@ -51,10 +47,8 @@ class XMLHttpRequestClass : public QObject {
     // Callbacks
     Q_PROPERTY(QScriptValue ontimeout READ getOnTimeout WRITE setOnTimeout)
     Q_PROPERTY(QScriptValue onreadystatechange READ getOnReadyStateChange WRITE setOnReadyStateChange)
-
 public:
     XMLHttpRequestClass(QScriptEngine* engine);
-
     ~XMLHttpRequestClass();
 
     static const int MAXIMUM_REDIRECTS = 5;
@@ -76,17 +70,13 @@ public:
 
     int getTimeout() const { return _timeout; }
     void setTimeout(int timeout) { _timeout = timeout; }
-
     QScriptValue getResponse() const { return _responseData; }
     QScriptValue getResponseText() const { return QScriptValue(QString(_rawResponseData.data())); }
-
     QString getResponseType() const { return _responseType; }
     void setResponseType(const QString& responseType) { _responseType = responseType; }
-
     QScriptValue getReadyState() const { return QScriptValue(_readyState); }
     QScriptValue getError() const { return QScriptValue(_errorCode); }
     QScriptValue getStatus() const;
-
     QString getStatusText() const;
 
     QScriptValue getOnTimeout() const { return _onTimeout; }
@@ -100,7 +90,6 @@ public slots:
     void open(const QString& method, const QString& url, bool async = true, const QString& username = "",
               const QString& password = "");
     void send();
-
     void send(const QScriptValue& data);
     QScriptValue getAllResponseHeaders() const;
     QScriptValue getResponseHeader(const QString& name) const;
@@ -116,7 +105,6 @@ private:
     void abortRequest();
 
     QScriptEngine* _engine;
-
     bool _async;
     QUrl _url;
     QString _method;
@@ -125,11 +113,9 @@ private:
     QNetworkReply* _reply;
     QBuffer* _sendData;
     QByteArray _rawResponseData;
-
     QScriptValue _responseData;
     QScriptValue _onTimeout;
     QScriptValue _onReadyStateChange;
-
     ReadyState _readyState;
     QNetworkReply::NetworkError _errorCode;
     int _timeout;

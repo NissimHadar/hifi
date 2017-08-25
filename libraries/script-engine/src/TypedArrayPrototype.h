@@ -26,7 +26,6 @@ public slots:
     
     QScriptValue get(quint32 index);
     void set(quint32 index, QScriptValue& value);
-
 private:
     QByteArray* thisArrayBuffer() const;
 };

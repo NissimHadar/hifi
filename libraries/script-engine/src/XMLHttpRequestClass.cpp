@@ -36,11 +36,9 @@ XMLHttpRequestClass::XMLHttpRequestClass(QScriptEngine* engine) :
     _reply(NULL),
     _sendData(NULL),
     _rawResponseData(),
-
     _responseData(""),
     _onTimeout(QScriptValue::NullValue),
     _onReadyStateChange(QScriptValue::NullValue),
-
     _readyState(XMLHttpRequestClass::UNSENT),
     _errorCode(QNetworkReply::NoError),
     _timeout(0),
@@ -129,7 +127,6 @@ QScriptValue XMLHttpRequestClass::getResponseHeader(const QString& name) const {
 void XMLHttpRequestClass::setReadyState(ReadyState readyState) {
     if (readyState != _readyState) {
         _readyState = readyState;
-
         if (_onReadyStateChange.isFunction()) {
             _onReadyStateChange.call(QScriptValue::NullValue);
         }
@@ -205,7 +202,6 @@ void XMLHttpRequestClass::requestTimeout() {
     if (_onTimeout.isFunction()) {
         _onTimeout.call(QScriptValue::NullValue);
     }
-
     abortRequest();
     _errorCode = QNetworkReply::TimeoutError;
     setReadyState(DONE);

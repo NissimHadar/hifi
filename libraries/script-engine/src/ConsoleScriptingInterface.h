@@ -55,7 +55,6 @@ public slots:
 private:    
     QHash<QString, QDateTime> _timerDetails;
     static QList<QString> _groupDetails;
-
     static void logGroupMessage(QString message, QScriptEngine* engine);
     static QString appendArguments(QScriptContext* context);
 };

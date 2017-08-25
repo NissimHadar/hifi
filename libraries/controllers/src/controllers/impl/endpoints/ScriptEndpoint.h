@@ -45,7 +45,6 @@ protected:
     Q_INVOKABLE virtual void internalApply(const Pose& newValue, int sourceID);
 private:
     QScriptValue _callable;
-
     float _lastValueRead { 0.0f };
     float _lastValueWritten { 0.0f };
 

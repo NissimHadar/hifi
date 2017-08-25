@@ -62,7 +62,6 @@ static const int DEFAULT_ENTITY_PPS_PER_SCRIPT = 900;
 class CallbackData {
 public:
     QScriptValue function;
-
     EntityItemID definingEntityIdentifier;
     QUrl definingSandboxURL;
 };
@@ -85,9 +84,7 @@ public:
     QString errorInfo { "" };
 
     QString scriptText { "" };
-
     QScriptValue scriptObject { QScriptValue() };
-
     int64_t lastModified { 0 };
     QUrl definingSandboxURL { QUrl("about:EntityScript") };
 };
@@ -168,19 +165,16 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NOTE - these are intended to be public interfaces available to scripts
     Q_INVOKABLE void addEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
-
     Q_INVOKABLE void removeEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
 
     Q_INVOKABLE void load(const QString& loadfile);
-
     Q_INVOKABLE void include(const QStringList& includeFiles, QScriptValue callback = QScriptValue());
     Q_INVOKABLE void include(const QString& includeFile, QScriptValue callback = QScriptValue());
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MODULE related methods
     Q_INVOKABLE QScriptValue require(const QString& moduleId);
-
     Q_INVOKABLE void resetModuleCache(bool deleteScriptCache = false);
-
     QScriptValue currentModule();
     bool registerModuleWithParent(const QScriptValue& module, const QScriptValue& parent);
     QScriptValue newModule(const QString& modulePath, const QScriptValue& parent = QScriptValue());
@@ -189,7 +183,6 @@ public:
 
     Q_INVOKABLE QObject* setInterval(const QScriptValue& function, int intervalMS);
     Q_INVOKABLE QObject* setTimeout(const QScriptValue& function, int timeoutMS);
-
     Q_INVOKABLE void clearInterval(QObject* timer) { stopTimer(reinterpret_cast<QTimer*>(timer)); }
     Q_INVOKABLE void clearTimeout(QObject* timer) { stopTimer(reinterpret_cast<QTimer*>(timer)); }
 
@@ -212,7 +205,6 @@ public:
                                             const QStringList& params = QStringList()) override;
     Q_INVOKABLE void callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const PointerEvent& event);
     Q_INVOKABLE void callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const EntityItemID& otherID, const Collision& collision);
-
 
     Q_INVOKABLE void requestGarbageCollection() { collectGarbage(); }
 
@@ -280,7 +272,6 @@ protected:
     Q_INVOKABLE QString _requireResolve(const QString& moduleId, const QString& relativeTo = QString());
 
     QString logException(const QScriptValue& exception);
-
     void timerFired();
     void stopAllTimers();
     void stopAllTimersForEntityScript(const EntityItemID& entityID);
@@ -291,19 +282,15 @@ protected:
     void processDeferredEntityLoads(const QString& entityScript, const EntityItemID& leaderID);
 
     QObject* setupTimerWithInterval(const QScriptValue& function, int intervalMS, bool isSingleShot);
-
     void stopTimer(QTimer* timer);
 
     QHash<EntityItemID, RegisteredEventHandlers> _registeredHandlers;
-
     void forwardHandlerCall(const EntityItemID& entityID, const QString& eventName, QScriptValueList eventHanderArgs);
-
     Q_INVOKABLE void entityScriptContentAvailable(const EntityItemID& entityID, const QString& scriptOrURL, const QString& contents, bool isURL, bool success, const QString& status);
 
     EntityItemID currentEntityIdentifier {}; // Contains the defining entity script entity id during execution, if any. Empty for interface script execution.
     QUrl currentSandboxURL {}; // The toplevel url string for the entity script that loaded the code being executed, else empty.
     void doWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, std::function<void()> operation);
-
     void callWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, QScriptValue function, QScriptValue thisObject, QScriptValueList args);
 
     Context _context;

@@ -39,10 +39,8 @@ TypedArray::TypedArray(ScriptEngine* scriptEngine, QString name) : ArrayBufferVi
     engine()->globalObject().setProperty(_name, _ctor);
 }
 
-
 QScriptValue TypedArray::newInstance(quint32 length) {
     ArrayBufferClass* array = getScriptEngine()->getArrayBufferClass();
-
     QScriptValue buffer = array->newInstance(length * _bytesPerElement);
     return newInstance(buffer, 0, length);
 }

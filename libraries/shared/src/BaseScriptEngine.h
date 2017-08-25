@@ -34,7 +34,6 @@ public:
     BaseScriptEngine() {}
 
     Q_INVOKABLE QScriptValue lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber = 1);
-
     Q_INVOKABLE QScriptValue makeError(const QScriptValue& other = QScriptValue(), const QString& type = "Error");
     Q_INVOKABLE QString formatException(const QScriptValue& exception, bool includeExtendedDetails);
 
@@ -50,7 +49,6 @@ public:
 
     // helper to detect and log warnings when other code invokes QScriptEngine/BaseScriptEngine in thread-unsafe ways
     static bool IS_THREADSAFE_INVOCATION(const QThread *thread, const QString& method);
-
 signals:
     void unhandledException(const QScriptValue& exception);
 
@@ -85,14 +83,12 @@ class Lambda : public QObject {
 public:
     Lambda(QScriptEngine *engine, std::function<QScriptValue(QScriptContext *context, QScriptEngine* engine)> operation, QScriptValue data);
     ~Lambda();
-    
-public slots:
+    public slots:
         QScriptValue call();
     QString toString() const;
 private:
     QScriptEngine* engine;
     std::function<QScriptValue(QScriptContext *context, QScriptEngine* engine)> operation;
-
     QScriptValue data;
 };
 

@@ -87,7 +87,6 @@ public:
 
 protected:
     QSet<AssetRequest*> _pendingRequests;
-
     QScriptEngine* _engine;
 };
 

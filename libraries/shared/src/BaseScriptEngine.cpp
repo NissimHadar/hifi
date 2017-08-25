@@ -43,7 +43,6 @@ QScriptValue BaseScriptEngine::makeError(const QScriptValue& _other, const QStri
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
-
     auto other = _other;
     if (other.isString()) {
         other = newObject();
@@ -81,7 +80,6 @@ QScriptValue BaseScriptEngine::lintScript(const QString& sourceCode, const QStri
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
-
     const auto syntaxCheck = checkSyntax(sourceCode);
     if (syntaxCheck.state() != QScriptSyntaxCheckResult::Valid) {
         auto err = globalObject().property("SyntaxError")
@@ -111,7 +109,6 @@ QScriptValue BaseScriptEngine::cloneUncaughtException(const QString& extraDetail
     if (!hasUncaughtException()) {
         return unboundNullValue();
     }
-
     auto exception = uncaughtException();
     // ensure the error object is engine-local
     auto err = makeError(exception);
@@ -219,9 +216,7 @@ bool BaseScriptEngine::maybeEmitUncaughtException(const QString& debugHint) {
         return false;
     }
     if (!isEvaluating() && hasUncaughtException()) {
-
         emit unhandledException(cloneUncaughtException(debugHint));
-
         clearExceptions();
         return true;
     }
@@ -230,11 +225,9 @@ bool BaseScriptEngine::maybeEmitUncaughtException(const QString& debugHint) {
 
 QScriptValue BaseScriptEngine::evaluateInClosure(const QScriptValue& closure, const QScriptProgram& program) {
     PROFILE_RANGE(script, "evaluateInClosure");
-
     if (!IS_THREADSAFE_INVOCATION(thread(), __FUNCTION__)) {
         return unboundNullValue();
     }
-
     const auto fileName = program.fileName();
     const auto shortName = QUrl(fileName).fileName();
 
@@ -298,7 +291,6 @@ QScriptValue BaseScriptEngine::newLambdaFunction(std::function<QScriptValue(QScr
     call.setData(data);        // context->callee().data() will === data param
     return call;
 }
-
 QString Lambda::toString() const {
     return QString("[Lambda%1]").arg(data.isValid() ? " " + data.toString() : data.toString());
 }

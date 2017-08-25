@@ -74,7 +74,6 @@ QScriptValue ConsoleScriptingInterface::exception(QScriptContext* context, QScri
 void ConsoleScriptingInterface::time(QString labelName) {
     _timerDetails.insert(labelName, QDateTime::currentDateTime().toUTC());
     QString message = QString("%1: Timer started").arg(labelName);
-
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->scriptPrintedMessage(message);
     }

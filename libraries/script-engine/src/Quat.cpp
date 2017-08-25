@@ -124,7 +124,6 @@ void Quat::print(const QString& label, const glm::quat& q, bool asDegrees) {
         message = message.arg(glm::to_string(glm::dquat(q)).c_str());
     }
     qCDebug(scriptengine) << message;
-
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->print(message);
     }

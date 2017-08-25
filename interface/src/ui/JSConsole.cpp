@@ -162,7 +162,6 @@ void JSConsole::commandFinished() {
     }
 
     bool error = (_scriptEngine->hasUncaughtException() || result.isError());
-
     QString gutter = error ? GUTTER_ERROR : GUTTER_PREVIOUS_COMMAND;
     QString resultColor = error ? RESULT_ERROR_STYLE : RESULT_SUCCESS_STYLE;
     QString resultStr = "<span style='" + resultColor + "'>" + result.toString().toHtmlEscaped() + "</span>";

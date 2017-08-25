@@ -44,8 +44,8 @@ public:
                           const QScriptString& name, uint id) override;
     QScriptValue::PropertyFlags propertyFlags(const QScriptValue& object,
                                               const QScriptString& name, uint id) override;
-    QString name() const override;
 
+    QString name() const override;
     QScriptValue prototype() const override;
 
     ScriptEngine* getEngine() { return _scriptEngine; }

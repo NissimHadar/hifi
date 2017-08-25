@@ -19,6 +19,7 @@
 #include "ScriptEngineLogging.h"
 
 void registerAudioMetaTypes(QScriptEngine* engine) {
+
 #ifndef HIFI_UWP
     qScriptRegisterMetaType(engine, injectorOptionsToScriptValue, injectorOptionsFromScriptValue);
     qScriptRegisterMetaType(engine, soundSharedPointerToScriptValue, soundSharedPointerFromScriptValue);

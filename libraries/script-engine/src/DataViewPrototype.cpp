@@ -45,9 +45,7 @@ qint32 DataViewPrototype::getInt8(qint32 byteOffset) {
         stream >> result;
         return result;
     }
-
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return 0;
 }
 
@@ -60,9 +58,7 @@ quint32 DataViewPrototype::getUint8(qint32 byteOffset) {
         stream >> result;
         return result;
     }
-
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return 0;
 }
 
@@ -76,9 +72,7 @@ qint32 DataViewPrototype::getInt16(qint32 byteOffset, bool littleEndian) {
         stream >> result;
         return result;
     }
-
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return 0;
 }
 
@@ -92,9 +86,7 @@ quint32 DataViewPrototype::getUint16(qint32 byteOffset, bool littleEndian) {
         stream >> result;
         return result;
     }
-
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return 0;
 }
 
@@ -108,9 +100,7 @@ qint32 DataViewPrototype::getInt32(qint32 byteOffset, bool littleEndian) {
         stream >> result;
         return result;
     }
-
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return 0;
 }
 
@@ -124,9 +114,7 @@ quint32 DataViewPrototype::getUint32(qint32 byteOffset, bool littleEndian) {
         stream >> result;
         return result;
     }
-
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return 0;
 }
 
@@ -145,9 +133,7 @@ QScriptValue DataViewPrototype::getFloat32(qint32 byteOffset, bool littleEndian)
         
         return QScriptValue(result);
     }
-
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return QScriptValue();
 }
 
@@ -166,9 +152,7 @@ QScriptValue DataViewPrototype::getFloat64(qint32 byteOffset, bool littleEndian)
         
         return result;
     }
-    
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-
     return QScriptValue();
 }
 

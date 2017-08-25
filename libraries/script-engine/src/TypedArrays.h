@@ -45,7 +45,6 @@ public:
                                                       const QScriptString& name, uint id) override;
 
     QString name() const override;
-
     QScriptValue prototype() const override;
 
 protected:
@@ -72,7 +71,6 @@ public:
 
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-
 };
 
 class Uint8ArrayClass : public TypedArray {

@@ -24,7 +24,6 @@ public:
     ModelScriptingInterface(QObject* parent);
 
     Q_INVOKABLE QString meshToOBJ(MeshProxyList in);
-
     Q_INVOKABLE QScriptValue appendMeshes(MeshProxyList in);
     Q_INVOKABLE QScriptValue transformMesh(glm::mat4 transform, MeshProxy* meshProxy);
     Q_INVOKABLE QScriptValue newMesh(const QVector<glm::vec3>& vertices,

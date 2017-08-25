@@ -48,7 +48,6 @@ public:
                                   const QScriptString& name, uint id) override;
     virtual QScriptValue::PropertyFlags propertyFlags(const QScriptValue& object,
                                                       const QScriptString& name, uint id) override;
-
 protected:
     // JS Object attributes
     QScriptString _bufferName;

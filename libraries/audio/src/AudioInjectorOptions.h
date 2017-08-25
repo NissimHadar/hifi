@@ -35,7 +35,7 @@ public:
     float secondOffset;
 };
 
-Q_DECLARE_METATYPE(AudioInjectorOptions); 
+Q_DECLARE_METATYPE(AudioInjectorOptions);
 
 QScriptValue injectorOptionsToScriptValue(QScriptEngine* engine, const AudioInjectorOptions& injectorOptions);
 void injectorOptionsFromScriptValue(const QScriptValue& object, AudioInjectorOptions& injectorOptions);

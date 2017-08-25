@@ -35,7 +35,7 @@
 
 /// Scriptable interface a Quaternion helper class object. Used exclusively in the JavaScript API
 class Quat : public QObject, protected QScriptable {
-        Q_OBJECT
+    Q_OBJECT
 
 public slots:
     glm::quat multiply(const glm::quat& q1, const glm::quat& q2);

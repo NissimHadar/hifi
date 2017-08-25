@@ -740,17 +740,12 @@ bool EntityPropertyMetadataRequest::script(EntityItemID entityID, QScriptValue h
             if (!details.contains("message")) {
                 details["message"] = details["errorInfo"];
             }
-
             err = _engine->makeError(_engine->toScriptValue(details));
-
         } else {
             details["success"] = true;
-
             result = _engine->toScriptValue(details);
         }
-
         callScopedHandlerObject(handler, err, result);
-
         request->deleteLater();
     });
     auto entityScriptingInterface = DependencyManager::get<EntityScriptingInterface>();
@@ -761,9 +756,7 @@ bool EntityPropertyMetadataRequest::script(EntityItemID entityID, QScriptValue h
     });
     if (!request->isStarted()) {
         request->deleteLater();
-
         callScopedHandlerObject(handler, _engine->makeError("Entities Scripting Provider unavailable", "InternalError"), QScriptValue());
-
         return false;
     }
     return true;
@@ -793,15 +786,11 @@ bool EntityPropertyMetadataRequest::serverScripts(EntityItemID entityID, QScript
             if (details["message"].toString().isEmpty()) {
                 details["message"] = "entity server script details not found";
             }
-
             err = engine->makeError(engine->toScriptValue(details));
-
         } else {
             result = engine->toScriptValue(details);
         }
-
         callScopedHandlerObject(handler, err, result);
-
         request->deleteLater();
     });
     request->start();

@@ -20,11 +20,7 @@
 #include <CrashHelpers.h>
 #include <DependencyManager.h>
 #include <ui/TabletScriptingInterface.h>
-
-#ifndef HIFI_UWP
 #include <display-plugins/DisplayPlugin.h>
-#endif
-
 #include <PathUtils.h>
 #include <SettingHandle.h>
 #include <UserActivityLogger.h>

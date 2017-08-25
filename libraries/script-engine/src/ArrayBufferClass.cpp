@@ -152,3 +152,4 @@ QScriptValue ArrayBufferClass::toScriptValue(QScriptEngine* engine, const QByteA
 void ArrayBufferClass::fromScriptValue(const QScriptValue& obj, QByteArray& ba) {
     ba = qvariant_cast<QByteArray>(obj.data().toVariant());
 }
+

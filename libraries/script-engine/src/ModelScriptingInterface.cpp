@@ -26,7 +26,6 @@ ModelScriptingInterface::ModelScriptingInterface(QObject* parent) : QObject(pare
     _modelScriptEngine = qobject_cast<QScriptEngine*>(parent);
 
     qScriptRegisterSequenceMetaType<QList<MeshProxy*>>(_modelScriptEngine);
-
     qScriptRegisterMetaType(_modelScriptEngine, meshFaceToScriptValue, meshFaceFromScriptValue);
     qScriptRegisterMetaType(_modelScriptEngine, qVectorMeshFaceToScriptValue, qVectorMeshFaceFromScriptValue);
 }
@@ -199,6 +198,7 @@ QScriptValue ModelScriptingInterface::getVertex(MeshProxy* meshProxy, int vertex
     return vec3toScriptValue(_modelScriptEngine, pos);
 }
 
+
 QScriptValue ModelScriptingInterface::newMesh(const QVector<glm::vec3>& vertices,
                                               const QVector<glm::vec3>& normals,
                                               const QVector<MeshFace>& faces) {
@@ -252,4 +252,3 @@ QScriptValue ModelScriptingInterface::newMesh(const QVector<glm::vec3>& vertices
     MeshProxy* meshProxy = new SimpleMeshProxy(mesh);
     return meshToScriptValue(_modelScriptEngine, meshProxy);
 }
-
