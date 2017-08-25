@@ -40,10 +40,13 @@ void CharacterGhostObject::getCollisionGroupAndMask(int16_t& group, int16_t& mas
     mask = _collisionFilterMask;
 }
 
-void CharacterGhostObject::getCollisionGroupAndMask(int32_t& group, int32_t& mask) const {
+#ifdef HIFI_UWP	
+// vcpkg'ed bullet has different definitions of m_collisionFilterGroup and m_collisionFilterMask
+ void CharacterGhostObject::getCollisionGroupAndMask(int32_t& group, int32_t& mask) const {
     group = _collisionFilterGroup;
     mask = _collisionFilterMask;
 }
+#endif
 
 void CharacterGhostObject::setRadiusAndHalfHeight(btScalar radius, btScalar halfHeight) {
     _radius = radius;

@@ -30,7 +30,11 @@ public:
 
     void setCollisionGroupAndMask(int16_t group, int16_t mask);
     void getCollisionGroupAndMask(int16_t& group, int16_t& mask) const;
+	
+#ifdef HIFI_UWP	
+	//  vcpkg'ed bullet has different definitions of m_collisionFilterGroup and m_collisionFilterMask
     void getCollisionGroupAndMask(int32_t& group, int32_t& mask) const;
+#endif
 
     void setRadiusAndHalfHeight(btScalar radius, btScalar halfHeight);
     void setUpDirection(const btVector3& up);
