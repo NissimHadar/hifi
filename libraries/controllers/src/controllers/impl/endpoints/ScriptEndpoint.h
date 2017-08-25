@@ -10,7 +10,9 @@
 #ifndef hifi_Controllers_ScriptEndpoint_h
 #define hifi_Controllers_ScriptEndpoint_h
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptValue>
 #endif
 
@@ -22,15 +24,9 @@ class ScriptEndpoint : public Endpoint {
     Q_OBJECT;
 public:
     using Endpoint::apply;
-#ifdef HIFI_UWP
-    ScriptEndpoint()
-        : Endpoint(Input::INVALID_INPUT) {
-    }
-#else
     ScriptEndpoint(const QScriptValue& callable)
         : Endpoint(Input::INVALID_INPUT), _callable(callable) {
     }
-#endif
 
     virtual float peek() const override;
     virtual void apply(float newValue, const Pointer& source) override;
@@ -48,9 +44,7 @@ protected:
     Q_INVOKABLE void updatePose();
     Q_INVOKABLE virtual void internalApply(const Pose& newValue, int sourceID);
 private:
-#ifndef HIFI_UWP
     QScriptValue _callable;
-#endif
 
     float _lastValueRead { 0.0f };
     float _lastValueWritten { 0.0f };

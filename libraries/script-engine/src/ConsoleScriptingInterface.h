@@ -22,7 +22,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptable>
 #endif
 
@@ -30,14 +32,9 @@
 #include <QHash>
 
 // Scriptable interface of "console" object. Used exclusively in the JavaScript API
-#ifdef HIFI_UWP
-class ConsoleScriptingInterface : public QObject {
-#else
 class ConsoleScriptingInterface : public QObject, protected QScriptable {
-#endif
     Q_OBJECT
 public:
-#ifndef HIFI_UWP
     static QScriptValue info(QScriptContext* context, QScriptEngine* engine);
     static QScriptValue log(QScriptContext* context, QScriptEngine* engine);
     static QScriptValue debug(QScriptContext* context, QScriptEngine* engine);
@@ -48,7 +45,7 @@ public:
     static QScriptValue group(QScriptContext* context, QScriptEngine* engine);
     static QScriptValue groupCollapsed(QScriptContext* context, QScriptEngine* engine);
     static QScriptValue groupEnd(QScriptContext* context, QScriptEngine* engine);
-#endif
+
 public slots:
     void time(QString labelName);
     void timeEnd(QString labelName);
@@ -59,10 +56,8 @@ private:
     QHash<QString, QDateTime> _timerDetails;
     static QList<QString> _groupDetails;
 
-#ifndef HIFI_UWP
     static void logGroupMessage(QString message, QScriptEngine* engine);
     static QString appendArguments(QScriptContext* context);
-#endif
 };
 
 #endif // hifi_ConsoleScriptingInterface_h

@@ -84,11 +84,9 @@ WindowScriptingInterface::~WindowScriptingInterface() {
     _messageBoxes.clear();
 }
 
-#ifndef HIFI_UWP
 QScriptValue WindowScriptingInterface::hasFocus() {
     return qApp->hasFocus();
 }
-#endif
 
 void WindowScriptingInterface::setFocus() {
     // It's forbidden to call focus() from another thread.
@@ -113,7 +111,6 @@ void WindowScriptingInterface::alert(const QString& message) {
     OffscreenUi::warning("", message);
 }
 
-#ifndef HIFI_UWP
 /// Display a confirmation box with the options 'Yes' and 'No'
 /// \param const QString& message message to display
 /// \return QScriptValue `true` if 'Yes' was clicked, `false` otherwise
@@ -130,7 +127,6 @@ QScriptValue WindowScriptingInterface::prompt(const QString& message, const QStr
     QString result = OffscreenUi::getText(nullptr, "", message, QLineEdit::Normal, defaultText, &ok);
     return ok ? QScriptValue(result) : QScriptValue::NullValue;
 }
-#endif
 
 CustomPromptResult WindowScriptingInterface::customPrompt(const QVariant& config) {
     CustomPromptResult result;
@@ -178,7 +174,6 @@ void WindowScriptingInterface::ensureReticleVisible() const {
     }
 }
 
-#ifndef HIFI_UWP
 /// Display a "browse to directory" dialog.  If `directory` is an invalid file or directory the browser will start at the current
 /// working directory.
 /// \param const QString& title title of the window
@@ -269,7 +264,6 @@ QScriptValue WindowScriptingInterface::browseAssets(const QString& title, const 
     }
     return result.isEmpty() ? QScriptValue::NullValue : QScriptValue(result);
 }
-#endif
 
 void WindowScriptingInterface::showAssetServer(const QString& upload) {
     QMetaObject::invokeMethod(qApp, "showAssetServerWidget", Qt::QueuedConnection, Q_ARG(QString, upload));

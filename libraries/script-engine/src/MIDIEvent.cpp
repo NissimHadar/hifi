@@ -11,7 +11,6 @@
 
 #include "MIDIEvent.h"
 
-#ifndef HIFI_UWP
 void registerMIDIMetaTypes(QScriptEngine* engine) {
     qScriptRegisterMetaType(engine, midiEventToScriptValue, midiEventFromScriptValue);
 }
@@ -36,4 +35,3 @@ void midiEventFromScriptValue(const QScriptValue &object, MIDIEvent& event) {
     event.data1 = object.property(MIDI_DATA_1_PROP_NAME).toVariant().toUInt();
     event.data2 = object.property(MIDI_DATA_2_PROP_NAME).toVariant().toUInt();
 }
-#endif

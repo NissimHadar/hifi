@@ -46,7 +46,9 @@ typedef unsigned long long quint64;
 #include <QVariantMap>
 #include <QVector>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptable>
 #include <QtScript/QScriptValueIterator>
 #endif
@@ -865,7 +867,6 @@ Q_DECLARE_METATYPE(AttachmentData)
 Q_DECLARE_METATYPE(QVector<AttachmentData>)
 
 /// Scriptable wrapper for attachments.
-#ifndef HIFI_UWP
 class AttachmentDataObject : public QObject, protected QScriptable {
     Q_OBJECT
     Q_PROPERTY(QString modelURL READ getModelURL WRITE setModelURL)
@@ -895,7 +896,6 @@ public:
     Q_INVOKABLE void setIsSoft(bool scale);
     Q_INVOKABLE bool getIsSoft() const;
 };
-#endif
 
 void registerAvatarTypes(QScriptEngine* engine);
 

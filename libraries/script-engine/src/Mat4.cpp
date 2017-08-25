@@ -74,9 +74,7 @@ void Mat4::print(const QString& label, const glm::mat4& m, bool transpose) const
     message = message.arg(glm::to_string(out).c_str());
     qCDebug(scriptengine) << message;
 
-#ifndef HIFI_UWP
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->print(message);
     }
-#endif
 }

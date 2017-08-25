@@ -638,11 +638,7 @@ Endpoint::Pointer UserInputMapper::endpointFor(const QScriptValue& endpoint) {
     }
 
     if (endpoint.isFunction()) {
-#ifdef HIFI_UWP
-        auto result = std::make_shared<ScriptEndpoint>();
-#else
         auto result = std::make_shared<ScriptEndpoint>(endpoint);
-#endif
         return result;
     }
 
@@ -880,11 +876,7 @@ Conditional::Pointer UserInputMapper::conditionalFor(const QScriptValue& conditi
     }
 
     if (condition.isFunction()) {
-#ifdef HIFI_UWP
-        return std::make_shared<ScriptConditional>();
-#else
         return std::make_shared<ScriptConditional>(condition);
-#endif
     }
 
     qWarning() << "Unsupported conditional type " << condition.toString();

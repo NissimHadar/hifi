@@ -26,20 +26,13 @@
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptString>
 #include <QtScript/QScriptValue>
+#endif
 
 class ScriptEngine;
-#endif
 
-#ifdef HIFI_UWP
-class ArrayBufferClass : public QObject {
-    Q_OBJECT
-    ArrayBufferClass();
-#else
 class ArrayBufferClass : public QObject, public QScriptClass {
     Q_OBJECT
-#endif
 public:
-#ifndef HIFI_UWP
     ArrayBufferClass(ScriptEngine* scriptEngine);
     QScriptValue newInstance(qint32 size);
     QScriptValue newInstance(const QByteArray& ba);
@@ -56,9 +49,8 @@ public:
     QScriptValue prototype() const override;
 
     ScriptEngine* getEngine() { return _scriptEngine; }
-#endif
+
 private:
-#ifndef HIFI_UWP
     static QScriptValue construct(QScriptContext* context, QScriptEngine* engine);
 
     static QScriptValue toScriptValue(QScriptEngine* eng, const QByteArray& ba);
@@ -72,7 +64,6 @@ private:
     QScriptString _byteLength;
 
     ScriptEngine* _scriptEngine;
-#endif
 };
 
 #endif // hifi_ArrayBufferClass_h

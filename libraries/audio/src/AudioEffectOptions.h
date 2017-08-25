@@ -13,7 +13,9 @@
 
 #include <QObject>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
 #endif
@@ -44,18 +46,12 @@ class AudioEffectOptions : public QObject {
     Q_PROPERTY(float wetDryMix READ getWetDryMix WRITE setWetDryMix)
 
 public:
-#ifdef HIFI_UWP
-    AudioEffectOptions();
-#else
     AudioEffectOptions(QScriptValue arguments = QScriptValue());
-#endif
 
     AudioEffectOptions(const AudioEffectOptions &other);
     AudioEffectOptions& operator=(const AudioEffectOptions &other);
 
-#ifndef HIFI_UWP
     static QScriptValue constructor(QScriptContext* context, QScriptEngine* engine);
-#endif
 
     float getBandwidth() const { return _bandwidth; }
     void setBandwidth(float bandwidth) { _bandwidth = bandwidth; }

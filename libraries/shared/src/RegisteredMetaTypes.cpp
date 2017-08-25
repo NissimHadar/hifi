@@ -876,7 +876,6 @@ QScriptValue meshesToScriptValue(QScriptEngine* engine, const MeshProxyList &in)
     return result;
 }
 
-#ifndef HIFI_UWP
 void meshesFromScriptValue(const QScriptValue& value, MeshProxyList &out) {
     QScriptValueIterator itr(value);
 
@@ -921,4 +920,3 @@ void qVectorMeshFaceFromScriptValue(const QScriptValue& array, QVector<MeshFace>
         result << meshFace;
     }
 }
-#endif

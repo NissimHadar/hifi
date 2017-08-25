@@ -14,15 +14,13 @@
 
 #include <QtCore/QObject>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptable>
 #endif
 
-#ifdef HIFI_UWP
-class ArrayBufferPrototype : public QObject {
-#else
 class ArrayBufferPrototype : public QObject, public QScriptable {
-#endif
     Q_OBJECT
 public:
     ArrayBufferPrototype(QObject* parent = NULL);

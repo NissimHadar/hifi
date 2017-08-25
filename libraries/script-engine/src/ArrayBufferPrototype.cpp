@@ -85,9 +85,5 @@ QByteArray ArrayBufferPrototype::recodeImage(const QString& sourceFormat, const 
 }
 
 QByteArray* ArrayBufferPrototype::thisArrayBuffer() const {
-#ifdef HIFI_UWP
-    return new QByteArray();
-#else
     return qscriptvalue_cast<QByteArray*>(thisObject().data());
-#endif
 }

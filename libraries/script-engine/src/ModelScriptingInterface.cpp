@@ -27,10 +27,8 @@ ModelScriptingInterface::ModelScriptingInterface(QObject* parent) : QObject(pare
 
     qScriptRegisterSequenceMetaType<QList<MeshProxy*>>(_modelScriptEngine);
 
-#ifndef HIFI_UWP
     qScriptRegisterMetaType(_modelScriptEngine, meshFaceToScriptValue, meshFaceFromScriptValue);
     qScriptRegisterMetaType(_modelScriptEngine, qVectorMeshFaceToScriptValue, qVectorMeshFaceFromScriptValue);
-#endif
 }
 
 QString ModelScriptingInterface::meshToOBJ(MeshProxyList in) {
@@ -42,7 +40,6 @@ QString ModelScriptingInterface::meshToOBJ(MeshProxyList in) {
     return writeOBJToString(meshes);
 }
 
-#ifndef HIFI_UWP
 QScriptValue ModelScriptingInterface::appendMeshes(MeshProxyList in) {
     // figure out the size of the resulting mesh
     size_t totalVertexCount { 0 };
@@ -255,4 +252,4 @@ QScriptValue ModelScriptingInterface::newMesh(const QVector<glm::vec3>& vertices
     MeshProxy* meshProxy = new SimpleMeshProxy(mesh);
     return meshToScriptValue(_modelScriptEngine, meshProxy);
 }
-#endif
+

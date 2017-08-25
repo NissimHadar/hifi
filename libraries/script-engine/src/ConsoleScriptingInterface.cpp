@@ -24,7 +24,6 @@ const QString SPACE_SEPARATOR = " ";
 const QString STACK_TRACE_FORMAT = "\n[Stacktrace]%1%2";
 QList<QString> ConsoleScriptingInterface::_groupDetails = QList<QString>();
 
-#ifndef HIFI_UWP
 QScriptValue ConsoleScriptingInterface::info(QScriptContext* context, QScriptEngine* engine) {
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine)) {
         scriptEngine->scriptInfoMessage(appendArguments(context));
@@ -71,21 +70,17 @@ QScriptValue ConsoleScriptingInterface::exception(QScriptContext* context, QScri
     }
     return QScriptValue::NullValue;
 }
-#endif
 
 void ConsoleScriptingInterface::time(QString labelName) {
     _timerDetails.insert(labelName, QDateTime::currentDateTime().toUTC());
     QString message = QString("%1: Timer started").arg(labelName);
 
-#ifndef HIFI_UWP
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->scriptPrintedMessage(message);
     }
-#endif
 }
 
 void ConsoleScriptingInterface::timeEnd(QString labelName) {
-#ifndef HIFI_UWP
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         if (!_timerDetails.contains(labelName)) {
             scriptEngine->scriptErrorMessage("No such label found " + labelName);
@@ -106,10 +101,8 @@ void ConsoleScriptingInterface::timeEnd(QString labelName) {
 
         scriptEngine->scriptPrintedMessage(message);
     }
-#endif
 }
 
-#ifndef HIFI_UWP
 QScriptValue ConsoleScriptingInterface::assertion(QScriptContext* context, QScriptEngine* engine) {
     QString message;
     bool condition = false;
@@ -134,27 +127,21 @@ QScriptValue ConsoleScriptingInterface::assertion(QScriptContext* context, QScri
     }
     return QScriptValue::NullValue;
 }
-#endif
 
 void ConsoleScriptingInterface::trace() {
-#ifndef HIFI_UWP
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->scriptPrintedMessage
             (QString(STACK_TRACE_FORMAT).arg(LINE_SEPARATOR,
             scriptEngine->currentContext()->backtrace().join(LINE_SEPARATOR)));
     }
-#endif
 }
 
 void ConsoleScriptingInterface::clear() {
-#ifndef HIFI_UWP
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->clearDebugLogWindow();
     }
-#endif
 }
 
-#ifndef HIFI_UWP
 QScriptValue ConsoleScriptingInterface::group(QScriptContext* context, QScriptEngine* engine) {
     logGroupMessage(context->argument(0).toString(), engine); // accept first parameter as label
     _groupDetails.push_back(context->argument(0).toString());
@@ -194,4 +181,3 @@ void ConsoleScriptingInterface::logGroupMessage(QString message, QScriptEngine* 
         scriptEngine->scriptPrintedMessage(logMessage);
     }
 }
-#endif

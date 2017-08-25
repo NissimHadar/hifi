@@ -108,7 +108,6 @@ void HMDScriptingInterface::openTablet() {
     _showTablet = true;
 }
 
-#ifndef HIFI_UWP
 QScriptValue HMDScriptingInterface::getHUDLookAtPosition2D(QScriptContext* context, QScriptEngine* engine) {
     glm::vec3 hudIntersection;
     auto instance = DependencyManager::get<HMDScriptingInterface>();
@@ -127,7 +126,6 @@ QScriptValue HMDScriptingInterface::getHUDLookAtPosition3D(QScriptContext* conte
     }
     return QScriptValue::NullValue;
 }
-#endif
 
 bool HMDScriptingInterface::getHUDLookAtPosition3D(glm::vec3& result) const {
     const Camera& camera = qApp->getCamera();

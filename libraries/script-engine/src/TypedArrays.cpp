@@ -18,7 +18,6 @@
 
 Q_DECLARE_METATYPE(QByteArray*)
 
-#ifndef HIFI_UWP
 TypedArray::TypedArray(ScriptEngine* scriptEngine, QString name) : ArrayBufferViewClass(scriptEngine) {
     _bytesPerElementName = engine()->toStringHandle(BYTES_PER_ELEMENT_PROPERTY_NAME.toLatin1());
     _lengthName = engine()->toStringHandle(LENGTH_PROPERTY_NAME.toLatin1());
@@ -196,7 +195,6 @@ QString TypedArray::name() const {
 QScriptValue TypedArray::prototype() const {
     return _proto;
 }
-#endif
 
 void TypedArray::setBytesPerElement(quint32 bytesPerElement) {
     _bytesPerElement = bytesPerElement;
@@ -237,7 +235,6 @@ Int8ArrayClass::Int8ArrayClass(ScriptEngine* scriptEngine) : TypedArray(scriptEn
     setBytesPerElement(sizeof(qint8));
 }
 
-#ifndef HIFI_UWP
 QScriptValue Int8ArrayClass::property(const QScriptValue& object, const QScriptString& name, uint id) {
     QByteArray* arrayBuffer = qscriptvalue_cast<QByteArray*>(object.data().property(_bufferName).data());
     QScriptValue result = propertyHelper<qint8>(arrayBuffer, name, id);
@@ -430,4 +427,3 @@ void Float64ArrayClass::setProperty(QScriptValue& object, const QScriptString& n
         stream << (double)value.toNumber();
     }
 }
-#endif

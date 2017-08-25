@@ -34,11 +34,7 @@
  */
 
 /// Scriptable interface a Quaternion helper class object. Used exclusively in the JavaScript API
-#ifdef HIFI_UWP
-class Quat : public QObject {
-#else
 class Quat : public QObject, protected QScriptable {
-#endif
         Q_OBJECT
 
 public slots:

@@ -17,10 +17,6 @@ Q_DECLARE_METATYPE(QByteArray*)
 
 static const QString DATA_VIEW_NAME = "DataView";
 
-#ifdef HIFI_UWP
-DataViewClass::DataViewClass() {
-}
-#else
 DataViewClass::DataViewClass(ScriptEngine* scriptEngine) : ArrayBufferViewClass(scriptEngine) {
     QScriptValue global = engine()->globalObject();
     
@@ -96,4 +92,3 @@ QString DataViewClass::name() const {
 QScriptValue DataViewClass::prototype() const {
     return _proto;
 }
-#endif

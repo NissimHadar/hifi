@@ -54,16 +54,10 @@ static const float LATE_MIX_LEFT_DEFAULT = 90.0f;
 static const float LATE_MIX_RIGHT_DEFAULT = 90.0f;
 static const float WET_DRY_MIX_DEFAULT = 50.0f;
 
-#ifndef HIFI_UWP
 static void setOption(QScriptValue arguments, const QString name, float defaultValue, float& variable) {
     variable = arguments.property(name).isNumber() ? (float)arguments.property(name).toNumber() : defaultValue;
 }
-#endif
 
-#ifdef HIFI_UWP
-AudioEffectOptions::AudioEffectOptions() {
-}
-#else
 AudioEffectOptions::AudioEffectOptions(QScriptValue arguments) {
     setOption(arguments, BANDWIDTH_HANDLE, BANDWIDTH_DEFAULT, _bandwidth);
     setOption(arguments, PRE_DELAY_HANDLE, PRE_DELAY_DEFAULT, _preDelay);
@@ -87,7 +81,6 @@ AudioEffectOptions::AudioEffectOptions(QScriptValue arguments) {
     setOption(arguments, LATE_MIX_RIGHT_HANDLE, LATE_MIX_RIGHT_DEFAULT, _lateMixRight);
     setOption(arguments, WET_DRY_MIX_HANDLE, WET_DRY_MIX_DEFAULT, _wetDryMix);
 }
-#endif
 
 AudioEffectOptions::AudioEffectOptions(const AudioEffectOptions &other) : QObject() {
     *this = other;
@@ -119,8 +112,6 @@ AudioEffectOptions& AudioEffectOptions::operator=(const AudioEffectOptions &othe
     return *this;
 }
 
-#ifndef HIFI_UWP
 QScriptValue AudioEffectOptions::constructor(QScriptContext* context, QScriptEngine* engine) {
     return engine->newQObject(new AudioEffectOptions(context->argument(0)));
 }
-#endif

@@ -16,7 +16,9 @@
 #include <QtCore/QString>
 #include <QtQuick/QQuickItem>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptValue>
 #endif
 
@@ -29,12 +31,10 @@ public:
     QVariant value;
 };
 
-#ifndef HIFI_UWP
 Q_DECLARE_METATYPE(CustomPromptResult);
 
 QScriptValue CustomPromptResultToScriptValue(QScriptEngine* engine, const CustomPromptResult& result);
 void CustomPromptResultFromScriptValue(const QScriptValue& object, CustomPromptResult& result);
-#endif
 
 class WindowScriptingInterface : public QObject, public Dependency {
     Q_OBJECT
@@ -51,27 +51,21 @@ public:
     int getY();
 
 public slots:
-#ifndef HIFI_UWP
     QScriptValue hasFocus();
-#endif
 
     void setFocus();
     void raiseMainWindow();
     void alert(const QString& message = "");
 
-#ifndef HIFI_UWP
     QScriptValue confirm(const QString& message = "");
     QScriptValue prompt(const QString& message = "", const QString& defaultText = "");
-#endif
 
     CustomPromptResult customPrompt(const QVariant& config);
 
-#ifndef HIFI_UWP
     QScriptValue browseDir(const QString& title = "", const QString& directory = "");
     QScriptValue browse(const QString& title = "", const QString& directory = "",  const QString& nameFilter = "");
     QScriptValue save(const QString& title = "", const QString& directory = "",  const QString& nameFilter = "");
     QScriptValue browseAssets(const QString& title = "", const QString& directory = "", const QString& nameFilter = "");
-#endif
 
     void showAssetServer(const QString& upload = "");
     QString checkVersion();

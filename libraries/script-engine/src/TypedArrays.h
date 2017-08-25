@@ -35,7 +35,6 @@ public:
     virtual QScriptValue newInstance(QScriptValue array);
     virtual QScriptValue newInstance(QScriptValue buffer, quint32 byteOffset, quint32 length);
 
-#ifndef HIFI_UWP
     virtual QueryFlags queryProperty(const QScriptValue& object,
                                      const QScriptString& name,
                                      QueryFlags flags, uint* id) override;
@@ -48,7 +47,7 @@ public:
     QString name() const override;
 
     QScriptValue prototype() const override;
-#endif
+
 protected:
     static QScriptValue construct(QScriptContext* context, QScriptEngine* engine);
 
@@ -71,43 +70,36 @@ class Int8ArrayClass : public TypedArray {
 public:
     Int8ArrayClass(ScriptEngine* scriptEngine);
 
-#ifndef HIFI_UWP
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
+
 };
 
 class Uint8ArrayClass : public TypedArray {
     Q_OBJECT
 public:
-#ifndef HIFI_UWP
     Uint8ArrayClass(ScriptEngine* scriptEngine);
 
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 class Uint8ClampedArrayClass : public TypedArray {
     Q_OBJECT
 public:
-#ifndef HIFI_UWP
     Uint8ClampedArrayClass(ScriptEngine* scriptEngine);
 
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 class Int16ArrayClass : public TypedArray {
     Q_OBJECT
 public:
-#ifndef HIFI_UWP
     Int16ArrayClass(ScriptEngine* scriptEngine);
 
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 class Uint16ArrayClass : public TypedArray {
@@ -115,10 +107,8 @@ class Uint16ArrayClass : public TypedArray {
 public:
     Uint16ArrayClass(ScriptEngine* scriptEngine);
 
-#ifndef HIFI_UWP
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 class Int32ArrayClass : public TypedArray {
@@ -126,10 +116,8 @@ class Int32ArrayClass : public TypedArray {
 public:
     Int32ArrayClass(ScriptEngine* scriptEngine);
 
-#ifndef HIFI_UWP
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 class Uint32ArrayClass : public TypedArray {
@@ -137,10 +125,8 @@ class Uint32ArrayClass : public TypedArray {
 public:
     Uint32ArrayClass(ScriptEngine* scriptEngine);
 
-#ifndef HIFI_UWP
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 class Float32ArrayClass : public TypedArray {
@@ -148,10 +134,8 @@ class Float32ArrayClass : public TypedArray {
 public:
     Float32ArrayClass(ScriptEngine* scriptEngine);
 
-#ifndef HIFI_UWP
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 class Float64ArrayClass : public TypedArray {
@@ -159,10 +143,8 @@ class Float64ArrayClass : public TypedArray {
 public:
     Float64ArrayClass(ScriptEngine* scriptEngine);
 
-#ifndef HIFI_UWP
     QScriptValue property(const QScriptValue& object, const QScriptString& name, uint id) override;
     void setProperty(QScriptValue& object, const QScriptString& name, uint id, const QScriptValue& value) override;
-#endif
 };
 
 #endif // hifi_TypedArrays_h

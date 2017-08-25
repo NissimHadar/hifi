@@ -39,7 +39,6 @@ static const char* const TOOLWINDOW_PROPERTY = "toolWindow";
 static const uvec2 MAX_QML_WINDOW_SIZE { 1280, 720 };
 static const uvec2 MIN_QML_WINDOW_SIZE { 120, 80 };
 
-#ifndef HIFI_UWP
 QVariantMap QmlWindowClass::parseArguments(QScriptContext* context) {
     const auto argumentCount = context->argumentCount();
     QString title;
@@ -72,10 +71,8 @@ QVariantMap QmlWindowClass::parseArguments(QScriptContext* context) {
 
     return properties;
 }
-#endif
 
 // Method called by Qt scripts to create a new web window in the overlay
-#ifndef HIFI_UWP
 QScriptValue QmlWindowClass::constructor(QScriptContext* context, QScriptEngine* engine) {
     auto properties = parseArguments(context);
     auto offscreenUi = DependencyManager::get<OffscreenUi>();
@@ -90,7 +87,6 @@ QScriptValue QmlWindowClass::constructor(QScriptContext* context, QScriptEngine*
     connect(engine, &QScriptEngine::destroyed, retVal, &QmlWindowClass::deleteLater);
     return engine->newQObject(retVal);
 }
-#endif
 
 QmlWindowClass::QmlWindowClass() {
 

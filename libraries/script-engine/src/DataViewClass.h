@@ -17,24 +17,19 @@
 class DataViewClass : public ArrayBufferViewClass {
     Q_OBJECT
 public:
-#ifdef HIFI_UWP
-    DataViewClass();
-#else
     DataViewClass(ScriptEngine* scriptEngine);
     QScriptValue newInstance(QScriptValue buffer, quint32 byteOffset, quint32 byteLength);
 
     QString name() const override;
     QScriptValue prototype() const override;
-#endif
+
 private:
-#ifndef HIFI_UWP
     static QScriptValue construct(QScriptContext* context, QScriptEngine* engine);
 
     QScriptValue _proto;
     QScriptValue _ctor;
 
     QScriptString _name;
-#endif
 };
 
 

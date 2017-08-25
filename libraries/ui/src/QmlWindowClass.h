@@ -12,7 +12,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptValue>
 #endif
 
@@ -33,10 +35,7 @@ class QmlWindowClass : public QObject {
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
 
 public:
-#ifndef HIFI_UWP
     static QScriptValue constructor(QScriptContext* context, QScriptEngine* engine);
-#endif
-
     QmlWindowClass();
     ~QmlWindowClass();
 
@@ -89,11 +88,8 @@ protected slots:
 
 protected:
     static QVariantMap parseArguments(QScriptContext* context);
-
-#ifndef HIFI_UWP
-    static QScriptValue internalConstructor(QScriptContext* context, QScriptEngine* engine,
+    static QScriptValue internalConstructor(QScriptContext* context, QScriptEngine* engine, 
         std::function<QmlWindowClass*(QVariantMap)> function);
-#endif
 
     virtual QString qmlSource() const { return "QmlWindow.qml"; }
 

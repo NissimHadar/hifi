@@ -14,24 +14,19 @@
 
 #include "ArrayBufferViewClass.h"
 
-#ifdef HIFI_UWP
-class TypedArrayPrototype : public QObject {
-#else
 class TypedArrayPrototype : public QObject, public QScriptable {
-#endif
     Q_OBJECT
 public:
     TypedArrayPrototype(QObject* parent = NULL);
     
 public slots:
-#ifndef HIFI_UWP
     void set(QScriptValue array, qint32 offset = 0);
     QScriptValue subarray(qint32 begin);
     QScriptValue subarray(qint32 begin, qint32 end);
     
     QScriptValue get(quint32 index);
     void set(quint32 index, QScriptValue& value);
-#endif
+
 private:
     QByteArray* thisArrayBuffer() const;
 };

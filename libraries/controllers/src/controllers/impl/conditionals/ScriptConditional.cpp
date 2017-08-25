@@ -23,7 +23,5 @@ void ScriptConditional::updateValue() {
         return;
     }
 
-#ifndef HIFI_UWP
     _lastValue = _callable.call().toBool();
-#endif
 }

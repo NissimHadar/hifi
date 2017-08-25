@@ -32,11 +32,9 @@ void Vec3::print(const QString& label, const glm::vec3& v) {
     message = message.arg(glm::to_string(glm::dvec3(v)).c_str());
     qCDebug(scriptengine) << message;
 
-#ifndef HIFI_UWP
     if (ScriptEngine* scriptEngine = qobject_cast<ScriptEngine*>(engine())) {
         scriptEngine->print(message);
     }
-#endif
 }
 
 bool Vec3::withinEpsilon(const glm::vec3& v1, const glm::vec3& v2, float epsilon) {

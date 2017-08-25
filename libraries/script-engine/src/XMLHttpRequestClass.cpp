@@ -26,12 +26,8 @@ const QString METAVERSE_API_URL = NetworkingConstants::METAVERSE_SERVER_URL.toSt
 
 Q_DECLARE_METATYPE(QByteArray*)
 
-#ifdef HIFI_UWP
-XMLHttpRequestClass::XMLHttpRequestClass() :
-#else
 XMLHttpRequestClass::XMLHttpRequestClass(QScriptEngine* engine) :
     _engine(engine),
-#endif
     _async(true),
     _url(),
     _method(""),
@@ -41,11 +37,9 @@ XMLHttpRequestClass::XMLHttpRequestClass(QScriptEngine* engine) :
     _sendData(NULL),
     _rawResponseData(),
 
-#ifndef HIFI_UWP
     _responseData(""),
     _onTimeout(QScriptValue::NullValue),
     _onReadyStateChange(QScriptValue::NullValue),
-#endif
 
     _readyState(XMLHttpRequestClass::UNSENT),
     _errorCode(QNetworkReply::NoError),
@@ -62,7 +56,6 @@ XMLHttpRequestClass::~XMLHttpRequestClass() {
     if (_sendData) { delete _sendData; }
 }
 
-#ifndef HIFI_UWP
 QScriptValue XMLHttpRequestClass::constructor(QScriptContext* context, QScriptEngine* engine) {
     return engine->newQObject(new XMLHttpRequestClass(engine));
 }
@@ -73,7 +66,6 @@ QScriptValue XMLHttpRequestClass::getStatus() const {
     } 
     return QScriptValue(0);
 }
-#endif
 
 QString XMLHttpRequestClass::getStatusText() const {
     if (_reply) {
@@ -112,7 +104,6 @@ void XMLHttpRequestClass::requestDownloadProgress(qint64 bytesReceived, qint64 b
     }
 }
 
-#ifndef HIFI_UWP
 QScriptValue XMLHttpRequestClass::getAllResponseHeaders() const {
     if (_reply) {
         QList<QNetworkReply::RawHeaderPair> headerList = _reply->rawHeaderPairs();
@@ -134,17 +125,14 @@ QScriptValue XMLHttpRequestClass::getResponseHeader(const QString& name) const {
     }
     return QScriptValue::NullValue;
 }
-#endif
 
 void XMLHttpRequestClass::setReadyState(ReadyState readyState) {
     if (readyState != _readyState) {
         _readyState = readyState;
 
-#ifndef HIFI_UWP
         if (_onReadyStateChange.isFunction()) {
             _onReadyStateChange.call(QScriptValue::NullValue);
         }
-#endif
     }
 }
 
@@ -177,12 +165,9 @@ void XMLHttpRequestClass::open(const QString& method, const QString& url, bool a
 }
 
 void XMLHttpRequestClass::send() {
-#ifndef HIFI_UWP
     send(QScriptValue::NullValue);
-#endif
 }
 
-#ifndef HIFI_UWP
 void XMLHttpRequestClass::send(const QScriptValue& data) {
     if (_readyState == OPENED && !_reply) {
         if (!data.isNull()) {
@@ -204,7 +189,6 @@ void XMLHttpRequestClass::send(const QScriptValue& data) {
         }
     }
 }
-#endif
 
 void XMLHttpRequestClass::doSend() {
     
@@ -218,11 +202,9 @@ void XMLHttpRequestClass::doSend() {
 }
 
 void XMLHttpRequestClass::requestTimeout() {
-#ifndef HIFI_UWP
     if (_onTimeout.isFunction()) {
         _onTimeout.call(QScriptValue::NullValue);
     }
-#endif
 
     abortRequest();
     _errorCode = QNetworkReply::TimeoutError;
@@ -241,7 +223,6 @@ void XMLHttpRequestClass::requestFinished() {
     if (_errorCode == QNetworkReply::NoError) {
         _rawResponseData.append(_reply->readAll());
 
-#ifndef HIFI_UWP
         if (_responseType == "json") {
             _responseData = _engine->evaluate("(" + QString(_rawResponseData.data()) + ")");
             if (_responseData.isError()) {
@@ -254,7 +235,6 @@ void XMLHttpRequestClass::requestFinished() {
         } else {
             _responseData = QScriptValue(QString(_rawResponseData.data()));
         }
-#endif
     }
 
     setReadyState(DONE);

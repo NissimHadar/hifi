@@ -9,7 +9,9 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptEngine>
 #endif
 
@@ -24,12 +26,10 @@ public:
     unsigned int data2;
 };
 
-#ifndef HIFI_UWP
 Q_DECLARE_METATYPE(MIDIEvent)
 
 void registerMIDIMetaTypes(QScriptEngine* engine);
 
 QScriptValue midiEventToScriptValue(QScriptEngine* engine, const MIDIEvent& event);
 void midiEventFromScriptValue(const QScriptValue &object, MIDIEvent& event);
-#endif
 #endif // hifi_MIDIEvent_h

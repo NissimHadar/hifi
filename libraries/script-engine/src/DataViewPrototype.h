@@ -14,15 +14,13 @@
 
 #include <QtCore/QObject>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptable>
 #endif
 
-#ifdef HIFI_UWP
-class DataViewPrototype : public QObject {
-#else
 class DataViewPrototype : public QObject, public QScriptable {
-#endif
     Q_OBJECT
 public:
     DataViewPrototype(QObject* parent = NULL);
@@ -45,10 +43,8 @@ public slots:
     qint32 getInt32(qint32 byteOffset, bool littleEndian = false);
     quint32 getUint32(qint32 byteOffset, bool littleEndian = false);
 
-#ifndef HIFI_UWP
     QScriptValue getFloat32(qint32 byteOffset, bool littleEndian = false);
     QScriptValue getFloat64(qint32 byteOffset, bool littleEndian = false);
-#endif
 
     // Stores a value of the given type at the specified byte offset
     // from the start of the view. There is no alignment constraint;

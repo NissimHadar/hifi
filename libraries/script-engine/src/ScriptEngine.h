@@ -20,7 +20,9 @@
 #include <QtCore/QWaitCondition>
 #include <QtCore/QStringList>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptEngine>
 #endif
 
@@ -59,9 +61,7 @@ static const int DEFAULT_ENTITY_PPS_PER_SCRIPT = 900;
 
 class CallbackData {
 public:
-#ifndef HIFI_UWP
     QScriptValue function;
-#endif
 
     EntityItemID definingEntityIdentifier;
     QUrl definingSandboxURL;
@@ -86,9 +86,7 @@ public:
 
     QString scriptText { "" };
 
-#ifndef HIFI_UWP
     QScriptValue scriptObject { QScriptValue() };
-#endif
 
     int64_t lastModified { 0 };
     QUrl definingSandboxURL { QUrl("about:EntityScript") };
@@ -137,7 +135,6 @@ public:
     Q_INVOKABLE void registerGlobalObject(const QString& name, QObject* object);
 
     /// registers a global getter/setter
-#ifndef HIFI_UWP
     Q_INVOKABLE void registerGetterSetter(const QString& name, QScriptEngine::FunctionSignature getter,
                                           QScriptEngine::FunctionSignature setter, const QString& parent = QString(""));
 
@@ -155,7 +152,6 @@ public:
     Q_INVOKABLE QScriptValue evaluate(const QString& program, const QString& fileName, int lineNumber = 1); // this is also used by the script tool widget
 
     Q_INVOKABLE QScriptValue evaluateInClosure(const QScriptValue& locals, const QScriptProgram& program);
-#endif
 
     /// if the script engine is not already running, this will download the URL and start the process of seting it up
     /// to run... NOTE - this is used by Application currently to load the url. We don't really want it to be exposed
@@ -169,29 +165,22 @@ public:
     Q_INVOKABLE bool isEntityServerScript() const { return _context == ENTITY_SERVER_SCRIPT; }
     Q_INVOKABLE bool isAgentScript() const { return _context == AGENT_SCRIPT; }
 
-#ifndef HIFI_UWP
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // NOTE - these are intended to be public interfaces available to scripts
     Q_INVOKABLE void addEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
 
     Q_INVOKABLE void removeEventHandler(const EntityItemID& entityID, const QString& eventName, QScriptValue handler);
-#endif
 
     Q_INVOKABLE void load(const QString& loadfile);
 
-#ifndef HIFI_UWP
     Q_INVOKABLE void include(const QStringList& includeFiles, QScriptValue callback = QScriptValue());
     Q_INVOKABLE void include(const QString& includeFile, QScriptValue callback = QScriptValue());
-#endif
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MODULE related methods
-#ifndef HIFI_UWP
     Q_INVOKABLE QScriptValue require(const QString& moduleId);
-#endif
 
     Q_INVOKABLE void resetModuleCache(bool deleteScriptCache = false);
 
-#ifndef HIFI_UWP
     QScriptValue currentModule();
     bool registerModuleWithParent(const QScriptValue& module, const QScriptValue& parent);
     QScriptValue newModule(const QString& modulePath, const QScriptValue& parent = QScriptValue());
@@ -200,7 +189,6 @@ public:
 
     Q_INVOKABLE QObject* setInterval(const QScriptValue& function, int intervalMS);
     Q_INVOKABLE QObject* setTimeout(const QScriptValue& function, int timeoutMS);
-#endif
 
     Q_INVOKABLE void clearInterval(QObject* timer) { stopTimer(reinterpret_cast<QTimer*>(timer)); }
     Q_INVOKABLE void clearTimeout(QObject* timer) { stopTimer(reinterpret_cast<QTimer*>(timer)); }
@@ -226,11 +214,7 @@ public:
     Q_INVOKABLE void callEntityScriptMethod(const EntityItemID& entityID, const QString& methodName, const EntityItemID& otherID, const Collision& collision);
 
 
-    Q_INVOKABLE void requestGarbageCollection() { 
-#ifndef HIFI_UWP
-        collectGarbage(); 
-#endif
-    }
+    Q_INVOKABLE void requestGarbageCollection() { collectGarbage(); }
 
     Q_INVOKABLE QUuid generateUUID() { return QUuid::createUuid(); }
 
@@ -295,9 +279,7 @@ protected:
     //   then inside of init() we just have to do "Script.require.resolve = Script._requireResolve;"
     Q_INVOKABLE QString _requireResolve(const QString& moduleId, const QString& relativeTo = QString());
 
-#ifndef HIFI_UWP
     QString logException(const QScriptValue& exception);
-#endif
 
     void timerFired();
     void stopAllTimers();
@@ -308,17 +290,13 @@ protected:
     void setParentURL(const QString& parentURL) { _parentURL = parentURL; }
     void processDeferredEntityLoads(const QString& entityScript, const EntityItemID& leaderID);
 
-#ifndef HIFI_UWP
     QObject* setupTimerWithInterval(const QScriptValue& function, int intervalMS, bool isSingleShot);
-#endif
 
     void stopTimer(QTimer* timer);
 
     QHash<EntityItemID, RegisteredEventHandlers> _registeredHandlers;
 
-#ifndef HIFI_UWP
     void forwardHandlerCall(const EntityItemID& entityID, const QString& eventName, QScriptValueList eventHanderArgs);
-#endif
 
     Q_INVOKABLE void entityScriptContentAvailable(const EntityItemID& entityID, const QString& scriptOrURL, const QString& contents, bool isURL, bool success, const QString& status);
 
@@ -326,9 +304,7 @@ protected:
     QUrl currentSandboxURL {}; // The toplevel url string for the entity script that loaded the code being executed, else empty.
     void doWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, std::function<void()> operation);
 
-#ifndef HIFI_UWP
     void callWithEnvironment(const EntityItemID& entityID, const QUrl& sandboxURL, QScriptValue function, QScriptValue thisObject, QScriptValueList args);
-#endif
 
     Context _context;
     QString _scriptContents;
@@ -344,11 +320,7 @@ protected:
     QList<DeferredLoadEntity> _deferredEntityLoads;
 
     bool _isThreaded { false };
-
-#ifndef HIFI_UWP
     QScriptEngineDebugger* _debugger { nullptr };
-#endif
-
     bool _debuggable { false };
     qint64 _lastUpdate;
 
@@ -363,11 +335,7 @@ protected:
 
     ArrayBufferClass* _arrayBufferClass;
 
-#ifdef HIFI_UWP
-    AssetScriptingInterface _assetScriptingInterface{ };
-#else
     AssetScriptingInterface _assetScriptingInterface{ this };
-#endif
 
     std::function<bool()> _emitScriptUpdates{ []() { return true; }  };
 

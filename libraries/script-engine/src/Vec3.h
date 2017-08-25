@@ -18,7 +18,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptable>
 #endif
 
@@ -52,11 +54,7 @@
  */
 
 /// Scriptable interface a Vec3ernion helper class object. Used exclusively in the JavaScript API
-#ifdef HIFI_UWP
-class Vec3 : public QObject {
-#else
 class Vec3 : public QObject, protected QScriptable {
-#endif
     Q_OBJECT
     Q_PROPERTY(glm::vec3 UNIT_X READ UNIT_X CONSTANT)
     Q_PROPERTY(glm::vec3 UNIT_Y READ UNIT_Y CONSTANT)

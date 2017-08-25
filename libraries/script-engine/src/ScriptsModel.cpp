@@ -57,6 +57,7 @@ ScriptsModel::ScriptsModel(QObject* parent) :
 #ifndef HIFI_UWP
     _fsWatcher(),
 #endif
+
     _treeNodes()
 {
     _localDirectory.setFilter(QDir::Files | QDir::Readable);

@@ -1863,7 +1863,6 @@ QDataStream& operator>>(QDataStream& in, AttachmentData& attachment) {
         attachment.translation >> attachment.rotation >> attachment.scale >> attachment.isSoft;
 }
 
-#ifndef HIFI_UWP
 void AttachmentDataObject::setModelURL(const QString& modelURL) {
     AttachmentData data = qscriptvalue_cast<AttachmentData>(thisObject());
     data.modelURL = modelURL;
@@ -1929,7 +1928,6 @@ void registerAvatarTypes(QScriptEngine* engine) {
     engine->setDefaultPrototype(qMetaTypeId<AttachmentData>(), engine->newQObject(
         new AttachmentDataObject(), QScriptEngine::ScriptOwnership));
 }
-#endif
 
 void AvatarData::setRecordingBasis(std::shared_ptr<Transform> recordingBasis) {
     if (!recordingBasis) {
@@ -2514,7 +2512,6 @@ QScriptValue AvatarEntityMapToScriptValue(QScriptEngine* engine, const AvatarEnt
     return obj;
 }
 
-#ifndef HIFI_UWP
 void AvatarEntityMapFromScriptValue(const QScriptValue& object, AvatarEntityMap& value) {
     QScriptValueIterator itr(object);
     while (itr.hasNext()) {
@@ -2529,4 +2526,3 @@ void AvatarEntityMapFromScriptValue(const QScriptValue& object, AvatarEntityMap&
         value[EntityID] = binaryEntityProperties;
     }
 }
-#endif

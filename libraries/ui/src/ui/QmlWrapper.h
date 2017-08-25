@@ -12,7 +12,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
 #endif
@@ -31,7 +33,6 @@ protected:
     QObject* _qmlObject{ nullptr };
 };
 
-#ifndef HIFI_UWP
 template <typename T>
 QScriptValue wrapperToScriptValue(QScriptEngine* engine, T* const &in) {
     if (!in) {
@@ -44,5 +45,5 @@ template <typename T>
 void wrapperFromScriptValue(const QScriptValue& value, T* &out) {
     out = qobject_cast<T*>(value.toQObject());
 }
-#endif
+
 #endif

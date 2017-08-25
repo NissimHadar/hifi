@@ -396,6 +396,7 @@ QAudioDeviceInfo defaultAudioDeviceForMode(QAudio::Mode mode) {
         }
     }
 #endif
+
 #if defined Q_OS_WIN && !defined HIFI_UWP
     QString deviceName;
     //Check for Windows Vista or higher, IMMDeviceEnumerator doesn't work below that.

@@ -13,8 +13,7 @@
 #define hifi_AudioInjectorOptions_h
 
 #ifdef HIFI_UWP
-// Need this for Q_DECLARE_METATYPE
-#include <QtCore>
+#include "myScript.h"
 #else
 #include <QtScript/qscriptengine.h>
 #endif
@@ -37,9 +36,8 @@ public:
 };
 
 Q_DECLARE_METATYPE(AudioInjectorOptions); 
-#ifndef HIFI_UWP
 
 QScriptValue injectorOptionsToScriptValue(QScriptEngine* engine, const AudioInjectorOptions& injectorOptions);
 void injectorOptionsFromScriptValue(const QScriptValue& object, AudioInjectorOptions& injectorOptions);
-#endif
+
 #endif // hifi_AudioInjectorOptions_h

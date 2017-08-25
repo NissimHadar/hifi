@@ -22,18 +22,11 @@ DataViewPrototype::DataViewPrototype(QObject* parent) : QObject(parent) {
 }
 
 QByteArray* DataViewPrototype::thisArrayBuffer() const {
-#ifdef HIFI_UWP
-    return new QByteArray();
-#else
     QScriptValue bufferObject = thisObject().data().property(BUFFER_PROPERTY_NAME);
     return qscriptvalue_cast<QByteArray*>(bufferObject.data());
-#endif
 }
 
 bool DataViewPrototype::realOffset(qint32& offset, size_t size) const {
-#ifdef HIFI_UWP
-    return false;
-#else
     if (offset < 0) {
         return false;
     }
@@ -41,7 +34,6 @@ bool DataViewPrototype::realOffset(qint32& offset, size_t size) const {
     quint32 viewLength = thisObject().data().property(BYTE_LENGTH_PROPERTY_NAME).toInt32();
     offset += viewOffset;
     return (offset + size) <= viewOffset + viewLength;
-#endif
 }
 
 qint32 DataViewPrototype::getInt8(qint32 byteOffset) {
@@ -53,9 +45,9 @@ qint32 DataViewPrototype::getInt8(qint32 byteOffset) {
         stream >> result;
         return result;
     }
-#ifndef HIFI_UWP
+
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
+
     return 0;
 }
 
@@ -69,9 +61,8 @@ quint32 DataViewPrototype::getUint8(qint32 byteOffset) {
         return result;
     }
 
-#ifndef HIFI_UWP
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
+
     return 0;
 }
 
@@ -86,9 +77,7 @@ qint32 DataViewPrototype::getInt16(qint32 byteOffset, bool littleEndian) {
         return result;
     }
 
-#ifndef HIFI_UWP
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
 
     return 0;
 }
@@ -104,9 +93,7 @@ quint32 DataViewPrototype::getUint16(qint32 byteOffset, bool littleEndian) {
         return result;
     }
 
-#ifndef HIFI_UWP
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
 
     return 0;
 }
@@ -122,9 +109,7 @@ qint32 DataViewPrototype::getInt32(qint32 byteOffset, bool littleEndian) {
         return result;
     }
 
-#ifndef HIFI_UWP
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
 
     return 0;
 }
@@ -140,14 +125,11 @@ quint32 DataViewPrototype::getUint32(qint32 byteOffset, bool littleEndian) {
         return result;
     }
 
-#ifndef HIFI_UWP
     thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
 
     return 0;
 }
 
-#ifndef HIFI_UWP
 QScriptValue DataViewPrototype::getFloat32(qint32 byteOffset, bool littleEndian) {
     if (realOffset(byteOffset, sizeof(float))) {
         QDataStream stream(*thisArrayBuffer());
@@ -189,7 +171,6 @@ QScriptValue DataViewPrototype::getFloat64(qint32 byteOffset, bool littleEndian)
 
     return QScriptValue();
 }
-#endif
 
 void DataViewPrototype::setInt8(qint32 byteOffset, qint32 value) {
     if (realOffset(byteOffset, sizeof(qint8))) {
@@ -198,11 +179,7 @@ void DataViewPrototype::setInt8(qint32 byteOffset, qint32 value) {
         
         stream << (qint8)value;
     } else {
-
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
-
     }
 }
 
@@ -213,9 +190,7 @@ void DataViewPrototype::setUint8(qint32 byteOffset, quint32 value) {
         
         stream << (quint8)value;
     } else {
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
     }
 }
 
@@ -227,9 +202,7 @@ void DataViewPrototype::setInt16(qint32 byteOffset, qint32 value, bool littleEnd
         
         stream << (qint16)value;
     } else {
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
     }
 }
 
@@ -241,9 +214,7 @@ void DataViewPrototype::setUint16(qint32 byteOffset, quint32 value, bool littleE
         
         stream << (quint16)value;
     } else {
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
     }
 }
 
@@ -255,9 +226,7 @@ void DataViewPrototype::setInt32(qint32 byteOffset, qint32 value, bool littleEnd
         
         stream << (qint32)value;
     } else {
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
     }
 }
 
@@ -269,9 +238,7 @@ void DataViewPrototype::setUint32(qint32 byteOffset, quint32 value, bool littleE
         
         stream << (quint32)value;
     } else {
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
     }
 }
 
@@ -284,9 +251,7 @@ void DataViewPrototype::setFloat32(qint32 byteOffset, float value, bool littleEn
         
         stream << value;
     } else {
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
     }
 }
 
@@ -299,9 +264,7 @@ void DataViewPrototype::setFloat64(qint32 byteOffset, double value, bool littleE
         
         stream << value;
     } else {
-#ifndef HIFI_UWP
         thisObject().engine()->evaluate("throw \"RangeError: byteOffset out of range\"");
-#endif
     }
 }
 

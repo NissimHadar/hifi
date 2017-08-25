@@ -15,29 +15,24 @@
 #include <functional>
 #include <QtCore/QDebug>
 
-#ifndef HIFI_UWP
+#ifdef HIFI_UWP
+#include "myScript.h"
+#else
 #include <QtScript/QScriptEngine>
 #endif
 
 // common base class for extending QScriptEngine itself
-#ifdef HIFI_UWP
-class BaseScriptEngine : public QObject, public QEnableSharedFromThis<BaseScriptEngine> {
-#else
 class BaseScriptEngine : public QScriptEngine, public QEnableSharedFromThis<BaseScriptEngine> {
-#endif
     Q_OBJECT
 public:
     static const QString SCRIPT_EXCEPTION_FORMAT;
     static const QString SCRIPT_BACKTRACE_SEP;
 
-#ifndef HIFI_UWP
     // threadsafe "unbound" version of QScriptEngine::nullValue()
     static const QScriptValue unboundNullValue() { return QScriptValue(0, QScriptValue::NullValue); }
-#endif
 
     BaseScriptEngine() {}
 
-#ifndef HIFI_UWP
     Q_INVOKABLE QScriptValue lintScript(const QString& sourceCode, const QString& fileName, const int lineNumber = 1);
 
     Q_INVOKABLE QScriptValue makeError(const QScriptValue& other = QScriptValue(), const QString& type = "Error");
@@ -52,30 +47,25 @@ public:
     // if the currentContext() is valid then throw the passed exception; otherwise, immediately emit it.
     // note: this is used in cases where C++ code might call into JS API methods directly
     bool raiseException(const QScriptValue& exception);
-#endif
 
     // helper to detect and log warnings when other code invokes QScriptEngine/BaseScriptEngine in thread-unsafe ways
     static bool IS_THREADSAFE_INVOCATION(const QThread *thread, const QString& method);
-#ifndef HIFI_UWP
+
 signals:
     void unhandledException(const QScriptValue& exception);
-#endif
 
 protected:
-#ifndef HIFI_UWP
     // like `newFunction`, but allows mapping inline C++ lambdas with captures as callable QScriptValues
     // even though the context/engine parameters are redundant in most cases, the function signature matches `newFunction`
     // anyway so that newLambdaFunction can be used to rapidly prototype / test utility APIs and then if becoming
     // permanent more easily promoted into regular static newFunction scenarios.
     QScriptValue newLambdaFunction(std::function<QScriptValue(QScriptContext *context, QScriptEngine* engine)> operation, const QScriptValue& data = QScriptValue(), const QScriptEngine::ValueOwnership& ownership = QScriptEngine::AutoOwnership);
-#endif
 
 #ifdef DEBUG_JS
     static void _debugDump(const QString& header, const QScriptValue& object, const QString& footer = QString());
 #endif
 };
 
-#ifndef HIFI_UWP
 // Standardized CPS callback helpers (see: http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js/)
 // These two helpers allow async JS APIs that use a callback parameter to be more friendly to scripters by accepting thisObject
 // context and adopting a consistent and intuitable callback signature:
@@ -87,9 +77,7 @@ protected:
 //   auto result = callScopedHandlerObject(handler, err, result);
 QScriptValue makeScopedHandlerObject(QScriptValue scopeOrCallback, QScriptValue methodOrName);
 QScriptValue callScopedHandlerObject(QScriptValue handler, QScriptValue err, QScriptValue result);
-#endif
 
-#ifndef HIFI_UWP
 // Lambda helps create callable QScriptValues out of std::functions:
 // (just meant for use from within the script engine itself)
 class Lambda : public QObject {
@@ -107,6 +95,5 @@ private:
 
     QScriptValue data;
 };
-#endif
 
 #endif // hifi_BaseScriptEngine_h

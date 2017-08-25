@@ -13,10 +13,6 @@
 
 Q_DECLARE_METATYPE(QByteArray*)
 
-#ifdef HIFI_UWP
-ArrayBufferViewClass::ArrayBufferViewClass() {
-}
-#else
 ArrayBufferViewClass::ArrayBufferViewClass(ScriptEngine* scriptEngine) :
 QObject(scriptEngine),
 QScriptClass(scriptEngine),
@@ -54,4 +50,3 @@ QScriptValue::PropertyFlags ArrayBufferViewClass::propertyFlags(const QScriptVal
                                                                 const QScriptString& name, uint id) {
     return QScriptValue::Undeletable;
 }
-#endif
