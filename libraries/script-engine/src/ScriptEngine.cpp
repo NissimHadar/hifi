@@ -619,7 +619,7 @@ void ScriptEngine::init() {
     registerEventTypes(this);
     registerMenuItemProperties(this);
     registerAnimationTypes(this);
-
+    registerAvatarTypes(this);
     registerAudioMetaTypes(this);
 
     qScriptRegisterMetaType(this, EntityPropertyFlagsToScriptValue, EntityPropertyFlagsFromScriptValue);
