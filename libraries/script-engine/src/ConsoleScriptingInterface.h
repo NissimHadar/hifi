@@ -22,11 +22,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptable>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QList>
 #include <QHash>

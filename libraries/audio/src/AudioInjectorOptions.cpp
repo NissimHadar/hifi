@@ -11,12 +11,7 @@
 
 #include "AudioInjectorOptions.h"
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValueIterator>
-#endif
-
+#include <shared/ScriptHelpers.h>
 #include <RegisteredMetaTypes.h>
 
 #include "AudioLogging.h"

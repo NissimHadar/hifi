@@ -14,12 +14,7 @@
 #include <QObject>
 #include <QMap>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValue>
-#include <QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <glm/glm.hpp>
 

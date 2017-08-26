@@ -17,10 +17,6 @@
 
 #include <glm/glm.hpp>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptEngine>
-#endif
-
 #include "EntityItemPropertiesMacros.h"
 #include "PropertyGroup.h"
 

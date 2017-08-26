@@ -9,11 +9,7 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #ifndef hifi_MIDIEvent_h
 #define hifi_MIDIEvent_h

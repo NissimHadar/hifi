@@ -14,11 +14,7 @@
 
 #include <QtCore/QObject>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptable>
-#endif
+#include <shared/ScriptHelpers.h>
 
 class DataViewPrototype : public QObject, public QScriptable {
     Q_OBJECT

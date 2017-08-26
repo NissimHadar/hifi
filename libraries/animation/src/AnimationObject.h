@@ -14,10 +14,6 @@
 
 #include <QObject>
 
-#ifndef HIFI_UWP
-#include <QScriptable>
-#endif
-
 #include <FBXReader.h>
 
 class QScriptEngine;

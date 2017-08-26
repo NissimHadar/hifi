@@ -20,11 +20,7 @@
 #include <QtCore/QWaitCondition>
 #include <QtCore/QStringList>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <AnimationCache.h>
 #include <AnimVariant.h>
@@ -48,10 +44,6 @@
 #include "ConsoleScriptingInterface.h"
 #include "SettingHandle.h"
 #include "Profile.h"
-
-#ifndef HIFI_UWP
-class QScriptEngineDebugger;
-#endif
 
 static const QString NO_SCRIPT("");
 

@@ -14,11 +14,7 @@
 
 #include <QObject>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QWebSocketServer>
 #include "WebSocketClass.h"

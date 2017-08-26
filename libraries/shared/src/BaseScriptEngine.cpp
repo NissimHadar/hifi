@@ -16,12 +16,6 @@
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptValueIterator>
-#include <QtScript/QScriptContextInfo>
-#endif
-
 #include "Profile.h"
 
 const QString BaseScriptEngine::SCRIPT_EXCEPTION_FORMAT { "[%0] %1 in %2:%3" };

@@ -14,13 +14,7 @@
 
 #include <QObject>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptContext>
-#include <QScriptEngine>
-#include <QScriptValue>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QString>
 #include <QStringList>

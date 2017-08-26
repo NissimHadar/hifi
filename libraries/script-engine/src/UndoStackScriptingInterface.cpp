@@ -11,14 +11,7 @@
 
 #include <QDebug>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValue>
-#include <QScriptValueList>
-#include <QScriptEngine>
-#endif
-
+#include <shared/ScriptHelpers.h>
 #include "UndoStackScriptingInterface.h"
 
 UndoStackScriptingInterface::UndoStackScriptingInterface(QUndoStack* undoStack) : _undoStack(undoStack) {

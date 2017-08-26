@@ -15,11 +15,7 @@
 
 #include <QEventLoop>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptSyntaxCheckResult>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QThreadPool>
 

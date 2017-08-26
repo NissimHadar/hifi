@@ -16,11 +16,7 @@
 #include <QtCore/QString>
 #include <QtQuick/QQuickItem>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptValue>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QtWidgets/QMessageBox>
 

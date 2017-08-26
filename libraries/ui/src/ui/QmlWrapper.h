@@ -12,12 +12,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 class QmlWrapper : public QObject {
     Q_OBJECT

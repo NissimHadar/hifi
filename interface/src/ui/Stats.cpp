@@ -364,7 +364,7 @@ void Stats::updateStats(bool force) {
     STAT_UPDATE(gpuTextureResourcePopulatedMemory, (int)BYTES_TO_MB(gpu::Context::getTextureResourcePopulatedGPUMemSize()));
     STAT_UPDATE(gpuTextureExternalMemory, (int)BYTES_TO_MB(gpu::Context::getTextureExternalGPUMemSize()));
 
-#ifdef HIFI_UWP
+#ifndef HIFI_UWP
     STAT_UPDATE(gpuTextureMemoryPressureState, getTextureMemoryPressureModeString());
 #endif
 

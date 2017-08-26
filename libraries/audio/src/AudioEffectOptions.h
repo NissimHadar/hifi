@@ -13,12 +13,7 @@
 
 #include <QObject>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptContext>
-#include <QtScript/QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 class AudioEffectOptions : public QObject {
     Q_OBJECT

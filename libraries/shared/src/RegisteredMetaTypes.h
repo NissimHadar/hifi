@@ -12,11 +12,7 @@
 #ifndef hifi_RegisteredMetaTypes_h
 #define hifi_RegisteredMetaTypes_h
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptEngine>
-#endif
+#include"shared/ScriptHelpers.h"
 
 #include <QtCore/QUuid>
 #include <QtCore/QUrl>

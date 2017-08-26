@@ -1,5 +1,5 @@
 //
-//  myScript.h
+//  ScriptHelpers.h
 //  libraries/shared/src
 //
 //  Created by Nissim Hadar on 8/23/2014.
@@ -8,8 +8,8 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-#ifndef hifi_MyScript_h
-#define hifi_MyScript_h
+#ifndef hifi_ScriptHelpers_h
+#define hifi_ScriptHelpers_h
 
 #ifdef HIFI_UWP
 #include <QString>
@@ -400,5 +400,12 @@ QScriptValue qScriptValueFromSequence(QScriptEngine *eng, const Container &cont)
     return a;
 }
 
+#else
+#include <QScriptEngine>
+#include <QScriptValue>
+#include <QScriptValueList>
+#include <QtScript/QScriptContext>
+#include <QtScript/QScriptEngine>
 #endif
-#endif
+
+#endif // hifi_ScriptHelpers_h

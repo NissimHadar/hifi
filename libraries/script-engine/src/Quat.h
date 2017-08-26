@@ -19,10 +19,6 @@
 #include <QObject>
 #include <QString>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptable>
-#endif
-
 /**jsdoc
  * A Quaternion
  *

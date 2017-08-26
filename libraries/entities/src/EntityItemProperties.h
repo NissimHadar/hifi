@@ -17,10 +17,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/component_wise.hpp>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptEngine>
-#endif
-
 #include <QtCore/QObject>
 #include <QVector>
 #include <QString>

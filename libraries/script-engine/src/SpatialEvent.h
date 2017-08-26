@@ -15,11 +15,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <qscriptengine.h>
-#endif
+#include <shared/ScriptHelpers.h>
 
 class SpatialEvent {
 public:

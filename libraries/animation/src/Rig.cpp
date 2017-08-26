@@ -14,11 +14,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <queue>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValueIterator>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QWriteLocker>
 #include <QReadLocker>

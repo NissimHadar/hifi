@@ -15,11 +15,7 @@
 #include <functional>
 #include <QtCore/QDebug>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptEngine>
-#endif
+#include "shared/ScriptHelpers.h"
 
 // common base class for extending QScriptEngine itself
 class BaseScriptEngine : public QScriptEngine, public QEnableSharedFromThis<BaseScriptEngine> {

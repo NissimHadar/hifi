@@ -16,11 +16,7 @@
 
 #include <QUuid>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptable>
-#endif
+#include <shared/ScriptHelpers.h>
 
 /// Scriptable interface for a UUID helper class object. Used exclusively in the JavaScript API
 class ScriptUUID : public QObject, protected QScriptable {

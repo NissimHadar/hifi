@@ -14,11 +14,7 @@
 
 #include <QKeyEvent>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValue>
-#endif
+#include <shared/ScriptHelpers.h>
 
 class KeyEvent {
 public:

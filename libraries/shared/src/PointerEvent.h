@@ -17,11 +17,7 @@
 #include <stdint.h>
 #include <glm/glm.hpp>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValue>
-#endif
+#include "shared/ScriptHelpers.h"
 
 class PointerEvent {
 public:

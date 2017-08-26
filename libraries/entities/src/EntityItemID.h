@@ -18,11 +18,7 @@
 #include <QObject>
 #include <QHash>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QUuid>
 

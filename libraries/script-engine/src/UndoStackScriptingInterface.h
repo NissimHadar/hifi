@@ -15,11 +15,7 @@
 #include <QUndoCommand>
 #include <QUndoStack>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValue>
-#endif
+#include <shared/ScriptHelpers.h>
 
 class UndoStackScriptingInterface : public QObject {
     Q_OBJECT

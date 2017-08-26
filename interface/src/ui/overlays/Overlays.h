@@ -21,11 +21,7 @@
 #include <QMouseEvent>
 #include <QReadWriteLock>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValue>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <PointerEvent.h>
 

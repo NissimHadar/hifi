@@ -17,11 +17,7 @@
 #include <QObject>
 #include <QString>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QtScript/QScriptable>
-#endif
+#include <shared/ScriptHelpers.h>
 
 /// Scriptable Mat4 object.  Used exclusively in the JavaScript API
 class Mat4 : public QObject, protected QScriptable {

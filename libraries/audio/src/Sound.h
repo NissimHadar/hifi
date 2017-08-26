@@ -16,10 +16,6 @@
 #include <QtCore/QObject>
 #include <QtNetwork/QNetworkReply>
 
-#ifndef HIFI_UWP
-#include <QtScript/qscriptengine.h>
-#endif
-
 #include <ResourceCache.h>
 
 class Sound : public Resource {

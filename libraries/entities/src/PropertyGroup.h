@@ -12,10 +12,6 @@
 #ifndef hifi_PropertyGroup_h
 #define hifi_PropertyGroup_h
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptEngine>
-#endif
-
 #include <OctreeElement.h>
 
 #include "EntityPropertyFlags.h"

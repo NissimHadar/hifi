@@ -12,21 +12,9 @@
 #ifndef hifi_ArrayBufferClass_h
 #define hifi_ArrayBufferClass_h
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptClass>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <QtCore/QObject>
-
-#ifndef HIFI_UWP
-#include <QtScript/QScriptClass>
-#include <QtScript/QScriptContext>
-#include <QtScript/QScriptEngine>
-#include <QtScript/QScriptString>
-#include <QtScript/QScriptValue>
-#endif
 
 class ScriptEngine;
 

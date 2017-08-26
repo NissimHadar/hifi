@@ -18,12 +18,7 @@
 #include <map>
 #include <set>
 
-#ifdef HIFI_UWP
-#include "myScript.h"
-#else
-#include <QScriptValue>
-#endif
-
+#include <shared/ScriptHelpers.h>
 #include <StreamUtils.h>
 #include <GLMHelpers.h>
 #include "AnimationLogging.h"
