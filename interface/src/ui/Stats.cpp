@@ -41,7 +41,7 @@ using namespace std;
 
 static Stats* INSTANCE{ nullptr };
 
-#ifdef UWP
+#ifdef HIFI_UWP
 //As GKTexture is not used, ignore this function
 QString getTextureMemoryPressureModeString();
 #endif
@@ -364,7 +364,7 @@ void Stats::updateStats(bool force) {
     STAT_UPDATE(gpuTextureResourcePopulatedMemory, (int)BYTES_TO_MB(gpu::Context::getTextureResourcePopulatedGPUMemSize()));
     STAT_UPDATE(gpuTextureExternalMemory, (int)BYTES_TO_MB(gpu::Context::getTextureExternalGPUMemSize()));
 
-#ifdef UWP
+#ifdef HIFI_UWP
     STAT_UPDATE(gpuTextureMemoryPressureState, getTextureMemoryPressureModeString());
 #endif
 

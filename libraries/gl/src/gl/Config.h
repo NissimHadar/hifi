@@ -15,7 +15,7 @@
 #define GL_GLEXT_PROTOTYPES 1
 
 #ifdef HIFI_UWP
-#include <QtANGLE\GLES3\gl3.h>
+#include <QtANGLE/GLES3/gl3.h>
 #else
 #include <GL/glew.h>
 #endif
