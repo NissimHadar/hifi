@@ -60,21 +60,18 @@ elseif (NOT UWP)
   set(PLATFORM_QT_LIBRARIES Qt5::WebEngine Qt5::WebEngineWidgets)
 endif ()
 
-if (UWP)
-  find_package(
-    Qt5 COMPONENTS
-    Gui Multimedia Network OpenGL Qml Quick Svg
-    ${PLATFORM_QT_COMPONENTS}
-    WebChannel WebSockets
-  )
-else ()
-  find_package(
-    Qt5 COMPONENTS
-    Gui Multimedia Network OpenGL Qml Quick Script Svg
-    ${PLATFORM_QT_COMPONENTS}
-    WebChannel WebSockets
-  )
+find_package(
+  Qt5 COMPONENTS
+  Gui Multimedia Network OpenGL Qml Quick Svg
+  ${PLATFORM_QT_COMPONENTS}
+  WebChannel WebSockets
+)
+
+# The UWP port has its own implementation of QtScript
+if (NOT UWP)
+  find_package(Qt5 COMPONENTS Script)
 endif ()
+
 # grab the ui files in resources/ui
 file (GLOB_RECURSE QT_UI_FILES ui/*.ui)
 source_group("UI Files" FILES ${QT_UI_FILES})
