@@ -27,7 +27,7 @@
 
 #endif
 
-#if defined WIN32 && !defined HIFI_UWP
+#if defined(WIN32) && !defined(HIFI_UWP)
 
 #include <GL/wglew.h>
 

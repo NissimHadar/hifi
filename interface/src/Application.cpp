@@ -179,7 +179,7 @@
 #include "scripting/ControllerScriptingInterface.h"
 #include "scripting/RatesScriptingInterface.h"
 
-#if defined Q_OS_MAC || (defined Q_OS_WIN && !defined HIFI_UWP)
+#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
 #include "SpeechRecognizer.h"
 #endif
 
@@ -460,7 +460,7 @@ std::atomic<uint64_t> DeadlockWatchdogThread::_maxElapsed;
 std::atomic<int> DeadlockWatchdogThread::_maxElapsedAverage;
 ThreadSafeMovingAverage<int, DeadlockWatchdogThread::HEARTBEAT_SAMPLES> DeadlockWatchdogThread::_movingAverage;
 
-#if defined Q_OS_WIN && !defined HIFI_UWP
+#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
 class MyNativeEventFilter : public QAbstractNativeEventFilter {
 public:
     static MyNativeEventFilter& getInstance() {
@@ -670,7 +670,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<AssetMappingsScriptingInterface>();
     DependencyManager::set<DomainConnectionModel>();
 
-#if defined Q_OS_MAC || (defined Q_OS_WIN  && !defined HIFI_UWP)
+#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
     DependencyManager::set<SpeechRecognizer>();
 #endif
 
@@ -807,7 +807,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     _entityClipboard->createRootElement();
 
-#if defined Q_OS_WIN && !defined HIFI_UWP
+#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
     installNativeEventFilter(&MyNativeEventFilter::getInstance());
 #endif
 
@@ -2327,7 +2327,7 @@ void Application::initializeUi() {
 
     surfaceContext->setContextProperty("Camera", &_myCamera);
 
-#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined HIFI_UWP)
+#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
     surfaceContext->setContextProperty("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -6085,7 +6085,7 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerGlobalObject("Camera", &_myCamera);
 
-#if defined Q_OS_MAC  || (defined Q_OS_WIN && !defined HIFI_UWP)
+#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
     scriptEngine->registerGlobalObject("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 

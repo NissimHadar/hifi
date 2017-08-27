@@ -311,7 +311,7 @@ QAudioDeviceInfo getNamedAudioDeviceForMode(QAudio::Mode mode, const QString& de
     return result;
 }
 
-#if defined Q_OS_WIN && !defined HIFI_UWP
+#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
 QString getWinDeviceName(IMMDevice* pEndpoint) {
     QString deviceName;
     IPropertyStore* pPropertyStore;
@@ -397,7 +397,7 @@ QAudioDeviceInfo defaultAudioDeviceForMode(QAudio::Mode mode) {
     }
 #endif
 
-#if defined Q_OS_WIN && !defined HIFI_UWP
+#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
     QString deviceName;
     //Check for Windows Vista or higher, IMMDeviceEnumerator doesn't work below that.
     if (!IsWindowsVistaOrGreater()) { // lower then vista

@@ -11,7 +11,21 @@
 #ifndef hifi_ScriptHelpers_h
 #define hifi_ScriptHelpers_h
 
-#ifdef HIFI_UWP
+#ifndef HIFI_UWP
+// Use the Qt Script classes
+#include <QScriptable>
+#include <QScriptClass>
+#include <QScriptContextInfo>
+#include <QScriptEngine>
+#include <QScriptValue>
+#include <QScriptValueIterator>
+#include <QScriptValueList>
+#include <QtScript/QScriptContext>
+#include <QtScript/QScriptEngine>
+#include <QtScriptTools/QtScriptTools>
+
+#else
+// Use a set of stubs
 #include <QString>
 #include <QVariant>
 #include <QThread>
@@ -400,12 +414,6 @@ QScriptValue qScriptValueFromSequence(QScriptEngine *eng, const Container &cont)
     return a;
 }
 
-#else
-#include <QScriptEngine>
-#include <QScriptValue>
-#include <QScriptValueList>
-#include <QtScript/QScriptContext>
-#include <QtScript/QScriptEngine>
 #endif
 
 #endif // hifi_ScriptHelpers_h

@@ -13,7 +13,7 @@
 #include "Application.h"
 #include "CrashReporter.h"
 
-#if defined _WIN32 && !defined HIFI_UWP
+#if defined(_WIN32) && !defined(HIFI_UWP)
 #include <new.h>
 #include <Windows.h>
 #include <DbgHelp.h>

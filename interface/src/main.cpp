@@ -189,7 +189,7 @@ int main(int argc, const char* argv[]) {
     // or in the main window ctor, before GL startup.
     Application::initPlugins(arguments);
 
-#if defined Q_OS_WIN && !defined HIFI_UWP
+#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
     // If we're running in steam mode, we need to do an explicit check to ensure we're up to the required min spec
     if (parser.isSet(checkMinSpecOption)) {
         QString appPath;

@@ -41,7 +41,7 @@ using namespace std;
 
 static Stats* INSTANCE{ nullptr };
 
-#ifdef HIFI_UWP
+#ifndef HIFI_UWP
 //As GKTexture is not used, ignore this function
 QString getTextureMemoryPressureModeString();
 #endif
