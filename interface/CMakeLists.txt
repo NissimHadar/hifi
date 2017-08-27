@@ -286,25 +286,22 @@ endforeach()
 # include headers for interface and InterfaceConfig.
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
-if (UWP)
-   target_link_libraries(
-    ${TARGET_NAME}
-    Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
-    Qt5::Qml Qt5::Quick Qt5::Svg
-    Qt5::WebChannel
-    $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2.lib
-    ${PLATFORM_QT_LIBRARIES}
-  )
-else ()
-  target_link_libraries(
-    ${TARGET_NAME}
-    Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
-    Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
-    Qt5::WebChannel Qt5::WebEngine
-    ${PLATFORM_QT_LIBRARIES}
-  )
-endif()
+list(APPEND TARGET_LINK_LIBS   
+  ${TARGET_NAME}
+  Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
+  Qt5::Qml Qt5::Quick Qt5::Svg
+  Qt5::WebChannel
+  $ENV{QT_CMAKE_PREFIX_PATH_UWP}/../libGLESv2.lib
+  ${PLATFORM_QT_LIBRARIES}
+)
 
+# Use Qt Script when not UWP
+if (NOT UWP)
+  list(APPEND TARGET_LINK_LIBS  Qt5::Script)
+endif ()
+
+target_link_libraries(${TARGET_LINK_LIBS})
+ 
 if (UNIX)
     target_link_libraries(${TARGET_NAME} pthread)
 endif(UNIX)
