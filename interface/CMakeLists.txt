@@ -42,14 +42,6 @@ else ()
   list(REMOVE_ITEM INTERFACE_SRCS ${SPEECHRECOGNIZER_H})
   get_filename_component(SPEECHRECOGNIZER_CPP "src/SpeechRecognizer.cpp" ABSOLUTE)
   list(REMOVE_ITEM INTERFACE_SRCS ${SPEECHRECOGNIZER_CPP})
-
-  # For UWP, also remove DdeFaceTracker
-  if (UWP)
-    get_filename_component(DDE_FACE_TRACKER_H "src/devices/DdeFaceTracker.h" ABSOLUTE)
-    list(REMOVE_ITEM INTERFACE_SRCS ${DDE_FACE_TRACKER_H})
-    get_filename_component(DDE_FACE_TRACKER_CPP "src/devices/DdeFaceTracker.cpp" ABSOLUTE)
-    list(REMOVE_ITEM INTERFACE_SRCS ${DDE_FACE_TRACKER_CPP})
-  endif ()
 endif ()
 
 if (ANDROID)

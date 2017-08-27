@@ -154,10 +154,6 @@
 #include "avatar/MyHead.h"
 #include "CrashHandler.h"
 
-#ifndef HIFI_UWP
-#include "devices/DdeFaceTracker.h"
-#endif
-
 #include "DiscoverabilityManager.h"
 #include "GLCanvas.h"
 #include "InterfaceDynamicFactory.h"
@@ -637,10 +633,6 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<ModelCache>();
     DependencyManager::set<ScriptCache>();
     DependencyManager::set<SoundCache>();
-
-#ifndef HIFI_UWP
-    DependencyManager::set<DdeFaceTracker>();
-#endif
 
     DependencyManager::set<EyeTracker>();
     DependencyManager::set<AudioClient>();
@@ -1434,12 +1426,6 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     this->installEventFilter(this);
 
-#ifdef HAVE_DDE
-    auto ddeTracker = DependencyManager::get<DdeFaceTracker>();
-    ddeTracker->init();
-    connect(ddeTracker.data(), &FaceTracker::muteToggled, this, &Application::faceTrackerMuteToggled);
-#endif
-
 #ifdef HAVE_IVIEWHMD
     auto eyeTracker = DependencyManager::get<EyeTracker>();
     eyeTracker->init();
@@ -2001,9 +1987,6 @@ void Application::cleanupBeforeQuit() {
     }
 
     // Stop third party processes so that they're not left running in the event of a subsequent shutdown crash.
-#ifdef HAVE_DDE
-    DependencyManager::get<DdeFaceTracker>()->setEnabled(false);
-#endif
 #ifdef HAVE_IVIEWHMD
     DependencyManager::get<EyeTracker>()->setEnabled(false, true);
 #endif
@@ -2062,9 +2045,6 @@ void Application::cleanupBeforeQuit() {
     _window->saveGeometry();
 
     // Destroy third party processes after scripts have finished using them.
-#ifdef HAVE_DDE
-    DependencyManager::destroy<DdeFaceTracker>();
-#endif
 #ifdef HAVE_IVIEWHMD
     DependencyManager::destroy<EyeTracker>();
 #endif
@@ -2351,10 +2331,6 @@ void Application::initializeUi() {
     surfaceContext->setContextProperty("Tablet", DependencyManager::get<TabletScriptingInterface>().data());
     surfaceContext->setContextProperty("DialogsManager", _dialogsManagerScriptingInterface);
     surfaceContext->setContextProperty("GlobalServices", GlobalServicesScriptingInterface::getInstance());
-
-#ifndef HIFI_UWP
-    surfaceContext->setContextProperty("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
-#endif
 
     surfaceContext->setContextProperty("AvatarManager", DependencyManager::get<AvatarManager>().data());
     surfaceContext->setContextProperty("UndoStack", &_undoStackScriptingInterface);
@@ -2708,17 +2684,6 @@ void Application::paintGL() {
 void Application::runTests() {
     runTimingTests();
     runUnitTests();
-}
-
-void Application::faceTrackerMuteToggled() {
-#ifndef HIFI_UWP
-    QAction* muteAction = Menu::getInstance()->getActionForOption(MenuOption::MuteFaceTracking);
-    Q_CHECK_PTR(muteAction);
-    bool isMuted = getSelectedFaceTracker()->isMuted();
-    muteAction->setChecked(isMuted);
-    getSelectedFaceTracker()->setEnabled(!isMuted);
-    Menu::getInstance()->getActionForOption(MenuOption::CalibrateCamera)->setEnabled(!isMuted);
-#endif
 }
 
 void Application::setFieldOfView(float fov) {
@@ -4252,41 +4217,6 @@ ivec2 Application::getMouse() const {
     return getApplicationCompositor().getReticlePosition();
 }
 
-FaceTracker* Application::getActiveFaceTracker() {
-#ifdef HIFI_UWP
-    return nullptr;
-#else
-    auto dde = DependencyManager::get<DdeFaceTracker>();
-
-    return dde->isActive() ? static_cast<FaceTracker*>(dde.data()) : nullptr;
-#endif
-}
-
-FaceTracker* Application::getSelectedFaceTracker() {
-    FaceTracker* faceTracker = nullptr;
-#ifdef HAVE_DDE
-    if (Menu::getInstance()->isOptionChecked(MenuOption::UseCamera)) {
-        faceTracker = DependencyManager::get<DdeFaceTracker>().data();
-    }
-#endif
-    return faceTracker;
-}
-
-void Application::setActiveFaceTracker() const {
-#ifdef HAVE_DDE
-    bool isMuted = Menu::getInstance()->isOptionChecked(MenuOption::MuteFaceTracking);
-    bool isUsingDDE = Menu::getInstance()->isOptionChecked(MenuOption::UseCamera);
-    Menu::getInstance()->getActionForOption(MenuOption::BinaryEyelidControl)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::CoupleEyelids)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::UseAudioForMouth)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::VelocityFilter)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::CalibrateCamera)->setVisible(isUsingDDE);
-    auto ddeTracker = DependencyManager::get<DdeFaceTracker>();
-    ddeTracker->setIsMuted(isMuted);
-    ddeTracker->setEnabled(isUsingDDE && !isMuted);
-#endif
-}
-
 #ifdef HAVE_IVIEWHMD
 void Application::setActiveEyeTracker() {
     auto eyeTracker = DependencyManager::get<EyeTracker>();
@@ -4588,7 +4518,6 @@ void Application::updateMyAvatarLookAtPosition() {
 
     auto myAvatar = getMyAvatar();
     myAvatar->updateLookAtTargetAvatar();
-    FaceTracker* faceTracker = getActiveFaceTracker();
     auto eyeTracker = DependencyManager::get<EyeTracker>();
 
     bool isLookingAtSomeone = false;
@@ -4651,23 +4580,6 @@ void Application::updateMyAvatarLookAtPosition() {
                     (myAvatar->getHead()->getFinalOrientationInWorldFrame() * glm::vec3(0.0f, 0.0f, -TREE_SCALE));
             }
         }
-
-#ifndef HIFI_UWP
-        // Deflect the eyes a bit to match the detected gaze from the face tracker if active.
-        if (faceTracker && !faceTracker->isMuted()) {
-            float eyePitch = faceTracker->getEstimatedEyePitch();
-            float eyeYaw = faceTracker->getEstimatedEyeYaw();
-            const float GAZE_DEFLECTION_REDUCTION_DURING_EYE_CONTACT = 0.1f;
-            glm::vec3 origin = myAvatar->getHead()->getEyePosition();
-            float deflection = faceTracker->getEyeDeflection();
-            if (isLookingAtSomeone) {
-                deflection *= GAZE_DEFLECTION_REDUCTION_DURING_EYE_CONTACT;
-            }
-            lookAtSpot = origin + _myCamera.getOrientation() * glm::quat(glm::radians(glm::vec3(
-                eyePitch * deflection, eyeYaw * deflection, 0.0f))) *
-                glm::inverse(_myCamera.getOrientation()) * (lookAtSpot - origin);
-        }
-#endif
     }
 
     myAvatar->getHead()->setLookAtPosition(lookAtSpot);
@@ -4979,38 +4891,6 @@ void Application::update(float deltaTime) {
 
     {
         PerformanceTimer perfTimer("devices");
-
-#ifndef HIFI_UWP
-        FaceTracker* tracker = getSelectedFaceTracker();
-        if (tracker && Menu::getInstance()->isOptionChecked(MenuOption::MuteFaceTracking) != tracker->isMuted()) {
-            tracker->toggleMute();
-        }
-
-        tracker = getActiveFaceTracker();
-        if (tracker && !tracker->isMuted()) {
-            tracker->update(deltaTime);
-
-            // Auto-mute microphone after losing face tracking?
-            if (tracker->isTracking()) {
-                _lastFaceTrackerUpdate = usecTimestampNow();
-            } else {
-                const quint64 MUTE_MICROPHONE_AFTER_USECS = 5000000;  //5 secs
-                Menu* menu = Menu::getInstance();
-                auto audioClient = DependencyManager::get<AudioClient>();
-                if (menu->isOptionChecked(MenuOption::AutoMuteAudio) && !audioClient->isMuted()) {
-                    if (_lastFaceTrackerUpdate > 0
-                        && ((usecTimestampNow() - _lastFaceTrackerUpdate) > MUTE_MICROPHONE_AFTER_USECS)) {
-                        audioClient->toggleMute();
-                        _lastFaceTrackerUpdate = 0;
-                    }
-                } else {
-                    _lastFaceTrackerUpdate = 0;
-                }
-            }
-        } else {
-            _lastFaceTrackerUpdate = 0;
-        }
-#endif
     }
 
     auto myAvatar = getMyAvatar();
@@ -5757,10 +5637,6 @@ void Application::displaySide(RenderArgs* renderArgs, Camera& theCamera, bool se
 }
 
 void Application::resetSensors(bool andReload) {
-#ifndef HIFI_UWP
-    DependencyManager::get<DdeFaceTracker>()->reset();
-#endif
-
     DependencyManager::get<EyeTracker>()->reset();
     getActiveDisplayPlugin()->resetSensors();
     _overlayConductor.centerUI();
@@ -6146,10 +6022,6 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerGlobalObject("GlobalServices", GlobalServicesScriptingInterface::getInstance());
     qScriptRegisterMetaType(scriptEngine, DownloadInfoResultToScriptValue, DownloadInfoResultFromScriptValue);
-
-#ifndef HIFI_UWP
-    scriptEngine->registerGlobalObject("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
-#endif
 
     scriptEngine->registerGlobalObject("AvatarManager", DependencyManager::get<AvatarManager>().data());
 

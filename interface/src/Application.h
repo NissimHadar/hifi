@@ -183,9 +183,6 @@ public:
 
     ivec2 getMouse() const;
 
-    FaceTracker* getActiveFaceTracker();
-    FaceTracker* getSelectedFaceTracker();
-
     ApplicationOverlay& getApplicationOverlay() { return _applicationOverlay; }
     const ApplicationOverlay& getApplicationOverlay() const { return _applicationOverlay; }
     CompositorHelper& getApplicationCompositor() const;
@@ -351,7 +348,6 @@ public slots:
     void openUrl(const QUrl& url) const;
 
     void resetSensors(bool andReload = false);
-    void setActiveFaceTracker() const;
 
 #if (PR_BUILD || DEV_BUILD)
     void sendWrongProtocolVersionsSignature(bool checked) { ::sendWrongProtocolVersionsSignature(checked); }
@@ -412,8 +408,6 @@ private slots:
     void onPresent(quint32 frameCount);
 
     void resettingDomain();
-
-    void faceTrackerMuteToggled();
 
     void activeChanged(Qt::ApplicationState state);
     void windowMinimizedChanged(bool minimized);
