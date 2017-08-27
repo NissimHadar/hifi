@@ -6529,7 +6529,7 @@ void Application::addAssetToWorldFromURL(QString url) {
     }
     if (url.contains("vr.google.com/downloads")) {
         filename = url.section('/', -1);
-        filename.remove(".zip?noDownload=false");
+        filename.remove(".zip");
     }
 
     if (!DependencyManager::get<NodeList>()->getThisNodeCanWriteAssets()) {
@@ -6559,7 +6559,7 @@ void Application::addAssetToWorldFromURLRequestFinished() {
     }
     if (url.contains("vr.google.com/downloads")) {
         filename = url.section('/', -1);
-        filename.remove(".zip?noDownload=false");
+        filename.remove(".zip");
         isBlocks = true;
     }
 
@@ -6576,6 +6576,7 @@ void Application::addAssetToWorldFromURLRequestFinished() {
             if (tempFile.open(QIODevice::WriteOnly)) {
                 tempFile.write(request->getData());
                 addAssetToWorldInfoClear(filename);  // Remove message from list; next one added will have a different key.
+                tempFile.close();
                 qApp->getFileDownloadInterface()->runUnzip(downloadPath, url, true, false, isBlocks);
             } else {
                 QString errorInfo = "Couldn't open temporary file for download";
