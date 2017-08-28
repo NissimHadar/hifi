@@ -45,10 +45,6 @@
 
 #include <QFontDatabase>
 
-#ifndef HIFI_UWP
-#include <QProcessEnvironment>
-#endif
-
 #include <QTemporaryDir>
 
 #include <gl/QOpenGLContextWrapper.h>
@@ -83,7 +79,7 @@
 #include <gpu/Batch.h>
 #include <gpu/Context.h>
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
 #include <gpu/gl/GLBackend.h>
 #endif
 
@@ -175,7 +171,7 @@
 #include "scripting/ControllerScriptingInterface.h"
 #include "scripting/RatesScriptingInterface.h"
 
-#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
 #include "SpeechRecognizer.h"
 #endif
 
@@ -456,7 +452,7 @@ std::atomic<uint64_t> DeadlockWatchdogThread::_maxElapsed;
 std::atomic<int> DeadlockWatchdogThread::_maxElapsedAverage;
 ThreadSafeMovingAverage<int, DeadlockWatchdogThread::HEARTBEAT_SAMPLES> DeadlockWatchdogThread::_movingAverage;
 
-#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
+#if defined(Q_OS_WIN64)
 class MyNativeEventFilter : public QAbstractNativeEventFilter {
 public:
     static MyNativeEventFilter& getInstance() {
@@ -601,15 +597,16 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     // Select appropriate audio DLL
     QString audioDLLPath = QCoreApplication::applicationDirPath();
 
-#ifdef HIFI_UWP
-    audioDLLPath += "/audioWin8";
-#else
-    if (IsWindows8OrGreater()) {
+    bool useWin8Audio = true;
+#ifdef Q_OS_WIN64
+    useWin8Audio = IsWindows8OrGreater();
+#endif
+
+    if (useWin8Audio) {
         audioDLLPath += "/audioWin8";
     } else {
         audioDLLPath += "/audioWin7";
     }
-#endif
 
     QCoreApplication::addLibraryPath(audioDLLPath);
 #endif
@@ -662,7 +659,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<AssetMappingsScriptingInterface>();
     DependencyManager::set<DomainConnectionModel>();
 
-#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
     DependencyManager::set<SpeechRecognizer>();
 #endif
 
@@ -799,7 +796,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     _entityClipboard->createRootElement();
 
-#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
+#if defined(Q_OS_WIN64)
     installNativeEventFilter(&MyNativeEventFilter::getInstance());
 #endif
 
@@ -1061,17 +1058,12 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     // sessionRunTime will be reset soon by loadSettings. Grab it now to get previous session value.
     // The value will be 0 if the user blew away settings this session, which is both a feature and a bug.
-    static const QString TESTER = "HIFI_TESTER";
+    static const char* TESTER = "HIFI_TESTER";
     auto gpuIdent = GPUIdent::getInstance();
     auto glContextData = getGLContextData();
     QJsonObject properties = {
         { "version", applicationVersion() },
-
-// No QProcess in UWP
-#ifndef HIFI_UWP
-        { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
-#endif
-
+        { "tester", qEnvironmentVariableIsSet(TESTER) },
         { "previousSessionCrashed", _previousSessionCrashed },
         { "previousSessionRuntime", sessionRunTime.get() },
         { "cpu_architecture", QSysInfo::currentCpuArchitecture() },
@@ -1122,16 +1114,12 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
     if (userActivityLogger.isEnabled()) {
         // sessionRunTime will be reset soon by loadSettings. Grab it now to get previous session value.
         // The value will be 0 if the user blew away settings this session, which is both a feature and a bug.
-        static const QString TESTER = "HIFI_TESTER";
+        static const char* TESTER = "HIFI_TESTER";
         auto gpuIdent = GPUIdent::getInstance();
         auto glContextData = getGLContextData();
         QJsonObject properties = {
             { "version", applicationVersion() },
-
-#ifndef HIFI_UWP
-            { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
-#endif
-
+            { "tester", qEnvironmentVariableIsSet(TESTER) },
             { "previousSessionCrashed", _previousSessionCrashed },
             { "previousSessionRuntime", sessionRunTime.get() },
             { "cpu_architecture", QSysInfo::currentCpuArchitecture() },
@@ -1973,9 +1961,9 @@ void Application::onAboutToQuit() {
 }
 
 void Application::cleanupBeforeQuit() {
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
     // add a logline indicating if QTWEBENGINE_REMOTE_DEBUGGING is set or not
-    QString webengineRemoteDebugging = QProcessEnvironment::systemEnvironment().value("QTWEBENGINE_REMOTE_DEBUGGING", "false");
+    QString webengineRemoteDebugging = qgetenv("QTWEBENGINE_REMOTE_DEBUGGING");
     qCDebug(interfaceapp) << "QTWEBENGINE_REMOTE_DEBUGGING =" << webengineRemoteDebugging;
 #endif
 
@@ -2142,6 +2130,13 @@ Application::~Application() {
     qInstallMessageHandler(LogHandler::verboseMessageHandler);
 }
 
+
+#if defined(Q_OS_ANDROID) || defined(Q_OS_WINRT) 
+#define BACKEND gpu::gl::GLESBackend
+#else
+#define BACKEND gpu::gl::GLBackend
+#endif
+
 void Application::initializeGL() {
     qCDebug(interfaceapp) << "Created Display Window.";
 
@@ -2161,10 +2156,10 @@ void Application::initializeGL() {
 
     _glWidget->makeCurrent();
 
-#ifndef HIFI_UWP
-    gpu::Context::init<gpu::gl::GLBackend>();
+#ifndef Q_OS_WINRT
+    gpu::Context::init<BACKEND>();
     qApp->setProperty(hifi::properties::gl::MAKE_PROGRAM_CALLBACK,
-        QVariant::fromValue((void*)(&gpu::gl::GLBackend::makeProgram)));
+        QVariant::fromValue((void*)(&BACKEND::makeProgram)));
 #endif
 
     _gpuContext = std::make_shared<gpu::Context>();
@@ -2177,13 +2172,9 @@ void Application::initializeGL() {
 
     // Set up the render engine
     render::CullFunctor cullFunctor = LODManager::shouldRender;
-    static const QString RENDER_FORWARD = "HIFI_RENDER_FORWARD";
+    static const char* RENDER_FORWARD = "HIFI_RENDER_FORWARD";
 
-#ifdef HIFI_UWP
-    bool isDeferred = false;
-#else
-    bool isDeferred = !QProcessEnvironment::systemEnvironment().contains(RENDER_FORWARD);
-#endif
+    bool isDeferred = !qEnvironmentVariableIsSet(RENDER_FORWARD);
 
     _renderEngine->addJob<UpdateSceneTask>("UpdateScene");
     _renderEngine->addJob<SecondaryCameraRenderTask>("SecondaryCameraJob", cullFunctor);
@@ -2307,7 +2298,7 @@ void Application::initializeUi() {
 
     surfaceContext->setContextProperty("Camera", &_myCamera);
 
-#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
     surfaceContext->setContextProperty("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -3835,7 +3826,7 @@ bool Application::shouldPaint() const {
     return true;
 }
 
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN64
 #include <Windows.h>
 #include <TCHAR.h>
 #include <pdh.h>
@@ -3972,10 +3963,8 @@ static ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
 static int numProcessors;
 static HANDLE self;
 
-#ifndef HIFI_UWP
 static PDH_HQUERY cpuQuery;
 static PDH_HCOUNTER cpuTotal;
-#endif
 
 void initCpuUsage() {
     SYSTEM_INFO sysInfo;
@@ -3992,11 +3981,9 @@ void initCpuUsage() {
     memcpy(&lastSysCPU, &fsys, sizeof(FILETIME));
     memcpy(&lastUserCPU, &fuser, sizeof(FILETIME));
 
-#ifndef HIFI_UWP
     PdhOpenQuery(NULL, NULL, &cpuQuery);
     PdhAddCounter(cpuQuery, "\\Processor(_Total)\\% Processor Time", NULL, &cpuTotal);
     PdhCollectQueryData(cpuQuery);
-#endif
 }
 
 void getCpuUsage(vec3& systemAndUser) {
@@ -4011,6 +3998,7 @@ void getCpuUsage(vec3& systemAndUser) {
     memcpy(&user, &fuser, sizeof(FILETIME));
     systemAndUser.x = (sys.QuadPart - lastSysCPU.QuadPart);
     systemAndUser.y = (user.QuadPart - lastUserCPU.QuadPart);
+    systemAndUser.z = 0.0;
     systemAndUser /= (float)(now.QuadPart - lastCPU.QuadPart);
     systemAndUser /= (float)numProcessors;
     systemAndUser *= 100.0f;
@@ -4018,14 +4006,10 @@ void getCpuUsage(vec3& systemAndUser) {
     lastUserCPU = user;
     lastSysCPU = sys;
 
-#ifdef HIFI_UWP
-    systemAndUser.z = 0.0;
-#else
     PDH_FMT_COUNTERVALUE counterVal;
     PdhCollectQueryData(cpuQuery);
     PdhGetFormattedCounterValue(cpuTotal, PDH_FMT_DOUBLE, NULL, &counterVal);
     systemAndUser.z = (float)counterVal.doubleValue;
-#endif
 }
 
 void setupCpuMonitorThread() {
@@ -4066,7 +4050,7 @@ void Application::idle() {
         connect(offscreenUi.data(), &OffscreenUi::showDesktop, this, &Application::showDesktop);
     }
 
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN64
     // If tracing is enabled then monitor the CPU in a separate thread
     static std::once_flag once;
     std::call_once(once, [&] {
@@ -5961,7 +5945,7 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerGlobalObject("Camera", &_myCamera);
 
-#if defined(Q_OS_MAC) || (defined(Q_OS_WIN) && !defined(HIFI_UWP))
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
     scriptEngine->registerGlobalObject("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 

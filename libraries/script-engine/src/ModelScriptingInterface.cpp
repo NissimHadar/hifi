@@ -11,12 +11,7 @@
 
 #include "ModelScriptingInterface.h"
 
-#ifndef HIFI_UWP
-#include <QScriptEngine>
-#include <QScriptValueIterator>
-#include <QtScript/QScriptValue>
-#endif
-
+#include <shared/ScriptHelpers.h>
 #include <model-networking/SimpleMeshProxy.h>
 #include "ScriptEngine.h"
 #include "ScriptEngineLogging.h"

@@ -11,10 +11,6 @@
 
 #include "AssetMappingsScriptingInterface.h"
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptEngine>
-#endif
-
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 

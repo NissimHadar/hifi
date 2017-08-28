@@ -66,7 +66,7 @@ public:
     virtual bool canJump() const override { assert(false); return false; } // never call this
 
 // The vcpkg'ed version has a different signature
-#ifdef HIFI_UWP
+#ifdef Q_OS_WINRT
     virtual void jump(const btVector3& dir = btVector3()) override;
 #else
     virtual void jump() override;

@@ -10,6 +10,9 @@
 //
 
 #include "RequestFilters.h"
+
+#ifndef Q_OS_WINRT
+
 #include "NetworkingConstants.h"
 
 #include <QtCore/QDebug>
@@ -38,10 +41,8 @@ namespace {
      bool isJSON(const QString filename) {
         return filename.endsWith(".json", Qt::CaseInsensitive);
      }
-
 }
 
-#ifndef HIFI_UWP
 void RequestFilters::interceptHFWebEngineRequest(QWebEngineUrlRequestInfo& info) {
     // check if this is a request to a highfidelity URL
     bool isAuthable = isAuthableHighFidelityURL(info.requestUrl());

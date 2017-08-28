@@ -14,20 +14,17 @@
 #ifndef hifi_RequestFilters_h
 #define hifi_RequestFilters_h
 
-#include <QObject>
+#include <QtGlobal>
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
+#include <QObject>
 #include <QWebEngineUrlRequestInfo>
-#endif
 
 class RequestFilters : public QObject {
-    Q_OBJECT
-
 public: 
-#ifndef HIFI_UWP
     static void interceptHFWebEngineRequest(QWebEngineUrlRequestInfo& info);
     static void interceptFileType(QWebEngineUrlRequestInfo& info);
-#endif
 };
+#endif
 
 #endif // hifi_RequestFilters_h

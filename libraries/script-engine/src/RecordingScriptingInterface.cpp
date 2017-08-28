@@ -11,13 +11,9 @@
 #include <QStandardPaths>
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
-
-#ifndef HIFI_UWP
-#include <QtScript/QScriptValue>
-#endif
-
 #include <QtWidgets/QFileDialog>
 
+#include <shared/ScriptHelpers.h>
 #include <shared/QtHelpers.h>
 #include <AssetClient.h>
 #include <AssetUpload.h>

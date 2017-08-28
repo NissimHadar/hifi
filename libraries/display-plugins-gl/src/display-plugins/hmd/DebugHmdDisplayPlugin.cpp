@@ -5,7 +5,6 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-#ifndef HIFI_UWP
 #include "DebugHmdDisplayPlugin.h"
 
 #include <QtCore/QProcessEnvironment>
@@ -15,8 +14,8 @@
 
 const QString DebugHmdDisplayPlugin::NAME("HMD Simulator");
 
-static const QString DEBUG_FLAG("HIFI_DEBUG_HMD");
-static bool enableDebugHmd = QProcessEnvironment::systemEnvironment().contains(DEBUG_FLAG);
+static const char* DEBUG_FLAG = "HIFI_DEBUG_HMD";
+static bool enableDebugHmd = qEnvironmentVariableIsSet(DEBUG_FLAG);
 
 
 bool DebugHmdDisplayPlugin::isSupported() const {
@@ -39,14 +38,6 @@ bool DebugHmdDisplayPlugin::beginFrameRender(uint32_t frameIndex) {
         _frameInfos[frameIndex] = _currentRenderFrameInfo;
     });
     return Parent::beginFrameRender(frameIndex);
-}
-
-// DLL based display plugins MUST initialize GLEW inside the DLL code.
-void DebugHmdDisplayPlugin::customizeContext() {
-    glewExperimental = true;
-    glewInit();
-    glGetError(); // clear the potential error from glewExperimental
-    Parent::customizeContext();
 }
 
 bool DebugHmdDisplayPlugin::internalActivate() {
@@ -79,4 +70,3 @@ void DebugHmdDisplayPlugin::updatePresentPose() {
         glm::mat4_cast(glm::angleAxis(yaw, Vectors::UP)) * 
         glm::mat4_cast(glm::angleAxis(pitch, Vectors::RIGHT));
 }
-#endif //HIFI_UWP

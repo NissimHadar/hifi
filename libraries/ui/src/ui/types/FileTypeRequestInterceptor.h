@@ -14,7 +14,9 @@
 #ifndef hifi_FileTypeRequestInterceptor_h
 #define hifi_FileTypeRequestInterceptor_h
 
-#ifndef HIFI_UWP
+#include <QtGlobal>
+
+#ifndef Q_OS_WINRT
 #include <QWebEngineUrlRequestInterceptor>
 
 class FileTypeRequestInterceptor : public QWebEngineUrlRequestInterceptor {

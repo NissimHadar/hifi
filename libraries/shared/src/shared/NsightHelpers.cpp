@@ -11,11 +11,10 @@
 
 #if defined(_WIN32) && defined(NSIGHT_FOUND)
 
-#include <QtCore/QProcessEnvironment>
 #include "nvToolsExt.h"
 
-static const QString NSIGHT_FLAG("NSIGHT_LAUNCHED");
-static const bool nsightLaunched = QProcessEnvironment::systemEnvironment().contains(NSIGHT_FLAG);
+static const char* NSIGHT_FLAG("NSIGHT_LAUNCHED");
+static const bool nsightLaunched = qEnvironmentVariableIsSet(NSIGHT_FLAG);
 
 bool nsightActive() {
     return nsightLaunched;

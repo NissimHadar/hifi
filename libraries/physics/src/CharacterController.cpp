@@ -328,7 +328,7 @@ void CharacterController::playerStep(btCollisionWorld* collisionWorld, btScalar 
 }
 
 // The vcpkg'ed version has a different signature
-#ifdef HIFI_UWP
+#ifdef Q_OS_WINRT
 void CharacterController::jump(const btVector3& dir) {
     _pendingFlags |= PENDING_FLAG_JUMP;
 }

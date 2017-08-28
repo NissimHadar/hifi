@@ -15,6 +15,10 @@
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
 
+#ifdef Q_OS_WINRT
+#include <GLES3/gl3.h>
+#endif
+
 #include <plugins/DisplayPlugin.h>
 
 ResourceImageItem::ResourceImageItem() : QQuickFramebufferObject() {
@@ -92,9 +96,6 @@ void ResourceImageItemRenderer::render() {
     auto f = QOpenGLContext::currentContext()->extraFunctions();
 
     if (_fenceSync) {
-#ifdef HIFI_UWP
-#define GL_TIMEOUT_IGNORED 0xFFFFFFFFFFFFFFFF
-#endif
         f->glWaitSync(_fenceSync, 0, GL_TIMEOUT_IGNORED);
         f->glDeleteSync(_fenceSync);
         _fenceSync = 0;

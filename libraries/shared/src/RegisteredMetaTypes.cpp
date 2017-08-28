@@ -23,10 +23,7 @@
 #include <QtGui/QQuaternion>
 #include <QtNetwork/QAbstractSocket>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptValueIterator>
-#endif
+#include "shared/ScriptHelpers.h"
 
 int vec4MetaTypeId = qRegisterMetaType<glm::vec4>();
 int vec3MetaTypeId = qRegisterMetaType<glm::vec3>();

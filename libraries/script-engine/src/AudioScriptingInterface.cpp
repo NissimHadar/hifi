@@ -20,7 +20,7 @@
 
 void registerAudioMetaTypes(QScriptEngine* engine) {
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
     qScriptRegisterMetaType(engine, injectorOptionsToScriptValue, injectorOptionsFromScriptValue);
     qScriptRegisterMetaType(engine, soundSharedPointerToScriptValue, soundSharedPointerFromScriptValue);
 #endif

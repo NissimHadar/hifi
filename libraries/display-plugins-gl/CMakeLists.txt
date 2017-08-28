@@ -1,9 +1,8 @@
-set(TARGET_NAME display-plugins)
-AUTOSCRIBE_SHADER_LIB(gpu display-plugins)
+set(TARGET_NAME display-plugins-gl)
+AUTOSCRIBE_SHADER_LIB(gpu display-plugins-gl)
+setup_hifi_library(OpenGL)
 
-setup_hifi_library()
-
-link_hifi_libraries(shared plugins ui-plugins ui render-utils)
+link_hifi_libraries(shared plugins ui-plugins display-plugins gl gpu-gl ui render-utils)
 
 include_hifi_library_headers(gpu)
 include_hifi_library_headers(model-networking)
@@ -13,5 +12,7 @@ include_hifi_library_headers(fbx)
 include_hifi_library_headers(image)
 include_hifi_library_headers(ktx)
 include_hifi_library_headers(render)
+
+target_opengl()
 
 GroupSources("src/display-plugins")

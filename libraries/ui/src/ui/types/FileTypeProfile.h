@@ -14,7 +14,9 @@
 #ifndef hifi_FileTypeProfile_h
 #define hifi_FileTypeProfile_h
 
-#ifndef HIFI_UWP
+#include <QtGlobal>
+
+#ifndef Q_OS_WINRT
 #include <QtWebEngine/QQuickWebEngineProfile>
 
 class FileTypeProfile : public QQuickWebEngineProfile {

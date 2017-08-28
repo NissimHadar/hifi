@@ -12,11 +12,7 @@
 
 #include <QtCore/QThread>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptContext>
-#include <QtScript/QScriptEngine>
-#endif
-
+#include <shared/ScriptHelpers.h>
 #include <QtQuick/QQuickItem>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>

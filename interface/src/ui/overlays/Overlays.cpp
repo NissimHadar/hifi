@@ -12,10 +12,6 @@
 
 #include <limits>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptValueIterator>
-#endif
-
 #include <shared/QtHelpers.h>
 #include <OffscreenUi.h>
 #include <render/Scene.h>

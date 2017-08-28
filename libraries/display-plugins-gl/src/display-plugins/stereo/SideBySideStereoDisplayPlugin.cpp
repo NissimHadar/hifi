@@ -5,7 +5,6 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-#ifndef HIFI_UWP
 #include "SideBySideStereoDisplayPlugin.h"
 
 const QString SideBySideStereoDisplayPlugin::NAME("3D TV - Side by Side Stereo");
@@ -15,4 +14,3 @@ glm::uvec2 SideBySideStereoDisplayPlugin::getRecommendedRenderSize() const {
     result.x *= 2;
     return result;
 }
-#endif //HIFI_UWP

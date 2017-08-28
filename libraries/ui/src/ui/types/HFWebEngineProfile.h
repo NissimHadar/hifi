@@ -14,7 +14,8 @@
 #ifndef hifi_HFWebEngineProfile_h
 #define hifi_HFWebEngineProfile_h
 
-#ifndef HIFI_UWP
+#include <QtGlobal>
+#ifndef Q_OS_WINRT
 #include <QtWebEngine/QQuickWebEngineProfile>
 
 class HFWebEngineProfile : public QQuickWebEngineProfile {

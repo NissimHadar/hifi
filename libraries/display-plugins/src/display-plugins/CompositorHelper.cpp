@@ -26,7 +26,7 @@
 #include <DependencyManager.h>
 #include <plugins/PluginManager.h>
 #include <CursorManager.h>
-#include <gl/GLWidget.h>
+
 
 // Used to animate the magnification windows
 

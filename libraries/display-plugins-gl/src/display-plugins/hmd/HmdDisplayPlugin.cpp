@@ -5,7 +5,6 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-#ifndef HIFI_UWP
 #include "HmdDisplayPlugin.h"
 
 #include <memory>
@@ -516,4 +515,3 @@ HmdDisplayPlugin::~HmdDisplayPlugin() {
 float HmdDisplayPlugin::stutterRate() const {
     return _stutterRate.rate();
 }
-#endif //HIFI_UWP
