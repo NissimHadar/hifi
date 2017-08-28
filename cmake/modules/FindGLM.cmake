@@ -19,7 +19,7 @@ hifi_library_search_hints("glm")
 
 # locate header
 if (UWP)
-  set (GLM_INCLUDE_DIRS "ENV{VCPKG_PATH}/include")
+  set (GLM_INCLUDE_DIRS "$ENV{VCPKG_PATH}/include")
 else ()
   find_path(GLM_INCLUDE_DIRS "glm/glm.hpp" HINTS ${GLM_SEARCH_DIRS})
 endif ()

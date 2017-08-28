@@ -1,4 +1,4 @@
-This is a stand-alone guide for creating your first High Fidelity build for Windows 64-bit.
+This is a stand-alone guide for creating your first High Fidelity build for Windows 64-bit with Universal Windows Platform (UWP) support.
 
 ## Building High Fidelity
 Note: We are now using Visual Studio 2017 and Qt 5.9.1. If you are upgrading from Visual Studio 2013 and Qt 5.6.2, do a clean uninstall of those versions before going through this guide. 
@@ -59,16 +59,18 @@ In the vcpkg directory, build zlib: __vcpkg install zlib:x64-uwp__.
 (Assumes step 5 has been completed)  
 In the vcpkg directory, build bullet: __vcpkg install bullet3:x64-uwp__.
 
-BUILDING MAY FAIL!!!  To fix this, modify lines 3036-3038 in ..vcpkg\buildtrees\bullet3\src\bullet3-2.86.1\src\BulletSoftBody by adding __= nullptr;__  instead of the semicolon on each line
+BUILDING MAY FAIL!!!  To fix this, modify lines 3036-3038 in ..vcpkg\buildtrees\bullet3\src\bullet3-2.86.1\src\BulletSoftBody\btSoftBody.cpp by adding __= nullptr;__  instead of the semicolon on each line
 
             btRigidBody* rigidCol = nullptr;
             btMultiBodyLinkCollider* multibodyLinkCol = nullptr;
             btScalar* deltaV = nullptr;
+            
+Then, run  the install command again.
 
 ### Step 8. glm
 
 (Assumes step 5 has been completed)  
-In the vcpkg directory, build zlib: __vcpkg install glm:x64-uwp__.
+In the vcpkg directory, build glm: __vcpkg install glm:x64-uwp__.
 
 ### Step 9. Scribe
 
@@ -91,6 +93,9 @@ Where `%HIFI_DIR%` is the directory for the highfidelity repository.
 Verify that High-Fidelity is not running.
 
 Open `%HIFI_DIR%\build\hifi.sln` using Visual Studio.
+On the first build, Visual Studio will install UWP components.
+
+In addition, Windows will keep opening __Settings__.  Ro stop this, select _Developer mode_.
 
 Change the Solution Configuration (next to the green play button) from "Debug" to "Release" for best performance.
 

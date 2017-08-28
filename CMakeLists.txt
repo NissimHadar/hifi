@@ -1,3 +1,9 @@
+if (WIN32)
+  cmake_minimum_required(VERSION 3.7)
+else()
+  cmake_minimum_required(VERSION 3.2)
+endif()
+
 # set variables for UWP
 if (UWP)
   set (CMAKE_SYSTEM_NAME WindowsStore)
@@ -7,12 +13,6 @@ if (UWP)
   add_definitions(-DHIFI_UWP)
   
   message (STATUS "Building for UWP")
-endif()
-
-if (WIN32)
-  cmake_minimum_required(VERSION 3.7)
-else()
-  cmake_minimum_required(VERSION 3.2)
 endif()
 
 if (USE_ANDROID_TOOLCHAIN)
