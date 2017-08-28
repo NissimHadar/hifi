@@ -9,12 +9,9 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#ifndef HIFI_UWP
-#include <QScriptEngine>
-#include <QScriptValueIterator>
-#endif
-
 #include <QThread>
+
+#include <shared/ScriptHelpers.h>
 #include <RegisteredMetaTypes.h>
 #include "AnimVariant.h" // which has AnimVariant/AnimVariantMap
 

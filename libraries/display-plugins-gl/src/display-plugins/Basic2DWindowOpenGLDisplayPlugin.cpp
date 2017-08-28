@@ -5,7 +5,6 @@
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
-#ifndef HIFI_UWP
 #include "Basic2DWindowOpenGLDisplayPlugin.h"
 
 #include <mutex>
@@ -52,4 +51,3 @@ bool Basic2DWindowOpenGLDisplayPlugin::isThrottled() const {
 QScreen* Basic2DWindowOpenGLDisplayPlugin::getFullscreenTarget() {
     return qApp->primaryScreen();
 }
-#endif //HIFI_UWP

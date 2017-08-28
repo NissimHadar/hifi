@@ -40,7 +40,7 @@ void CharacterGhostObject::getCollisionGroupAndMask(int16_t& group, int16_t& mas
     mask = _collisionFilterMask;
 }
 
-#ifdef HIFI_UWP	
+#ifdef Q_OS_WINRT	
 // vcpkg'ed bullet has different definitions of m_collisionFilterGroup and m_collisionFilterMask
  void CharacterGhostObject::getCollisionGroupAndMask(int32_t& group, int32_t& mask) const {
     group = _collisionFilterGroup;

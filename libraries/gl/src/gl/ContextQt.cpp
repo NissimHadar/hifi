@@ -28,7 +28,7 @@ void Context::makeCurrent(QOpenGLContext* context, QSurface* surface) {
 }
 
 QOpenGLContext* Context::qglContext() {
-#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
+#if defined(Q_OS_WIN64)
     if (!_wrappedContext) {
         _wrappedContext = new QOpenGLContext();
         _wrappedContext->setNativeHandle(QVariant::fromValue(QWGLNativeContext(_hglrc, _hwnd)));
@@ -45,7 +45,7 @@ void Context::moveToThread(QThread* thread) {
     qglContext()->moveToThread(thread);
 }
 
-#ifndef Q_OS_WIN
+#ifndef Q_OS_WIN64
 bool Context::makeCurrent() {
     updateSwapchainMemoryCounter();
     return _context->makeCurrent(_window);

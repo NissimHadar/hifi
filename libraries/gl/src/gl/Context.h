@@ -29,7 +29,7 @@ namespace gl {
         QWindow* _window { nullptr };
         static Context* PRIMARY;
         static void destroyContext(QOpenGLContext* context);
-#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
+#if defined(Q_OS_WIN64) 
         uint32_t _version { 0x0401 };
         HWND _hwnd { 0 };
         HDC _hdc { 0 };

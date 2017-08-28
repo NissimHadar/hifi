@@ -91,7 +91,7 @@ namespace controller {
     class StateController;
 }
 
-#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
+#if defined(Q_OS_WIN64)
 static const UINT UWM_IDENTIFY_INSTANCES =
     RegisterWindowMessage("UWM_IDENTIFY_INSTANCES_{8AB82783-B74A-4258-955B-8188C22AA0D6}_" + qgetenv("USERNAME"));
 static const UINT UWM_SHOW_APPLICATION =

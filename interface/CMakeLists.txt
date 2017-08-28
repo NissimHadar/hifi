@@ -222,7 +222,7 @@ list(APPEND INTERFACE_LIBS
 )
 
 if (NOT UWP)
-    list(APPEND INTERFACE_LIBS gl gpu-gl)
+    list(APPEND INTERFACE_LIBS gl gpu-gl display-plugins-gl)
 endif()
 
 link_hifi_libraries(${INTERFACE_LIBS})

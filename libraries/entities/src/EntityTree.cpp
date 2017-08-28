@@ -13,9 +13,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QQueue>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptEngine>
-#endif
+#include <shared/ScriptHelpers.h>
 
 #include <PerfStat.h>
 #include <Extents.h>

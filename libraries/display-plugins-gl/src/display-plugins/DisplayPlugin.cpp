@@ -11,7 +11,11 @@
 
 #include "NullDisplayPlugin.h"
 
-#if defined(Q_OS_WINRT)
+#include "stereo/SideBySideStereoDisplayPlugin.h"
+#include "stereo/InterleavedStereoDisplayPlugin.h"
+
+#include "hmd/DebugHmdDisplayPlugin.h"
+#include "Basic2DWindowOpenGLDisplayPlugin.h"
 
 const QString& DisplayPlugin::MENU_PATH() {
     static const QString value = "Display";
@@ -20,11 +24,26 @@ const QString& DisplayPlugin::MENU_PATH() {
 
 // TODO migrate to a DLL model where plugins are discovered and loaded at runtime by the PluginManager class
 DisplayPluginList getDisplayPlugins() {
+#ifdef HIFI_UWP
+DisplayPlugin* PLUGIN_POOL[] = {
+    new NullDisplayPlugin(),
+    nullptr
+};
+#else
     DisplayPlugin* PLUGIN_POOL[] = {
+        new Basic2DWindowOpenGLDisplayPlugin(),
+        new DebugHmdDisplayPlugin(),
+#ifdef DEBUG
         new NullDisplayPlugin(),
+#endif
+        // Stereo modes
+        // SBS left/right
+        new SideBySideStereoDisplayPlugin(),
+        // Interleaved left/right
+        new InterleavedStereoDisplayPlugin(),
         nullptr
     };
-
+#endif
     DisplayPluginList result;
     for (int i = 0; PLUGIN_POOL[i]; ++i) {
         DisplayPlugin * plugin = PLUGIN_POOL[i];
@@ -35,5 +54,3 @@ DisplayPluginList getDisplayPlugins() {
     }
     return result;
 }
-
-#endif

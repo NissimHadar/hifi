@@ -16,13 +16,9 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QThread>
-
-#ifndef HIFI_UWP
-#include <QtScript/QScriptEngine>
-#endif
-
 #include <QtNetwork/QNetworkDiskCache>
 
+#include <shared/ScriptHelpers.h>
 #include <shared/GlobalAppProperties.h>
 
 #include "AssetRequest.h"

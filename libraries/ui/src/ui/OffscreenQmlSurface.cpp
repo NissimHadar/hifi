@@ -166,7 +166,7 @@ private:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 8.0f);
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.2f);
 #endif
 
@@ -331,7 +331,7 @@ void initializeQmlEngine(QQmlEngine* engine, QQuickWindow* window) {
         rootContext->setContextProperty("eventBridgeJavaScriptToInject", QVariant(javaScriptToInject));
     }
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
     rootContext->setContextProperty("FileTypeProfile", new FileTypeProfile(rootContext));
     rootContext->setContextProperty("HFWebEngineProfile", new HFWebEngineProfile(rootContext));
 #endif
@@ -427,8 +427,10 @@ void OffscreenQmlSurface::render() {
     GLuint texture = offscreenTextures.getNextTexture(_size);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
     glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
+#else
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 #endif
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

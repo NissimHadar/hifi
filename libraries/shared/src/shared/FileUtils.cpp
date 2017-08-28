@@ -16,7 +16,7 @@
 #include <QtCore/QFileInfo>
 
 // No QProcess in UWP
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
 #include <QtCore/QProcess>
 #endif
 
@@ -64,7 +64,7 @@ void FileUtils::locateFile(QString filePath) {
     success = QProcess::startDetached("osascript", args);
 #endif
 
-#if defined(Q_OS_WIN) && !defined (HIFI_UWP)
+#if defined(Q_OS_WIN64)
 
     QStringList args;
     // don't send `select` command switch if `filePath` is folder

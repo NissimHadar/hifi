@@ -11,7 +11,9 @@
 #ifndef hifi_ScriptHelpers_h
 #define hifi_ScriptHelpers_h
 
-#ifndef HIFI_UWP
+#include <QtGlobal>
+
+#if !defined(Q_OS_WINRT)
 // Use the Qt Script classes
 #include <QScriptable>
 #include <QScriptClass>
@@ -23,7 +25,6 @@
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptEngine>
 #include <QtScriptTools/QtScriptTools>
-
 #else
 // Use a set of stubs
 #include <QString>

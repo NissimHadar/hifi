@@ -2,10 +2,6 @@
 if (UWP)
   set (CMAKE_SYSTEM_NAME WindowsStore)
   set (CMAKE_SYSTEM_VERSION 10.0)
-  
-  # Used by the code to #ifdef out non-UWP code
-  add_definitions(-DHIFI_UWP)
-  
   message (STATUS "Building for UWP")
 endif()
 

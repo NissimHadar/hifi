@@ -10,13 +10,10 @@
 
 #include <QtCore/QObject>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptValue>
-#endif
-
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 
+#include <shared/ScriptHelpers.h>
 #include <SharedUtil.h>
 
 #include "filters/ClampFilter.h"

@@ -50,21 +50,13 @@ TreeNodeFolder::TreeNodeFolder(const QString& foldername, TreeNodeFolder* parent
 
 ScriptsModel::ScriptsModel(QObject* parent) :
     QAbstractItemModel(parent),
-    _loadingScripts(false),
-    _localDirectory(),
-
-// No File system watcher in UWP
-#ifndef HIFI_UWP
-    _fsWatcher(),
-#endif
-
-    _treeNodes()
+    _loadingScripts(false)
 {
     _localDirectory.setFilter(QDir::Files | QDir::Readable);
     _localDirectory.setNameFilters(QStringList("*.js"));
 
 // No File system watcher in UWP
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
     connect(&_fsWatcher, &QFileSystemWatcher::directoryChanged, this, &ScriptsModel::reloadLocalFiles);
 #endif
 
@@ -134,7 +126,7 @@ int ScriptsModel::columnCount(const QModelIndex& parent) const {
 
 void ScriptsModel::updateScriptsLocation(const QString& newPath) {
 // No File system watcher in UWP
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
     _fsWatcher.removePath(_localDirectory.absolutePath());
 
     if (!newPath.isEmpty()) {

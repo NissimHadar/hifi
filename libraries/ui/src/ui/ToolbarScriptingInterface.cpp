@@ -11,15 +11,11 @@
 #include <QtCore/QThread>
 #include <QtQuick/QQuickItem>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptEngine>
-#endif
-
+#include <shared/ScriptHelpers.h>
 #include <shared/QtHelpers.h>
 #include "../OffscreenUi.h"
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
 QScriptValue toolbarToScriptValue(QScriptEngine* engine, ToolbarProxy* const &in) {
     if (!in) {
         return engine->undefinedValue();

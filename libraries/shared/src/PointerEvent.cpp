@@ -11,11 +11,7 @@
 
 #include "PointerEvent.h"
 
-#ifndef HIFI_UWP
-#include <qscriptengine.h>
-#include <qscriptvalue.h>
-#endif
-
+#include "shared/ScriptHelpers.h"
 #include "RegisteredMetaTypes.h"
 
 static bool areFlagsSet(uint32_t flags, uint32_t mask) {

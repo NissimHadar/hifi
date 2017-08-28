@@ -12,10 +12,6 @@
 
 #include "OffscreenGLCanvas.h"
 
-#ifndef HIFI_UWP
-#include <QtCore/QProcessEnvironment>
-#endif
-
 #include <QtCore/QDebug>
 #include <QtGui/QOffscreenSurface>
 #include <QtGui/QOpenGLContext>

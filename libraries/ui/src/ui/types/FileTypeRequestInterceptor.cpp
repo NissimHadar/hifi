@@ -15,7 +15,7 @@
 
 #include "RequestFilters.h"
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
 void FileTypeRequestInterceptor::interceptRequest(QWebEngineUrlRequestInfo& info) {
     RequestFilters::interceptHFWebEngineRequest(info);
     RequestFilters::interceptFileType(info);

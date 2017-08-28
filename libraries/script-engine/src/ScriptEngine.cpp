@@ -30,14 +30,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
-#ifndef HIFI_UWP
-#include <QtScript/QScriptContextInfo>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptValueIterator>
-
-#include <QtScriptTools/QScriptEngineDebugger>
-#endif
-
+#include <shared/ScriptHelpers.h>
 #include <shared/QtHelpers.h>
 #include <AudioConstants.h>
 #include <AudioEffectOptions.h>

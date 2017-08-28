@@ -52,6 +52,21 @@
 
 #include "AudioClient.h"
 
+
+#ifdef Q_OS_WIN
+
+static bool useWin8Audio() {
+#if defined(Q_OS_WIN64)
+    return IsWindows8OrGreater();
+#elif defined(Q_OS_WINRT)
+    return true;
+#else
+    return false;
+#endif
+}
+
+#endif
+
 const int AudioClient::MIN_BUFFER_FRAMES = 1;
 const int AudioClient::MAX_BUFFER_FRAMES = 20;
 
@@ -311,7 +326,7 @@ QAudioDeviceInfo getNamedAudioDeviceForMode(QAudio::Mode mode, const QString& de
     return result;
 }
 
-#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
+#if defined(Q_OS_WIN64)
 QString getWinDeviceName(IMMDevice* pEndpoint) {
     QString deviceName;
     IPropertyStore* pPropertyStore;
@@ -397,7 +412,7 @@ QAudioDeviceInfo defaultAudioDeviceForMode(QAudio::Mode mode) {
     }
 #endif
 
-#if defined(Q_OS_WIN) && !defined(HIFI_UWP)
+#if defined(Q_OS_WIN64)
     QString deviceName;
     //Check for Windows Vista or higher, IMMDeviceEnumerator doesn't work below that.
     if (!IsWindowsVistaOrGreater()) { // lower then vista
@@ -490,18 +505,13 @@ bool adjustedFormatForAudioDevice(const QAudioDeviceInfo& audioDevice,
 #endif
 
 #if defined(Q_OS_WIN)
-
-// Always above Windows 8 in UWP
-#ifndef HIFI_UWP
-    if (IsWindows8OrGreater()) {
-#endif
+    // Always above Windows 8 in UWP
+    if (useWin8Audio()) {
         // On Windows using WASAPI shared-mode, returns the internal mix format
         if (nativeFormatForAudioDevice(audioDevice, adjustedAudioFormat)) {
             return true;
         }
-#ifndef HIFI_UWP
     }
-#endif
 #endif
 
     adjustedAudioFormat = desiredAudioFormat;
@@ -1741,13 +1751,7 @@ int AudioClient::setOutputBufferSize(int numFrames, bool persist) {
 // proportional to the accelerator ratio.
 
 #ifdef Q_OS_WIN
-
-#ifdef HIFI_UWP
-const float AudioClient::CALLBACK_ACCELERATOR_RATIO = 1.0f;
-#else
-const float AudioClient::CALLBACK_ACCELERATOR_RATIO = IsWindows8OrGreater() ? 1.0f : 0.25f;
-#endif
-
+const float AudioClient::CALLBACK_ACCELERATOR_RATIO = useWin8Audio() ? 1.0f : 0.25f;
 #endif
 
 #ifdef Q_OS_MAC

@@ -13,7 +13,7 @@
 
 #include "FileTypeRequestInterceptor.h"
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
 static const QString QML_WEB_ENGINE_STORAGE_NAME = "qmlWebEngine";
 
 FileTypeProfile::FileTypeProfile(QObject* parent) :

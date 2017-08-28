@@ -17,7 +17,7 @@
 #include <QNetworkReply>
 
 // No File system watcher in UWP
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
 #include <QFileSystemWatcher>
 #endif
 
@@ -100,7 +100,7 @@ private:
     bool _loadingScripts;
     QDir _localDirectory;
 
-#ifndef HIFI_UWP
+#ifndef Q_OS_WINRT
     QFileSystemWatcher _fsWatcher;
 #endif
 
