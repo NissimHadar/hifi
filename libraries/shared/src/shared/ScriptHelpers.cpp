@@ -7,5 +7,9 @@
 //
 #include "ScriptHelpers.h"
 
+void foo() {
+
+}
+
 #ifdef Q_OS_WINRT
 #endif

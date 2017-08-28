@@ -185,7 +185,7 @@ public:
 };
 
 class QScriptEngine : public QObject {
-Q_OBJECT
+//Q_OBJECT
 public:
     QScriptEngine() {}
     QScriptEngine(QObject*) {}
@@ -326,7 +326,7 @@ public:
 
 class QScriptEngineDebugger : public QObject
 {
-Q_OBJECT
+//Q_OBJECT
 public:
     QScriptEngineDebugger(QObject *parent = Q_NULLPTR) {}
     void attachTo(QScriptEngine *engine) {}
