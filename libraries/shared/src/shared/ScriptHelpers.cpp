@@ -7,9 +7,4 @@
 //
 #include "ScriptHelpers.h"
 
-void foo() {
-
-}
-
-#ifdef Q_OS_WINRT
-#endif
+StubScriptEngine::StubScriptEngine(QObject*parent) : QObject(parent) {}
