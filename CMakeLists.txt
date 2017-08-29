@@ -264,7 +264,7 @@ option(BUILD_TESTS "Build tests" ON)
 MESSAGE(STATUS "Build tests: " ${BUILD_TESTS})
 
 # add subdirectories for all targets
-if (NOT ANDROID)
+if (NOT ANDROID AND NOT UWP)
   add_subdirectory(assignment-client)
   set_target_properties(assignment-client PROPERTIES FOLDER "Apps")
   add_subdirectory(domain-server)
@@ -281,6 +281,11 @@ if (NOT ANDROID)
   endif()
   add_subdirectory(plugins)
   add_subdirectory(tools)
+endif()
+
+# Building up a UWP test app to verify compatibility of all our dependencies and resolve them one by one
+if (UWP)
+  add_subdirectory("tests/uwp")
 endif()
 
 if (ANDROID OR DESKTOP_GVR)

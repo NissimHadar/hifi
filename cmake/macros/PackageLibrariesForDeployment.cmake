@@ -20,34 +20,14 @@ macro(PACKAGE_LIBRARIES_FOR_DEPLOYMENT)
     set(PLUGIN_PATH "plugins")
 
     # add a post-build command to copy DLLs beside the executable
-    if (UWP AND (${TARGET_NAME} STREQUAL "interface"))
-      add_custom_command(
-        TARGET ${TARGET_NAME}
-        POST_BUILD
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletCollision.dll $(Configuration)
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletDynamics.dll $(Configuration)
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/BulletSoftBody.dll $(Configuration)
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/LinearMath.dll $(Configuration)
-
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy ${HIFI_LIBRARY_DIR}/tbb/vc14_ui/tbb.dll $(Configuration)
-
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy ${CMAKE_BINARY_DIR}/ext/vc14/nvtt/project/src/nvtt/$(Configuration)/x64/nvtt.dll $(Configuration)
-
-        COMMAND "C:/Program Files/CMake/bin/cmake.exe" -E copy $ENV{VCPKG_PATH}/bin/zlib1.dll $(Configuration)
-
-        COMMAND if $(Configuration) == "Release" "C:/Program Files/CMake/bin/cmake.exe" -E copy ${CMAKE_BINARY_DIR}/ext/vc14/quazip/project/lib/quazip5.dll  $(Configuration)
-        COMMAND if $(Configuration) == "Debug"   "C:/Program Files/CMake/bin/cmake.exe" -E copy ${CMAKE_BINARY_DIR}/ext/vc14/quazip/project/lib/quazip5d.dll $(Configuration)
-      )
-    else ()
-      add_custom_command(
-        TARGET ${TARGET_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND}
-          -DBUNDLE_EXECUTABLE="$<TARGET_FILE:${TARGET_NAME}>"
-          -DBUNDLE_PLUGIN_DIR="$<TARGET_FILE_DIR:${TARGET_NAME}>/${PLUGIN_PATH}"
-          -P "${CMAKE_CURRENT_BINARY_DIR}/FixupBundlePostBuild.cmake"
-      )
-    endif ()
+    add_custom_command(
+      TARGET ${TARGET_NAME}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND}
+        -DBUNDLE_EXECUTABLE="$<TARGET_FILE:${TARGET_NAME}>"
+        -DBUNDLE_PLUGIN_DIR="$<TARGET_FILE_DIR:${TARGET_NAME}>/${PLUGIN_PATH}"
+        -P "${CMAKE_CURRENT_BINARY_DIR}/FixupBundlePostBuild.cmake"
+    )
     
     find_program(WINDEPLOYQT_COMMAND windeployqt PATHS ${QT_DIR}/bin NO_DEFAULT_PATH)
 
