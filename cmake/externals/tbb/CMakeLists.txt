@@ -2,7 +2,10 @@ set(EXTERNAL_NAME tbb)
 
 include(ExternalProject)
 
-if (WIN32)
+if (UWP)
+  set(DOWNLOAD_URL https://github.com/01org/tbb/releases/download/2017_U7/tbb2017_20170604oss_win.zip)
+  set(DOWNLOAD_MD5 ea98b37646c6a5390ce21a73160f3c68)
+elseif (WIN32)
   set(DOWNLOAD_URL http://hifi-public.s3.amazonaws.com/dependencies/tbb2017_20170604oss_win_slim.zip)
   set(DOWNLOAD_MD5 065934458e3db88397f3d10e7eea536c)
 elseif (APPLE)
@@ -56,6 +59,10 @@ elseif (WIN32)
     set(_TBB_MSVC_DIR "vc11")
   else()
     message(FATAL_ERROR "MSVC ${MSVC_VERSION} not supported by Intel TBB")
+  endif()
+  
+  if (UWP) 
+    set(_TBB_MSVC_DIR "${_TBB_MSVC_DIR}_ui")
   endif()
 
   if ("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
