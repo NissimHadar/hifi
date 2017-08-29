@@ -6,7 +6,7 @@
 #  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 #
 macro(TARGET_NSIGHT)
-    if (WIN32 AND USE_NSIGHT)
+    if (WIN32 AND USE_NSIGHT AND NOT UWP)
     
       # grab the global CHECKED_FOR_NSIGHT_ONCE property
       get_property(NSIGHT_UNAVAILABLE GLOBAL PROPERTY CHECKED_FOR_NSIGHT_ONCE)
