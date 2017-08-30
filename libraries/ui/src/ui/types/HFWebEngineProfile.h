@@ -14,12 +14,14 @@
 #ifndef hifi_HFWebEngineProfile_h
 #define hifi_HFWebEngineProfile_h
 
+#include <QtGlobal>
+#ifndef Q_OS_WINRT
 #include <QtWebEngine/QQuickWebEngineProfile>
 
 class HFWebEngineProfile : public QQuickWebEngineProfile {
 public:
     HFWebEngineProfile(QObject* parent = Q_NULLPTR);
 };
-
+#endif
 
 #endif // hifi_HFWebEngineProfile_h

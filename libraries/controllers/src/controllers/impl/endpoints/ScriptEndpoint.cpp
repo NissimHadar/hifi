@@ -52,6 +52,7 @@ void ScriptEndpoint::internalApply(float value, int sourceID) {
             Q_ARG(int, sourceID));
         return;
     }
+	
     _callable.call(QScriptValue(),
         QScriptValueList({ QScriptValue(value), QScriptValue(sourceID) }));
 }
@@ -66,6 +67,7 @@ void ScriptEndpoint::updatePose() {
         QMetaObject::invokeMethod(this, "updatePose", Qt::QueuedConnection);
         return;
     }
+	
     QScriptValue result = _callable.call();
     Pose::fromScriptValue(result, _lastPoseRead);
 }
@@ -85,6 +87,7 @@ void ScriptEndpoint::internalApply(const Pose& newPose, int sourceID) {
             Q_ARG(int, sourceID));
         return;
     }
+	
     _callable.call(QScriptValue(),
         QScriptValueList({ Pose::toScriptValue(_callable.engine(), newPose), QScriptValue(sourceID) }));
 }

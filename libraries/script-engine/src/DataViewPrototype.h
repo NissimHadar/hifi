@@ -13,7 +13,8 @@
 #define hifi_DataViewPrototype_h
 
 #include <QtCore/QObject>
-#include <QtScript/QScriptable>
+
+#include <shared/ScriptHelpers.h>
 
 class DataViewPrototype : public QObject, public QScriptable {
     Q_OBJECT

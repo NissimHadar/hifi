@@ -15,7 +15,9 @@
 
 #include "RequestFilters.h"
 
+#ifndef Q_OS_WINRT
 void FileTypeRequestInterceptor::interceptRequest(QWebEngineUrlRequestInfo& info) {
     RequestFilters::interceptHFWebEngineRequest(info);
     RequestFilters::interceptFileType(info);
 }
+#endif

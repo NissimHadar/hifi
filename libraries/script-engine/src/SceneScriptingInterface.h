@@ -12,7 +12,8 @@
 #ifndef hifi_SceneScriptingInterface_h
 #define hifi_SceneScriptingInterface_h
 
-#include <qscriptengine.h> // QObject
+#include <shared/ScriptHelpers.h>
+
 #include <DependencyManager.h> // Dependency
 
 #include "model/Stage.h"

@@ -9,9 +9,9 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#include <string>
+#include "AvatarManager.h"
 
-#include <QScriptEngine>
+#include <string>
 
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
@@ -36,7 +36,6 @@
 #include <avatars-renderer/OtherAvatar.h>
 
 #include "Application.h"
-#include "AvatarManager.h"
 #include "InterfaceLogging.h"
 #include "Menu.h"
 #include "MyAvatar.h"

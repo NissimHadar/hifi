@@ -11,9 +11,9 @@
 #include <QStandardPaths>
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
-#include <QtScript/QScriptValue>
 #include <QtWidgets/QFileDialog>
 
+#include <shared/ScriptHelpers.h>
 #include <shared/QtHelpers.h>
 #include <AssetClient.h>
 #include <AssetUpload.h>

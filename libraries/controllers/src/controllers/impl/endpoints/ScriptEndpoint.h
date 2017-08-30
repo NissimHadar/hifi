@@ -10,7 +10,7 @@
 #ifndef hifi_Controllers_ScriptEndpoint_h
 #define hifi_Controllers_ScriptEndpoint_h
 
-#include <QtScript/QScriptValue>
+#include <shared/ScriptHelpers.h>
 
 #include "../Endpoint.h"
 

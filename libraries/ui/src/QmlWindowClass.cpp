@@ -11,9 +11,8 @@
 #include <mutex>
 
 #include <QtCore/QThread>
-#include <QtScript/QScriptContext>
-#include <QtScript/QScriptEngine>
 
+#include <shared/ScriptHelpers.h>
 #include <QtQuick/QQuickItem>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
@@ -68,8 +67,6 @@ QVariantMap QmlWindowClass::parseArguments(QScriptContext* context) {
 
     return properties;
 }
-
-
 
 // Method called by Qt scripts to create a new web window in the overlay
 QScriptValue QmlWindowClass::constructor(QScriptContext* context, QScriptEngine* engine) {

@@ -22,8 +22,8 @@
 #include <QtGui/QVector3D>
 #include <QtGui/QQuaternion>
 #include <QtNetwork/QAbstractSocket>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptValueIterator>
+
+#include "shared/ScriptHelpers.h"
 
 int vec4MetaTypeId = qRegisterMetaType<glm::vec4>();
 int vec3MetaTypeId = qRegisterMetaType<glm::vec3>();
@@ -888,7 +888,6 @@ void meshesFromScriptValue(const QScriptValue& value, MeshProxyList &out) {
         }
     }
 }
-
 
 QScriptValue meshFaceToScriptValue(QScriptEngine* engine, const MeshFace &meshFace) {
     QScriptValue obj = engine->newObject();

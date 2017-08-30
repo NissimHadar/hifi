@@ -716,13 +716,6 @@ void MyAvatar::updateFromTrackers(float deltaTime) {
         return;
     }
 
-    FaceTracker* tracker = qApp->getActiveFaceTracker();
-    bool inFacetracker = tracker && !FaceTracker::isMuted();
-
-    if (inFacetracker) {
-        estimatedRotation = glm::degrees(safeEulerAngles(tracker->getHeadRotation()));
-    }
-
     //  Rotate the body if the head is turned beyond the screen
     if (Menu::getInstance()->isOptionChecked(MenuOption::TurnWithHead)) {
         const float TRACKER_YAW_TURN_SENSITIVITY = 0.5f;

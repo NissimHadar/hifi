@@ -1,6 +1,8 @@
 set(TARGET_NAME interface)
 project(${TARGET_NAME})
 
+set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} -bigobj")
+
 # set a default root dir for each of our optional externals if it was not passed
 set(OPTIONAL_EXTERNALS "LeapMotion")
 
@@ -27,8 +29,8 @@ endif()
 file(GLOB_RECURSE INTERFACE_SRCS "src/*.cpp" "src/*.h")
 GroupSources("src")
 
-# Add SpeechRecognizer if on Windows or OS X, otherwise remove
-if (WIN32)
+# Add SpeechRecognizer if on Windows (and not UWP) or OS X, otherwise remove
+if (WIN32 AND NOT UWP)
   # Use .cpp and .h files as is.
 elseif (APPLE)
   file(GLOB INTERFACE_OBJCPP_SRCS "src/SpeechRecognizer.mm")
@@ -42,19 +44,23 @@ else ()
   list(REMOVE_ITEM INTERFACE_SRCS ${SPEECHRECOGNIZER_CPP})
 endif ()
 
-if (ANDROID)
-  set(PLATFORM_QT_COMPONENTS AndroidExtras)
-  set(PLATFORM_QT_LIBRARIES Qt5::AndroidExtras)
-else ()
-  set(PLATFORM_QT_COMPONENTS WebEngine WebEngineWidgets)
-  set(PLATFORM_QT_LIBRARIES Qt5::WebEngine Qt5::WebEngineWidgets)
-endif ()
+if (ANDROID OR UWP)
+  list(APPEND PLATFORM_QT_COMPONENTS WebView)
+  list(APPEND PLATFORM_QT_LIBRARIES Qt5::WebView)
+else()
+  list(APPEND PLATFORM_QT_COMPONENTS WebEngine)
+  list(APPEND PLATFORM_QT_LIBRARIES Qt5::WebEngine)
+endif()
+
+if (NOT UWP)
+  list(APPEND PLATFORM_QT_COMPONENTS Script)
+  list(APPEND PLATFORM_QT_LIBRARIES Qt5::Script)
+endif()
 
 find_package(
   Qt5 COMPONENTS
-  Gui Multimedia Network OpenGL Qml Quick Script Svg
+  Gui Multimedia Network OpenGL Qml Quick Svg WebChannel WebSockets
   ${PLATFORM_QT_COMPONENTS}
-  WebChannel WebSockets
 )
 
 # grab the ui files in resources/ui
@@ -173,7 +179,7 @@ endif ()
 
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_BINARY_DIR}/includes")
 
-if (WIN32)
+if (WIN32 AND NOT UWP)
   # These are external plugins, but we need to do the 'add dependency' here so that their
   # binary directories get added to the fixup path
   add_dependency_external_projects(sixense)
@@ -182,6 +188,13 @@ if (WIN32)
   add_dependency_external_projects(neuron)
   add_dependency_external_projects(wasapi)
   add_dependency_external_projects(steamworks)
+endif()
+
+
+if (UWP)
+  # Use the OpenSSL version created with vcpkg
+  set(OPENSSL_INCLUDE_DIR "$ENV{VCPKG_PATH}/include")
+  message (STATUS "using vcpkg'ed version of OpenSSL")
 endif()
 
 # include OPENSSL
@@ -197,16 +210,15 @@ if (WIN32)
   set_property(TARGET ${TARGET_NAME} APPEND_STRING PROPERTY LINK_FLAGS_DEBUG "/OPT:NOREF /OPT:NOICF")
 endif()
 
-# link required hifi libraries
-link_hifi_libraries(
+list(APPEND INTERFACE_LIBS   
   shared octree ktx gpu gl gpu-gl procedural model render
   recording fbx networking model-networking entities avatars trackers
   audio audio-client animation script-engine physics
   render-utils entities-renderer avatars-renderer ui auto-updater midi
   controllers plugins image trackers
   ui-plugins display-plugins input-plugins
-  ${NON_ANDROID_LIBRARIES}
 )
+link_hifi_libraries(${INTERFACE_LIBS})
 
 # include the binary directory of render-utils for shader includes
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_BINARY_DIR}/libraries/render-utils")
@@ -214,7 +226,7 @@ target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_BINARY_DIR}/libraries
 target_bullet()
 target_opengl()
 
-if (NOT ANDROID)
+if (NOT ANDROID AND NOT UWP)
   target_glew()
 endif ()
 
@@ -259,14 +271,21 @@ endforeach()
 # include headers for interface and InterfaceConfig.
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
-target_link_libraries(
+list(APPEND TARGET_LINK_LIBS   
   ${TARGET_NAME}
   Qt5::Gui Qt5::Network Qt5::Multimedia Qt5::OpenGL
-  Qt5::Qml Qt5::Quick Qt5::Script Qt5::Svg
-  Qt5::WebChannel Qt5::WebEngine
+  Qt5::Qml Qt5::Quick Qt5::Svg
+  Qt5::WebChannel
   ${PLATFORM_QT_LIBRARIES}
 )
 
+# Use Qt Script when not UWP
+if (NOT UWP)
+  list(APPEND TARGET_LINK_LIBS  Qt5::Script)
+endif ()
+
+target_link_libraries(${TARGET_LINK_LIBS})
+ 
 if (UNIX)
     target_link_libraries(${TARGET_NAME} pthread)
 endif(UNIX)

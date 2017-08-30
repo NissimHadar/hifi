@@ -14,7 +14,6 @@
 #include <QClipboard>
 #include <QtCore/QDir>
 #include <QMessageBox>
-#include <QScriptValue>
 
 #include <shared/QtHelpers.h>
 #include <SettingHandle.h>

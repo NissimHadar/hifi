@@ -12,8 +12,6 @@
 #ifndef hifi_StagePropertyGroup_h
 #define hifi_StagePropertyGroup_h
 
-#include <QtScript/QScriptEngine>
-
 #include "PropertyGroup.h"
 #include "EntityItemPropertiesMacros.h"
 

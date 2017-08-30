@@ -28,7 +28,6 @@
 #include <QtCore/QVariant>
 
 #include <QtQml/QJSValue>
-#include <QtScript/QScriptValue>
 
 #include <DependencyManager.h>
 #include <StreamUtils.h>

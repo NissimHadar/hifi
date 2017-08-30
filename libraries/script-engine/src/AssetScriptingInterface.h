@@ -15,7 +15,8 @@
 #define hifi_AssetScriptingInterface_h
 
 #include <QtCore/QObject>
-#include <QtScript/QScriptValue>
+
+#include <shared/ScriptHelpers.h>
 
 #include <AssetClient.h>
 

@@ -13,7 +13,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QQueue>
 
-#include <QtScript/QScriptEngine>
+#include <shared/ScriptHelpers.h>
 
 #include <PerfStat.h>
 #include <Extents.h>

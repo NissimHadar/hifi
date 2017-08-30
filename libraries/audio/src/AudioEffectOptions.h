@@ -12,8 +12,8 @@
 #define hifi_AudioEffectOptions_h
 
 #include <QObject>
-#include <QtScript/QScriptContext>
-#include <QtScript/QScriptEngine>
+
+#include <shared/ScriptHelpers.h>
 
 class AudioEffectOptions : public QObject {
     Q_OBJECT

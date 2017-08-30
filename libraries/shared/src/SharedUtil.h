@@ -154,8 +154,6 @@ void setSemiNibbleAt(unsigned char& byte, int bitIndex, int value);
 
 int getNthBit(unsigned char byte, int ordinal); /// determines the bit placement 0-7 of the ordinal set bit
 
-bool isInEnvironment(const char* environment);
-
 const char* getCmdOption(int argc, const char * argv[],const char* option);
 bool cmdOptionExists(int argc, const char * argv[],const char* option);
 

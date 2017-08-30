@@ -13,11 +13,10 @@
 #define hifi_AnimationObject_h
 
 #include <QObject>
-#include <QScriptable>
 
 #include <FBXReader.h>
 
-class QScriptEngine;
+#include <shared/ScriptHelpers.h>
 
 /// Scriptable wrapper for animation pointers.
 class AnimationObject : public QObject, protected QScriptable {

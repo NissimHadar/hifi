@@ -10,8 +10,8 @@
 //
 
 #include <QVariant>
-#include <QScriptValue>
-#include <QScriptEngine>
+
+#include "shared/ScriptHelpers.h"
 
 QScriptValue variantToScriptValue(QVariant& qValue, QScriptEngine& scriptEngine);
 QScriptValue variantMapToScriptValue(QVariantMap& variantMap, QScriptEngine& scriptEngine);

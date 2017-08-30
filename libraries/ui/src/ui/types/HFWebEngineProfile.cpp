@@ -11,6 +11,7 @@
 
 #include "HFWebEngineProfile.h"
 
+#ifndef Q_OS_WINRT
 #include "HFWebEngineRequestInterceptor.h"
 
 static const QString QML_WEB_ENGINE_STORAGE_NAME = "qmlWebEngine";
@@ -24,3 +25,4 @@ HFWebEngineProfile::HFWebEngineProfile(QObject* parent) :
     auto requestInterceptor = new HFWebEngineRequestInterceptor(this);
     setRequestInterceptor(requestInterceptor);
 }
+#endif

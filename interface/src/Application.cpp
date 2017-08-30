@@ -44,7 +44,7 @@
 #include <QtMultimedia/QMediaPlayer>
 
 #include <QFontDatabase>
-#include <QProcessEnvironment>
+
 #include <QTemporaryDir>
 
 #include <gl/QOpenGLContextWrapper.h>
@@ -78,7 +78,11 @@
 #include <FramebufferCache.h>
 #include <gpu/Batch.h>
 #include <gpu/Context.h>
+
+#ifndef Q_OS_WINRT
 #include <gpu/gl/GLBackend.h>
+#endif
+
 #include <HFActionEvent.h>
 #include <HFBackEvent.h>
 #include <InfoView.h>
@@ -145,7 +149,7 @@
 #include "avatar/AvatarManager.h"
 #include "avatar/MyHead.h"
 #include "CrashHandler.h"
-#include "devices/DdeFaceTracker.h"
+
 #include "DiscoverabilityManager.h"
 #include "GLCanvas.h"
 #include "InterfaceDynamicFactory.h"
@@ -166,9 +170,11 @@
 #include "scripting/WindowScriptingInterface.h"
 #include "scripting/ControllerScriptingInterface.h"
 #include "scripting/RatesScriptingInterface.h"
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
+
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
 #include "SpeechRecognizer.h"
 #endif
+
 #include "ui/ResourceImageItem.h"
 #include "ui/AddressBarDialog.h"
 #include "ui/AvatarInputs.h"
@@ -445,7 +451,7 @@ std::atomic<uint64_t> DeadlockWatchdogThread::_maxElapsed;
 std::atomic<int> DeadlockWatchdogThread::_maxElapsedAverage;
 ThreadSafeMovingAverage<int, DeadlockWatchdogThread::HEARTBEAT_SAMPLES> DeadlockWatchdogThread::_movingAverage;
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
 class MyNativeEventFilter : public QAbstractNativeEventFilter {
 public:
     static MyNativeEventFilter& getInstance() {
@@ -589,11 +595,18 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
 #if defined(Q_OS_WIN)
     // Select appropriate audio DLL
     QString audioDLLPath = QCoreApplication::applicationDirPath();
-    if (IsWindows8OrGreater()) {
+
+    bool useWin8Audio = true;
+#ifdef Q_OS_WIN64
+    useWin8Audio = IsWindows8OrGreater();
+#endif
+
+    if (useWin8Audio) {
         audioDLLPath += "/audioWin8";
     } else {
         audioDLLPath += "/audioWin7";
     }
+
     QCoreApplication::addLibraryPath(audioDLLPath);
 #endif
 
@@ -616,7 +629,7 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<ModelCache>();
     DependencyManager::set<ScriptCache>();
     DependencyManager::set<SoundCache>();
-    DependencyManager::set<DdeFaceTracker>();
+
     DependencyManager::set<EyeTracker>();
     DependencyManager::set<AudioClient>();
     DependencyManager::set<AudioScope>();
@@ -645,9 +658,10 @@ bool setupEssentials(int& argc, char** argv, bool runningMarkerExisted) {
     DependencyManager::set<AssetMappingsScriptingInterface>();
     DependencyManager::set<DomainConnectionModel>();
 
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
     DependencyManager::set<SpeechRecognizer>();
 #endif
+
     DependencyManager::set<DiscoverabilityManager>();
     DependencyManager::set<SceneScriptingInterface>();
     DependencyManager::set<OffscreenUi>();
@@ -781,7 +795,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     _entityClipboard->createRootElement();
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
     installNativeEventFilter(&MyNativeEventFilter::getInstance());
 #endif
 
@@ -1046,12 +1060,12 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
     // sessionRunTime will be reset soon by loadSettings. Grab it now to get previous session value.
     // The value will be 0 if the user blew away settings this session, which is both a feature and a bug.
-    static const QString TESTER = "HIFI_TESTER";
+    static const char* TESTER = "HIFI_TESTER";
     auto gpuIdent = GPUIdent::getInstance();
     auto glContextData = getGLContextData();
     QJsonObject properties = {
         { "version", applicationVersion() },
-        { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
+        { "tester", qEnvironmentVariableIsSet(TESTER) },
         { "previousSessionCrashed", _previousSessionCrashed },
         { "previousSessionRuntime", sessionRunTime.get() },
         { "cpu_architecture", QSysInfo::currentCpuArchitecture() },
@@ -1102,12 +1116,12 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
     if (userActivityLogger.isEnabled()) {
         // sessionRunTime will be reset soon by loadSettings. Grab it now to get previous session value.
         // The value will be 0 if the user blew away settings this session, which is both a feature and a bug.
-        static const QString TESTER = "HIFI_TESTER";
+        static const char* TESTER = "HIFI_TESTER";
         auto gpuIdent = GPUIdent::getInstance();
         auto glContextData = getGLContextData();
         QJsonObject properties = {
             { "version", applicationVersion() },
-            { "tester", QProcessEnvironment::systemEnvironment().contains(TESTER) },
+            { "tester", qEnvironmentVariableIsSet(TESTER) },
             { "previousSessionCrashed", _previousSessionCrashed },
             { "previousSessionRuntime", sessionRunTime.get() },
             { "cpu_architecture", QSysInfo::currentCpuArchitecture() },
@@ -1401,12 +1415,6 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
 
 
     this->installEventFilter(this);
-
-#ifdef HAVE_DDE
-    auto ddeTracker = DependencyManager::get<DdeFaceTracker>();
-    ddeTracker->init();
-    connect(ddeTracker.data(), &FaceTracker::muteToggled, this, &Application::faceTrackerMuteToggled);
-#endif
 
 #ifdef HAVE_IVIEWHMD
     auto eyeTracker = DependencyManager::get<EyeTracker>();
@@ -1955,9 +1963,11 @@ void Application::onAboutToQuit() {
 }
 
 void Application::cleanupBeforeQuit() {
+#ifndef Q_OS_WINRT
     // add a logline indicating if QTWEBENGINE_REMOTE_DEBUGGING is set or not
-    QString webengineRemoteDebugging = QProcessEnvironment::systemEnvironment().value("QTWEBENGINE_REMOTE_DEBUGGING", "false");
+    QString webengineRemoteDebugging = qgetenv("QTWEBENGINE_REMOTE_DEBUGGING");
     qCDebug(interfaceapp) << "QTWEBENGINE_REMOTE_DEBUGGING =" << webengineRemoteDebugging;
+#endif
 
     if (tracing::enabled()) {
         auto tracer = DependencyManager::get<tracing::Tracer>();
@@ -1967,9 +1977,6 @@ void Application::cleanupBeforeQuit() {
     }
 
     // Stop third party processes so that they're not left running in the event of a subsequent shutdown crash.
-#ifdef HAVE_DDE
-    DependencyManager::get<DdeFaceTracker>()->setEnabled(false);
-#endif
 #ifdef HAVE_IVIEWHMD
     DependencyManager::get<EyeTracker>()->setEnabled(false, true);
 #endif
@@ -2028,9 +2035,6 @@ void Application::cleanupBeforeQuit() {
     _window->saveGeometry();
 
     // Destroy third party processes after scripts have finished using them.
-#ifdef HAVE_DDE
-    DependencyManager::destroy<DdeFaceTracker>();
-#endif
 #ifdef HAVE_IVIEWHMD
     DependencyManager::destroy<EyeTracker>();
 #endif
@@ -2128,6 +2132,13 @@ Application::~Application() {
     qInstallMessageHandler(LogHandler::verboseMessageHandler);
 }
 
+
+#if defined(Q_OS_ANDROID) || defined(Q_OS_WINRT) 
+#define BACKEND gpu::gl::GLESBackend
+#else
+#define BACKEND gpu::gl::GLBackend
+#endif
+
 void Application::initializeGL() {
     qCDebug(interfaceapp) << "Created Display Window.";
 
@@ -2146,9 +2157,11 @@ void Application::initializeGL() {
     qt_gl_set_global_share_context(_chromiumShareContext->getContext());
 
     _glWidget->makeCurrent();
-    gpu::Context::init<gpu::gl::GLBackend>();
+#ifndef Q_OS_WINRT
+    gpu::Context::init<BACKEND>();
     qApp->setProperty(hifi::properties::gl::MAKE_PROGRAM_CALLBACK,
-        QVariant::fromValue((void*)(&gpu::gl::GLBackend::makeProgram)));
+        QVariant::fromValue((void*)(&BACKEND::makeProgram)));
+#endif
     _gpuContext = std::make_shared<gpu::Context>();
     // The gpu context can make child contexts for transfers, so
     // we need to restore primary rendering context
@@ -2159,8 +2172,8 @@ void Application::initializeGL() {
 
     // Set up the render engine
     render::CullFunctor cullFunctor = LODManager::shouldRender;
-    static const QString RENDER_FORWARD = "HIFI_RENDER_FORWARD";
-    bool isDeferred = !QProcessEnvironment::systemEnvironment().contains(RENDER_FORWARD);
+    static const char* RENDER_FORWARD = "HIFI_RENDER_FORWARD";
+    bool isDeferred = !qEnvironmentVariableIsSet(RENDER_FORWARD);
     _renderEngine->addJob<UpdateSceneTask>("UpdateScene");
     _renderEngine->addJob<SecondaryCameraRenderTask>("SecondaryCameraJob", cullFunctor);
     _renderEngine->addJob<RenderViewTask>("RenderMainView", cullFunctor, isDeferred);
@@ -2281,7 +2294,7 @@ void Application::initializeUi() {
 
     surfaceContext->setContextProperty("Camera", &_myCamera);
 
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
     surfaceContext->setContextProperty("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -2305,7 +2318,7 @@ void Application::initializeUi() {
     surfaceContext->setContextProperty("Tablet", DependencyManager::get<TabletScriptingInterface>().data());
     surfaceContext->setContextProperty("DialogsManager", _dialogsManagerScriptingInterface);
     surfaceContext->setContextProperty("GlobalServices", GlobalServicesScriptingInterface::getInstance());
-    surfaceContext->setContextProperty("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
+
     surfaceContext->setContextProperty("AvatarManager", DependencyManager::get<AvatarManager>().data());
     surfaceContext->setContextProperty("UndoStack", &_undoStackScriptingInterface);
     surfaceContext->setContextProperty("LODManager", DependencyManager::get<LODManager>().data());
@@ -2658,16 +2671,6 @@ void Application::paintGL() {
 void Application::runTests() {
     runTimingTests();
     runUnitTests();
-}
-
-void Application::faceTrackerMuteToggled() {
-
-    QAction* muteAction = Menu::getInstance()->getActionForOption(MenuOption::MuteFaceTracking);
-    Q_CHECK_PTR(muteAction);
-    bool isMuted = getSelectedFaceTracker()->isMuted();
-    muteAction->setChecked(isMuted);
-    getSelectedFaceTracker()->setEnabled(!isMuted);
-    Menu::getInstance()->getActionForOption(MenuOption::CalibrateCamera)->setEnabled(!isMuted);
 }
 
 void Application::setFieldOfView(float fov) {
@@ -3819,7 +3822,7 @@ bool Application::shouldPaint() const {
     return true;
 }
 
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN64
 #include <Windows.h>
 #include <TCHAR.h>
 #include <pdh.h>
@@ -3955,6 +3958,7 @@ void updateCpuInformation() {
 static ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
 static int numProcessors;
 static HANDLE self;
+
 static PDH_HQUERY cpuQuery;
 static PDH_HCOUNTER cpuTotal;
 
@@ -3990,6 +3994,7 @@ void getCpuUsage(vec3& systemAndUser) {
     memcpy(&user, &fuser, sizeof(FILETIME));
     systemAndUser.x = (sys.QuadPart - lastSysCPU.QuadPart);
     systemAndUser.y = (user.QuadPart - lastUserCPU.QuadPart);
+    systemAndUser.z = 0.0;
     systemAndUser /= (float)(now.QuadPart - lastCPU.QuadPart);
     systemAndUser /= (float)numProcessors;
     systemAndUser *= 100.0f;
@@ -4041,7 +4046,7 @@ void Application::idle() {
         connect(offscreenUi.data(), &OffscreenUi::showDesktop, this, &Application::showDesktop);
     }
 
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN64
     // If tracing is enabled then monitor the CPU in a separate thread
     static std::once_flag once;
     std::call_once(once, [&] {
@@ -4190,37 +4195,6 @@ void Application::idle() {
 
 ivec2 Application::getMouse() const {
     return getApplicationCompositor().getReticlePosition();
-}
-
-FaceTracker* Application::getActiveFaceTracker() {
-    auto dde = DependencyManager::get<DdeFaceTracker>();
-
-    return dde->isActive() ? static_cast<FaceTracker*>(dde.data()) : nullptr;
-}
-
-FaceTracker* Application::getSelectedFaceTracker() {
-    FaceTracker* faceTracker = nullptr;
-#ifdef HAVE_DDE
-    if (Menu::getInstance()->isOptionChecked(MenuOption::UseCamera)) {
-        faceTracker = DependencyManager::get<DdeFaceTracker>().data();
-    }
-#endif
-    return faceTracker;
-}
-
-void Application::setActiveFaceTracker() const {
-#ifdef HAVE_DDE
-    bool isMuted = Menu::getInstance()->isOptionChecked(MenuOption::MuteFaceTracking);
-    bool isUsingDDE = Menu::getInstance()->isOptionChecked(MenuOption::UseCamera);
-    Menu::getInstance()->getActionForOption(MenuOption::BinaryEyelidControl)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::CoupleEyelids)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::UseAudioForMouth)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::VelocityFilter)->setVisible(isUsingDDE);
-    Menu::getInstance()->getActionForOption(MenuOption::CalibrateCamera)->setVisible(isUsingDDE);
-    auto ddeTracker = DependencyManager::get<DdeFaceTracker>();
-    ddeTracker->setIsMuted(isMuted);
-    ddeTracker->setEnabled(isUsingDDE && !isMuted);
-#endif
 }
 
 #ifdef HAVE_IVIEWHMD
@@ -4524,7 +4498,6 @@ void Application::updateMyAvatarLookAtPosition() {
 
     auto myAvatar = getMyAvatar();
     myAvatar->updateLookAtTargetAvatar();
-    FaceTracker* faceTracker = getActiveFaceTracker();
     auto eyeTracker = DependencyManager::get<EyeTracker>();
 
     bool isLookingAtSomeone = false;
@@ -4589,21 +4562,6 @@ void Application::updateMyAvatarLookAtPosition() {
                 lookAtSpot = myAvatar->getHead()->getEyePosition() +
                     (myAvatar->getHead()->getFinalOrientationInWorldFrame() * glm::vec3(0.0f, 0.0f, -TREE_SCALE));
             }
-        }
-
-        // Deflect the eyes a bit to match the detected gaze from the face tracker if active.
-        if (faceTracker && !faceTracker->isMuted()) {
-            float eyePitch = faceTracker->getEstimatedEyePitch();
-            float eyeYaw = faceTracker->getEstimatedEyeYaw();
-            const float GAZE_DEFLECTION_REDUCTION_DURING_EYE_CONTACT = 0.1f;
-            glm::vec3 origin = myAvatar->getHead()->getEyePosition();
-            float deflection = faceTracker->getEyeDeflection();
-            if (isLookingAtSomeone) {
-                deflection *= GAZE_DEFLECTION_REDUCTION_DURING_EYE_CONTACT;
-            }
-            lookAtSpot = origin + _myCamera.getOrientation() * glm::quat(glm::radians(glm::vec3(
-                eyePitch * deflection, eyeYaw * deflection, 0.0f))) *
-                glm::inverse(_myCamera.getOrientation()) * (lookAtSpot - origin);
         }
     }
 
@@ -4916,37 +4874,6 @@ void Application::update(float deltaTime) {
 
     {
         PerformanceTimer perfTimer("devices");
-
-        FaceTracker* tracker = getSelectedFaceTracker();
-        if (tracker && Menu::getInstance()->isOptionChecked(MenuOption::MuteFaceTracking) != tracker->isMuted()) {
-            tracker->toggleMute();
-        }
-
-        tracker = getActiveFaceTracker();
-        if (tracker && !tracker->isMuted()) {
-            tracker->update(deltaTime);
-
-            // Auto-mute microphone after losing face tracking?
-            if (tracker->isTracking()) {
-                _lastFaceTrackerUpdate = usecTimestampNow();
-            } else {
-                const quint64 MUTE_MICROPHONE_AFTER_USECS = 5000000;  //5 secs
-                Menu* menu = Menu::getInstance();
-                auto audioClient = DependencyManager::get<AudioClient>();
-                if (menu->isOptionChecked(MenuOption::AutoMuteAudio) && !audioClient->isMuted()) {
-                    if (_lastFaceTrackerUpdate > 0
-                        && ((usecTimestampNow() - _lastFaceTrackerUpdate) > MUTE_MICROPHONE_AFTER_USECS)) {
-                        audioClient->toggleMute();
-                        _lastFaceTrackerUpdate = 0;
-                    }
-                } else {
-                    _lastFaceTrackerUpdate = 0;
-                }
-            }
-        } else {
-            _lastFaceTrackerUpdate = 0;
-        }
-
     }
 
     auto myAvatar = getMyAvatar();
@@ -5693,7 +5620,6 @@ void Application::displaySide(RenderArgs* renderArgs, Camera& theCamera, bool se
 }
 
 void Application::resetSensors(bool andReload) {
-    DependencyManager::get<DdeFaceTracker>()->reset();
     DependencyManager::get<EyeTracker>()->reset();
     getActiveDisplayPlugin()->resetSensors();
     _overlayConductor.centerUI();
@@ -6018,7 +5944,7 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerGlobalObject("Camera", &_myCamera);
 
-#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN64)
     scriptEngine->registerGlobalObject("SpeechRecognizer", DependencyManager::get<SpeechRecognizer>().data());
 #endif
 
@@ -6079,8 +6005,6 @@ void Application::registerScriptEngineWithApplicationServices(ScriptEngine* scri
 
     scriptEngine->registerGlobalObject("GlobalServices", GlobalServicesScriptingInterface::getInstance());
     qScriptRegisterMetaType(scriptEngine, DownloadInfoResultToScriptValue, DownloadInfoResultFromScriptValue);
-
-    scriptEngine->registerGlobalObject("FaceTracker", DependencyManager::get<DdeFaceTracker>().data());
 
     scriptEngine->registerGlobalObject("AvatarManager", DependencyManager::get<AvatarManager>().data());
 

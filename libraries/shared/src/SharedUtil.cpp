@@ -48,7 +48,12 @@ extern "C" FILE * __cdecl __iob_func(void) {
 #include <QDateTime>
 #include <QElapsedTimer>
 #include <QTimer>
+
+// No QProcess in UWP
+#ifndef Q_OS_WINRT
 #include <QProcess>
+#endif
+
 #include <QSysInfo>
 #include <QThread>
 
@@ -797,7 +802,7 @@ void printSystemInformation() {
         qCDebug(shared) << "\tWindows Version: " << windowsVersion;
     }
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64) 
     SYSTEM_INFO si;
     GetNativeSystemInfo(&si);
 
@@ -854,12 +859,16 @@ void printSystemInformation() {
     const QStringList envWhitelist = {
         "QTWEBENGINE_REMOTE_DEBUGGING"
     };
+
+// No getenv in UWP
+#ifndef Q_OS_WINRT
     auto envVariables = QProcessEnvironment::systemEnvironment();
     for (auto& env : envWhitelist)
     {
         qCDebug(shared).noquote().nospace() << "\t" <<
             (envVariables.contains(env) ? " = " + envVariables.value(env) : " NOT FOUND");
     }
+#endif
 }
 
 bool getMemoryInfo(MemoryInfo& info) {
@@ -913,7 +922,7 @@ DWORD CountSetBits(ULONG_PTR bitMask)
 
 bool getProcessorInfo(ProcessorInfo& info) {
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
     LPFN_GLPI glpi;
     bool done = false;
     PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer = NULL;
@@ -1036,7 +1045,7 @@ const QString& getInterfaceSharedMemoryName() {
 
 const std::vector<uint8_t>& getAvailableCores() {
     static std::vector<uint8_t> availableCores;
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
     static std::once_flag once;
     std::call_once(once, [&] {
         DWORD_PTR defaultProcessAffinity = 0, defaultSystemAffinity = 0;
@@ -1055,7 +1064,7 @@ const std::vector<uint8_t>& getAvailableCores() {
 }
 
 void setMaxCores(uint8_t maxCores) {
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
     HANDLE process = GetCurrentProcess();
     auto availableCores = getAvailableCores();
     if (availableCores.size() <= maxCores) {
@@ -1085,7 +1094,7 @@ void quitWithParentProcess() {
     }
 }
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
 VOID CALLBACK parentDiedCallback(PVOID lpParameter, BOOLEAN timerOrWaitFired) {
     if (!timerOrWaitFired) {
         quitWithParentProcess();

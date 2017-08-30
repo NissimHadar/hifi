@@ -47,7 +47,6 @@ signals:
 
 protected:
     Q_INVOKABLE void resetSensors();
-    Q_INVOKABLE void toggleCameraMute();
 
 private: 
     float _trailingAudioLoudness{ 0 };

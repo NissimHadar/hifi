@@ -21,8 +21,12 @@ macro(SETUP_HIFI_PROJECT)
       set(TARGET_SRCS ${TARGET_SRCS} "${DIR_CONTENTS}")
     endif ()
   endforeach()
+  
+  if (UWP)
+    set(EXECUTABLE_TYPE WIN32)
+  endif()
 
-  add_executable(${TARGET_NAME} ${TARGET_SRCS} ${AUTOSCRIBE_SHADER_LIB_SRC})
+  add_executable(${TARGET_NAME} ${EXECUTABLE_TYPE} ${TARGET_SRCS} ${AUTOSCRIBE_SHADER_LIB_SRC})
 
   # include the generated application version header
   target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_BINARY_DIR}/includes")
@@ -43,6 +47,9 @@ macro(SETUP_HIFI_PROJECT)
   foreach(QT_MODULE ${${TARGET_NAME}_DEPENDENCY_QT_MODULES})
     target_link_libraries(${TARGET_NAME} Qt5::${QT_MODULE})
   endforeach()
+  if (UWP)
+    target_link_libraries(${TARGET_NAME} Qt5::WinMain)
+  endif()
   target_link_libraries(${TARGET_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
   target_glm()

@@ -15,6 +15,10 @@
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
 
+#ifdef Q_OS_WINRT
+#include <GLES3/gl3.h>
+#endif
+
 #include <plugins/DisplayPlugin.h>
 
 ResourceImageItem::ResourceImageItem() : QQuickFramebufferObject() {

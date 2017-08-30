@@ -14,7 +14,8 @@
 
 #include <QUndoCommand>
 #include <QUndoStack>
-#include <QScriptValue>
+
+#include <shared/ScriptHelpers.h>
 
 class UndoStackScriptingInterface : public QObject {
     Q_OBJECT

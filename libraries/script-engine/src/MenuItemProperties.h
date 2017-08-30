@@ -12,8 +12,6 @@
 #ifndef hifi_MenuItemProperties_h
 #define hifi_MenuItemProperties_h
 
-#include <QtScript/QScriptEngine>
-
 #include "KeyEvent.h"
 
 

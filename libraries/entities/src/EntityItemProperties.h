@@ -17,7 +17,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/component_wise.hpp>
 
-#include <QtScript/QScriptEngine>
 #include <QtCore/QObject>
 #include <QVector>
 #include <QString>

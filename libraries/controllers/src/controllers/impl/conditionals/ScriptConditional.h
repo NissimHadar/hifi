@@ -12,7 +12,7 @@
 
 #include <QtCore/QObject>
 
-#include <QtScript/QScriptValue>
+#include <shared/ScriptHelpers.h>
 
 #include "../Conditional.h"
 

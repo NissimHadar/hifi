@@ -19,8 +19,11 @@
 #include "ScriptEngineLogging.h"
 
 void registerAudioMetaTypes(QScriptEngine* engine) {
+
+#ifndef Q_OS_WINRT
     qScriptRegisterMetaType(engine, injectorOptionsToScriptValue, injectorOptionsFromScriptValue);
     qScriptRegisterMetaType(engine, soundSharedPointerToScriptValue, soundSharedPointerFromScriptValue);
+#endif
 }
 
 ScriptAudioInjector* AudioScriptingInterface::playSystemSound(SharedSoundPointer sound, const QVector3D& position) {

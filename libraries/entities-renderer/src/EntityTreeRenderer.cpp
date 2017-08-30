@@ -14,7 +14,6 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include <QEventLoop>
-#include <QScriptSyntaxCheckResult>
 #include <QThreadPool>
 
 #include <shared/QtHelpers.h>

@@ -30,12 +30,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
-#include <QtScript/QScriptContextInfo>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptValueIterator>
-
-#include <QtScriptTools/QScriptEngineDebugger>
-
+#include <shared/ScriptHelpers.h>
 #include <shared/QtHelpers.h>
 #include <AudioConstants.h>
 #include <AudioEffectOptions.h>

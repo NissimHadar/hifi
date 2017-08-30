@@ -91,7 +91,7 @@ namespace controller {
     class StateController;
 }
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
 static const UINT UWM_IDENTIFY_INSTANCES =
     RegisterWindowMessage("UWM_IDENTIFY_INSTANCES_{8AB82783-B74A-4258-955B-8188C22AA0D6}_" + qgetenv("USERNAME"));
 static const UINT UWM_SHOW_APPLICATION =
@@ -182,9 +182,6 @@ public:
     EntityEditPacketSender* getEntityEditPacketSender() { return &_entityEditSender; }
 
     ivec2 getMouse() const;
-
-    FaceTracker* getActiveFaceTracker();
-    FaceTracker* getSelectedFaceTracker();
 
     ApplicationOverlay& getApplicationOverlay() { return _applicationOverlay; }
     const ApplicationOverlay& getApplicationOverlay() const { return _applicationOverlay; }
@@ -351,7 +348,6 @@ public slots:
     void openUrl(const QUrl& url) const;
 
     void resetSensors(bool andReload = false);
-    void setActiveFaceTracker() const;
 
 #if (PR_BUILD || DEV_BUILD)
     void sendWrongProtocolVersionsSignature(bool checked) { ::sendWrongProtocolVersionsSignature(checked); }
@@ -412,8 +408,6 @@ private slots:
     void onPresent(quint32 frameCount);
 
     void resettingDomain();
-
-    void faceTrackerMuteToggled();
 
     void activeChanged(Qt::ApplicationState state);
     void windowMinimizedChanged(bool minimized);

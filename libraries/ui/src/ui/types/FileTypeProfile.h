@@ -14,12 +14,15 @@
 #ifndef hifi_FileTypeProfile_h
 #define hifi_FileTypeProfile_h
 
+#include <QtGlobal>
+
+#ifndef Q_OS_WINRT
 #include <QtWebEngine/QQuickWebEngineProfile>
 
 class FileTypeProfile : public QQuickWebEngineProfile {
 public:
     FileTypeProfile(QObject* parent = Q_NULLPTR);
 };
-
+#endif
 
 #endif // hifi_FileTypeProfile_h

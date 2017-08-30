@@ -14,6 +14,7 @@
 
 #include <QtCore/QObject>
 
+#include <shared/ScriptHelpers.h>
 #include <DependencyManager.h>
 #include <recording/ClipCache.h>
 #include <recording/Forward.h>

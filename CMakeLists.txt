@@ -4,6 +4,13 @@ else()
   cmake_minimum_required(VERSION 3.2)
 endif()
 
+# set variables for UWP
+if (UWP)
+  set (CMAKE_SYSTEM_NAME WindowsStore)
+  set (CMAKE_SYSTEM_VERSION 10.0)
+  message (STATUS "Building for UWP")
+endif()
+
 if (USE_ANDROID_TOOLCHAIN)
   set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/android/android.toolchain.cmake")
   set(ANDROID_NATIVE_API_LEVEL 19)
@@ -27,6 +34,11 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMakeTargets")
 
 project(hifi)
+
+if (NOT UWP)
+	set(QT_SCRIPT_LIBRARY Script)
+endif()
+
 add_definitions(-DGLM_FORCE_RADIANS)
 set(CMAKE_CXX_FLAGS_DEBUG  "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
@@ -133,6 +145,12 @@ else ()
   if (NOT QT_CMAKE_PREFIX_PATH)
     get_filename_component(QT_CMAKE_PREFIX_PATH "${Qt5_DIR}/.." REALPATH)
   endif ()
+  
+  # use UWP version of Qt in UWP mode
+  if (UWP)
+    set(QT_CMAKE_PREFIX_PATH $ENV{QT_CMAKE_PREFIX_PATH_UWP})
+    message(STATUS "set Qt path to ${QT_CMAKE_PREFIX_PATH} for UWP")
+  endif()
 endif ()
 
 set(QT_DIR $ENV{QT_DIR})
@@ -251,7 +269,7 @@ option(BUILD_TESTS "Build tests" ON)
 MESSAGE(STATUS "Build tests: " ${BUILD_TESTS})
 
 # add subdirectories for all targets
-if (NOT ANDROID)
+if (NOT ANDROID AND NOT UWP)
   add_subdirectory(assignment-client)
   set_target_properties(assignment-client PROPERTIES FOLDER "Apps")
   add_subdirectory(domain-server)
@@ -268,6 +286,11 @@ if (NOT ANDROID)
   endif()
   add_subdirectory(plugins)
   add_subdirectory(tools)
+endif()
+
+# Building up a UWP test app to verify compatibility of all our dependencies and resolve them one by one
+if (UWP)
+  add_subdirectory("tests/uwp")
 endif()
 
 if (ANDROID OR DESKTOP_GVR)

@@ -11,9 +11,7 @@
 
 #include "PointerEvent.h"
 
-#include <qscriptengine.h>
-#include <qscriptvalue.h>
-
+#include "shared/ScriptHelpers.h"
 #include "RegisteredMetaTypes.h"
 
 static bool areFlagsSet(uint32_t flags, uint32_t mask) {

@@ -12,11 +12,12 @@
 #ifndef hifi_SpeechRecognizer_h
 #define hifi_SpeechRecognizer_h
 
+#include <QtGlobal>
 #include <QObject>
 #include <QSet>
 #include <QString>
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN64)
 #include <QWinEventNotifier>
 #endif
 
@@ -51,7 +52,7 @@ private:
 #if defined(Q_OS_MAC)
     void* _speechRecognizerDelegate;
     void* _speechRecognizer;
-#elif defined(Q_OS_WIN)
+#elif defined(Q_OS_WIN64)
     bool _comInitialized;
     // Use void* instead of ATL CComPtr<> for speech recognizer in order to avoid linker errors with Visual Studio Express.
     void* _speechRecognizer;
@@ -59,9 +60,6 @@ private:
     void* _speechRecognizerGrammar;
     void* _commandRecognizedEvent;
     QWinEventNotifier* _commandRecognizedNotifier;
-#endif
-
-#if defined(Q_OS_WIN)
 private slots:
     void notifyCommandRecognized(void* handle);
 #endif

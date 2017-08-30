@@ -46,7 +46,12 @@ public:
 
     // This is the ugly "download the pixels to sysmem for taking a snapshot"
     // Just avoid using it, it's ugly and will break performances
-    virtual void downloadFramebuffer(const FramebufferPointer& srcFramebuffer, const Vec4i& region, QImage& destImage) final { }
+    virtual void downloadFramebuffer(const FramebufferPointer& srcFramebuffer, const Vec4i& region, QImage& destImage) override final { }
+
+    virtual const std::string& getVersion() const override { return "Null"; };
+    virtual void recycle() const override {}
+    virtual bool isTextureManagementSparseEnabled() const override { return false; }
+
 };
 
 } }

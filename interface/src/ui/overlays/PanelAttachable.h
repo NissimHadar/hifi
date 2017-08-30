@@ -33,12 +33,10 @@
 #define OVERLAY_PANELS 0
 
 #include <memory>
+#include <QUuid>
 
 #include <glm/glm.hpp>
 #include <Transform.h>
-#include <QScriptValue>
-#include <QScriptEngine>
-#include <QUuid>
 
 class OverlayPanel;
 class PanelAttachable {

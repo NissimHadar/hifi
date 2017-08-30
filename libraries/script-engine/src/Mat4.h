@@ -16,7 +16,8 @@
 
 #include <QObject>
 #include <QString>
-#include <QtScript/QScriptable>
+
+#include <shared/ScriptHelpers.h>
 
 /// Scriptable Mat4 object.  Used exclusively in the JavaScript API
 class Mat4 : public QObject, protected QScriptable {

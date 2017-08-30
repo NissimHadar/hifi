@@ -11,7 +11,9 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtScript/QScriptValue>
+
+#include <shared/ScriptHelpers.h>
+
 #include <QtQuick/QQuickItem>
 
 #include <GLMHelpers.h>

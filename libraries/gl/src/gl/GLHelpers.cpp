@@ -5,7 +5,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QThread>
 #include <QtCore/QRegularExpression>
-#include <QtCore/QProcessEnvironment>
 
 #include <QtGui/QSurfaceFormat>
 #include <QtGui/QOpenGLContext>

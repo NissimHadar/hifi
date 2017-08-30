@@ -9,11 +9,11 @@
 #include "Filter.h"
 
 #include <QtCore/QObject>
-#include <QtScript/QScriptValue>
 
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
 
+#include <shared/ScriptHelpers.h>
 #include <SharedUtil.h>
 
 #include "filters/ClampFilter.h"

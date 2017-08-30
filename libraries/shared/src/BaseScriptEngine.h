@@ -14,7 +14,8 @@
 
 #include <functional>
 #include <QtCore/QDebug>
-#include <QtScript/QScriptEngine>
+
+#include "shared/ScriptHelpers.h"
 
 // common base class for extending QScriptEngine itself
 class BaseScriptEngine : public QScriptEngine, public QEnableSharedFromThis<BaseScriptEngine> {

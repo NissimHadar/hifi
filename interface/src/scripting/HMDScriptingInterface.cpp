@@ -11,8 +11,7 @@
 
 #include "HMDScriptingInterface.h"
 
-#include <QtScript/QScriptContext>
-
+#include <shared/ScriptHelpers.h>
 #include <shared/QtHelpers.h>
 #include <avatar/AvatarManager.h>
 #include <display-plugins/DisplayPlugin.h>

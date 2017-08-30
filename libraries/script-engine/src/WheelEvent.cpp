@@ -9,8 +9,7 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#include <qscriptengine.h>
-#include <qscriptvalue.h>
+#include <shared/ScriptHelpers.h>
 
 #include "WheelEvent.h"
 

@@ -16,9 +16,9 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QObject>
-#include <QScriptContext>
-#include <QScriptEngine>
-#include <QScriptValue>
+
+#include <shared/ScriptHelpers.h>
+
 #include <QTimer>
 
 class XMLHttpRequestClass : public QObject {

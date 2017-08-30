@@ -15,9 +15,6 @@
 #include <QtCore/QString>
 #include <QtCore/QThread>
 #include <QtCore/QUrl>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptValueIterator>
-#include <QtScript/QScriptContextInfo>
 
 #include "Profile.h"
 

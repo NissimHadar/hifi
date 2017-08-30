@@ -13,8 +13,9 @@
 
 #include <QObject>
 #include <QMap>
-#include <QScriptValue>
-#include <QScriptEngine>
+
+#include <shared/ScriptHelpers.h>
+
 #include <glm/glm.hpp>
 
 #include <functional>

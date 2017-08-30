@@ -13,7 +13,6 @@
 
 #include <glm/gtx/vector_angle.hpp>
 #include <queue>
-#include <QScriptValueIterator>
 #include <QWriteLocker>
 #include <QReadLocker>
 

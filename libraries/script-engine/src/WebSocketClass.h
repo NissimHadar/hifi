@@ -13,7 +13,9 @@
 #define hifi_WebSocketClass_h
 
 #include <QObject>
-#include <QScriptEngine>
+
+#include <shared/ScriptHelpers.h>
+
 #include <QWebSocket>
 
 class WebSocketClass : public QObject {

@@ -12,25 +12,24 @@
 #ifndef hifi_gpu_GPUConfig_h
 #define hifi_gpu_GPUConfig_h
 
+#include <QtGlobal>
+
 #define GL_GLEXT_PROTOTYPES 1
 
+#if defined(Q_OS_WINRT)
+#include <QtANGLE/GLES3/gl3.h>
+#else
 #include <GL/glew.h>
+#if defined(Q_OS_WIN64) 
+#include <GL/wglew.h>
+#endif
+#endif
 
-#if defined(__APPLE__)
-
+#if defined(Q_OS_DARWIN)
 #include <OpenGL/gl.h>
 #include <OpenGL/glext.h>
 #include <OpenGL/OpenGL.h>
-
 #endif
 
-#if defined(WIN32)
-
-#include <GL/wglew.h>
-
-// Uncomment this define and recompile to be able to avoid code path preventing to be able to run nsight graphics debug
-//#define HIFI_ENABLE_NSIGHT_DEBUG 1
-
-#endif
 
 #endif // hifi_gpu_GPUConfig_h

@@ -4,6 +4,6 @@ link_hifi_libraries(shared networking)
 
 target_opengl()
 
-if (NOT ANDROID)
+if (NOT ANDROID AND NOT UWP)
   target_glew()
 endif ()

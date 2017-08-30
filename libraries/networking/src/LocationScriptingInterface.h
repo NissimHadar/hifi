@@ -12,7 +12,7 @@
 #ifndef hifi_LocationScriptingInterface_h
 #define hifi_LocationScriptingInterface_h
 
-#include <qscriptengine.h>
+#include <shared/ScriptHelpers.h>
 
 class LocationScriptingInterface : public QObject {
     Q_OBJECT

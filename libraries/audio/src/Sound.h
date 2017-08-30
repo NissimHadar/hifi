@@ -15,8 +15,8 @@
 #include <QRunnable>
 #include <QtCore/QObject>
 #include <QtNetwork/QNetworkReply>
-#include <QtScript/qscriptengine.h>
 
+#include <shared/ScriptHelpers.h>
 #include <ResourceCache.h>
 
 class Sound : public Resource {

@@ -14,12 +14,14 @@
 #ifndef __hifi__Rig__
 #define __hifi__Rig__
 
+#include <vector>
+
 #include <QObject>
 #include <QMutex>
-#include <QScriptValue>
-#include <vector>
-#include <JointData.h>
 #include <QReadWriteLock>
+
+#include <shared/ScriptHelpers.h>
+#include <JointData.h>
 
 #include "AnimNode.h"
 #include "AnimNodeLoader.h"

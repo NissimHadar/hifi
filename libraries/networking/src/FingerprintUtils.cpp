@@ -49,7 +49,7 @@ QString FingerprintUtils::getMachineFingerprintString() {
     qCDebug(networking) << "Mac serial number: " << uuidString;
 #endif //Q_OS_MAC
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN64)
     HKEY cryptoKey;
     
     // try and open the key that contains the machine GUID

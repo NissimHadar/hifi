@@ -10,12 +10,12 @@
 
 #include <QtCore/QThread>
 #include <QtQuick/QQuickItem>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptEngine>
 
+#include <shared/ScriptHelpers.h>
 #include <shared/QtHelpers.h>
 #include "../OffscreenUi.h"
 
+#ifndef Q_OS_WINRT
 QScriptValue toolbarToScriptValue(QScriptEngine* engine, ToolbarProxy* const &in) {
     if (!in) {
         return engine->undefinedValue();
@@ -37,7 +37,7 @@ QScriptValue toolbarButtonToScriptValue(QScriptEngine* engine, ToolbarButtonProx
 void toolbarButtonFromScriptValue(const QScriptValue& value, ToolbarButtonProxy* &out) {
     out = qobject_cast<ToolbarButtonProxy*>(value.toQObject());
 }
-
+#endif
 
 ToolbarButtonProxy::ToolbarButtonProxy(QObject* qmlObject, QObject* parent) : QmlWrapper(qmlObject, parent) {
     Q_ASSERT(QThread::currentThread() == qApp->thread());

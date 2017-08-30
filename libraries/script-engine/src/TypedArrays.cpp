@@ -425,4 +425,3 @@ void Float64ArrayClass::setProperty(QScriptValue& object, const QScriptString& n
         stream << (double)value.toNumber();
     }
 }
-

@@ -20,7 +20,7 @@
 #include <QtCore/QWaitCondition>
 #include <QtCore/QStringList>
 
-#include <QtScript/QScriptEngine>
+#include <shared/ScriptHelpers.h>
 
 #include <AnimationCache.h>
 #include <AnimVariant.h>
@@ -44,8 +44,6 @@
 #include "ConsoleScriptingInterface.h"
 #include "SettingHandle.h"
 #include "Profile.h"
-
-class QScriptEngineDebugger;
 
 static const QString NO_SCRIPT("");
 

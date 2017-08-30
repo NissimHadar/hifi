@@ -66,9 +66,10 @@ if (DEFINED BULLET_LIB_EXT)
     list(GET _LIB_PAIR 0 _LIB_VAR_NAME)
     list(GET _LIB_PAIR 1 _LIB_NAME)
 
-
-
-    if (WIN32)
+    if (UWP)
+      set(${EXTERNAL_NAME_UPPER}_${_LIB_VAR_NAME}_RELEASE $ENV{VCPKG_PATH}/lib/${_LIB_NAME}.lib CACHE FILEPATH "${_LIB_NAME} release library location" FORCE)
+      set(${EXTERNAL_NAME_UPPER}_${_LIB_VAR_NAME}_DEBUG $ENV{VCPKG_PATH}/lib/${_LIB_NAME}.lib CACHE FILEPATH "${_LIB_NAME} debug library location" FORCE)
+    elseif (WIN32)
       # on windows, we might end up with a library that ends with RelWithDebInfo if Visual Studio is building for that configuration
       set(${EXTERNAL_NAME_UPPER}_${_LIB_VAR_NAME}_RELEASE "${BULLET_LIB_DIR}/${LIB_PREFIX}${_LIB_NAME}$<$<CONFIG:RelWithDebInfo>:_RelWithDebugInfo>$<$<CONFIG:MinSizeRel>:_MinsizeRel>.${BULLET_LIB_EXT}" CACHE FILEPATH "${_LIB_NAME} release library location")
 
@@ -81,5 +82,10 @@ if (DEFINED BULLET_LIB_EXT)
 endif ()
 
 if (DEFINED ${EXTERNAL_NAME_UPPER}_DYNAMICS_LIBRARY_RELEASE)
-  set(${EXTERNAL_NAME_UPPER}_INCLUDE_DIR ${INSTALL_DIR}/include/bullet CACHE PATH "Path to bullet include directory")
+  if (UWP)
+    set(${EXTERNAL_NAME_UPPER}_INCLUDE_DIR $ENV{VCPKG_PATH}/include/bullet CACHE PATH "Path to bullet include directory")
+    message(STATUS "using vcpkg'ed version of bullet")
+  else ()
+    set(${EXTERNAL_NAME_UPPER}_INCLUDE_DIR ${INSTALL_DIR}/include/bullet CACHE PATH "Path to bullet include directory")
+  endif ()
 endif ()

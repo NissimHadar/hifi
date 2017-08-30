@@ -9,12 +9,12 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
+#include "GlobalServicesScriptingInterface.h"
+
 #include "AccountManager.h"
 #include "Application.h"
 #include "DiscoverabilityManager.h"
 #include "ResourceCache.h"
-
-#include "GlobalServicesScriptingInterface.h"
 
 GlobalServicesScriptingInterface::GlobalServicesScriptingInterface() {
     auto accountManager = DependencyManager::get<AccountManager>();

@@ -87,13 +87,6 @@ void AvatarInputs::setShowAudioTools(bool showAudioTools) {
     emit showAudioToolsChanged(_showAudioTools);
 }
 
-void AvatarInputs::toggleCameraMute() {
-    FaceTracker* faceTracker = qApp->getSelectedFaceTracker();
-    if (faceTracker) {
-        faceTracker->toggleMute();
-    }
-}
-
 void AvatarInputs::resetSensors() {
     qApp->resetSensors();
 }

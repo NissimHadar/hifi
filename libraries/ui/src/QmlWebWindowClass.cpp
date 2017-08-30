@@ -10,8 +10,7 @@
 
 #include <QtCore/QThread>
 
-#include <QtScript/QScriptContext>
-#include <QtScript/QScriptEngine>
+#include <shared/ScriptHelpers.h>
 
 #include <shared/QtHelpers.h>
 #include "OffscreenUi.h"

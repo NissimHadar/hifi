@@ -17,7 +17,8 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtScript/QScriptable>
+
+#include <shared/ScriptHelpers.h>
 
 #include "GLMHelpers.h"
 

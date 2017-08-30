@@ -12,8 +12,6 @@
 
 #include <limits>
 
-#include <QtScript/QScriptValueIterator>
-
 #include <shared/QtHelpers.h>
 #include <OffscreenUi.h>
 #include <render/Scene.h>

@@ -10,6 +10,9 @@
 //
 
 #include "RequestFilters.h"
+
+#ifndef Q_OS_WINRT
+
 #include "NetworkingConstants.h"
 
 #include <QtCore/QDebug>
@@ -38,7 +41,6 @@ namespace {
      bool isJSON(const QString filename) {
         return filename.endsWith(".json", Qt::CaseInsensitive);
      }
-
 }
 
 void RequestFilters::interceptHFWebEngineRequest(QWebEngineUrlRequestInfo& info) {
@@ -76,3 +78,4 @@ void RequestFilters::interceptFileType(QWebEngineUrlRequestInfo& info) {
         info.setHttpHeader(CONTENT_HEADER.toLocal8Bit(), TYPE_VALUE.toLocal8Bit());
     }
 }
+#endif

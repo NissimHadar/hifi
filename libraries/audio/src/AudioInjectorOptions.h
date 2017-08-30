@@ -12,7 +12,7 @@
 #ifndef hifi_AudioInjectorOptions_h
 #define hifi_AudioInjectorOptions_h
 
-#include <QtScript/qscriptengine.h>
+#include <shared/ScriptHelpers.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

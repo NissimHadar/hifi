@@ -9,10 +9,8 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#include <QScriptEngine>
-
-#include "AnimationCache.h"
 #include "AnimationObject.h"
+#include "AnimationCache.h"
 
 QStringList AnimationObject::getJointNames() const {
     return qscriptvalue_cast<AnimationPointer>(thisObject())->getJointNames();

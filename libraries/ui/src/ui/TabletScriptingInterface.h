@@ -14,9 +14,7 @@
 
 #include <QObject>
 #include <QVariant>
-#include <QtScript/QScriptValue>
-#include <QScriptEngine>
-#include <QScriptValueIterator>
+
 #include <QQuickItem>
 #include <QUuid>
 

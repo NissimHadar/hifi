@@ -14,7 +14,11 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkReply>
+
+// No QProcess in UWP
+#ifndef Q_OS_WINRT
 #include <QProcess>
+#endif
 
 #include <NumericalConstants.h>
 #include <SharedUtil.h>
@@ -53,6 +57,8 @@ bool readStatus(QByteArray statusData) {
 }
 
 void runLocalSandbox(QString contentPath, bool autoShutdown, bool noUpdater) {
+// Cannot launch Sandbox process in UWP
+#ifndef Q_OS_WINRT
     QString serverPath = "./server-console/server-console.exe";
     qCDebug(networking) << "Server path is: " << serverPath;
     qCDebug(networking) << "autoShutdown: " << autoShutdown;
@@ -83,6 +89,7 @@ void runLocalSandbox(QString contentPath, bool autoShutdown, bool noUpdater) {
 
     qCDebug(networking) << "Launching sandbox with:" << args;
     qCDebug(networking) << QProcess::startDetached(serverPath, args);
+#endif
 }
 
 }

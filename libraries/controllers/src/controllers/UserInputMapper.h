@@ -18,7 +18,8 @@
 #include <mutex>
 
 #include <QtQml/QJSValue>
-#include <QtScript/QScriptValue>
+
+#include <shared/ScriptHelpers.h>
 
 #include <DependencyManager.h>
 #include <RegisteredMetaTypes.h>

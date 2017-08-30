@@ -17,7 +17,8 @@
 #include <glm/gtx/quaternion.hpp>
 #include <map>
 #include <set>
-#include <QScriptValue>
+
+#include <shared/ScriptHelpers.h>
 #include <StreamUtils.h>
 #include <GLMHelpers.h>
 #include "AnimationLogging.h"

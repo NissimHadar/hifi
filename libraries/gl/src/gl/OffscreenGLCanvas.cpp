@@ -12,7 +12,6 @@
 
 #include "OffscreenGLCanvas.h"
 
-#include <QtCore/QProcessEnvironment>
 #include <QtCore/QDebug>
 #include <QtGui/QOffscreenSurface>
 #include <QtGui/QOpenGLContext>

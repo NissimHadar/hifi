@@ -18,7 +18,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QtScript/QScriptable>
 
 /**jsdoc
  * A Quaternion

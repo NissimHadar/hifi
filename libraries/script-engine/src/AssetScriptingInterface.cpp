@@ -11,8 +11,7 @@
 
 #include "AssetScriptingInterface.h"
 
-#include <QtScript/QScriptEngine>
-
+#include <shared/ScriptHelpers.h>
 #include <AssetRequest.h>
 #include <AssetUpload.h>
 #include <MappingRequest.h>

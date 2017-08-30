@@ -28,8 +28,6 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
-#include <QScriptEngine>
-
 #include <DependencyManager.h>
 
 #include "ResourceManager.h"

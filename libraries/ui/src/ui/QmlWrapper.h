@@ -11,8 +11,8 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
-#include <QtScript/QScriptValue>
-#include <QtScript/QScriptEngine>
+
+#include <shared/ScriptHelpers.h>
 
 class QmlWrapper : public QObject {
     Q_OBJECT

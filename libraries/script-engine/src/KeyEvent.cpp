@@ -10,7 +10,8 @@
 //
 
 #include <qdebug.h>
-#include <qscriptengine.h>
+
+#include <shared/ScriptHelpers.h>
 
 #include "ScriptEngineLogging.h"
 

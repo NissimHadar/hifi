@@ -13,7 +13,8 @@
 #define hifi_ArrayBufferPrototype_h
 
 #include <QtCore/QObject>
-#include <QtScript/QScriptable>
+
+#include <shared/ScriptHelpers.h>
 
 class ArrayBufferPrototype : public QObject, public QScriptable {
     Q_OBJECT

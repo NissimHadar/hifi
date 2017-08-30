@@ -15,7 +15,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtQuick/QQuickItem>
-#include <QtScript/QScriptValue>
+
+#include <shared/ScriptHelpers.h>
+
 #include <QtWidgets/QMessageBox>
 
 #include <DependencyManager.h>
@@ -29,7 +31,6 @@ Q_DECLARE_METATYPE(CustomPromptResult);
 
 QScriptValue CustomPromptResultToScriptValue(QScriptEngine* engine, const CustomPromptResult& result);
 void CustomPromptResultFromScriptValue(const QScriptValue& object, CustomPromptResult& result);
-
 
 class WindowScriptingInterface : public QObject, public Dependency {
     Q_OBJECT
@@ -47,16 +48,21 @@ public:
 
 public slots:
     QScriptValue hasFocus();
+
     void setFocus();
     void raiseMainWindow();
     void alert(const QString& message = "");
+
     QScriptValue confirm(const QString& message = "");
     QScriptValue prompt(const QString& message = "", const QString& defaultText = "");
+
     CustomPromptResult customPrompt(const QVariant& config);
+
     QScriptValue browseDir(const QString& title = "", const QString& directory = "");
     QScriptValue browse(const QString& title = "", const QString& directory = "",  const QString& nameFilter = "");
     QScriptValue save(const QString& title = "", const QString& directory = "",  const QString& nameFilter = "");
     QScriptValue browseAssets(const QString& title = "", const QString& directory = "", const QString& nameFilter = "");
+
     void showAssetServer(const QString& upload = "");
     QString checkVersion();
     void copyToClipboard(const QString& text);

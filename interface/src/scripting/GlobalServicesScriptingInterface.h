@@ -13,12 +13,10 @@
 #define hifi_GlobalServicesScriptingInterface_h
 
 #include <QObject>
-#include <QScriptContext>
-#include <QScriptEngine>
-#include <QScriptValue>
 #include <QString>
 #include <QStringList>
 #include <DiscoverabilityManager.h>
+#include <shared/ScriptHelpers.h>
 
 class DownloadInfoResult {
 public:

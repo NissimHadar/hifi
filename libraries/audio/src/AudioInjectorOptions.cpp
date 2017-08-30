@@ -11,8 +11,7 @@
 
 #include "AudioInjectorOptions.h"
 
-#include <QScriptValueIterator>
-
+#include <shared/ScriptHelpers.h>
 #include <RegisteredMetaTypes.h>
 
 #include "AudioLogging.h"

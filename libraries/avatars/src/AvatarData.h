@@ -45,8 +45,9 @@ typedef unsigned long long quint64;
 #include <QUuid>
 #include <QVariantMap>
 #include <QVector>
-#include <QtScript/QScriptable>
-#include <QtScript/QScriptValueIterator>
+
+#include <shared/ScriptHelpers.h>
+
 #include <QReadWriteLock>
 
 #include <JointData.h>

@@ -10,10 +10,8 @@
 //
 
 #include <QDebug>
-#include <QScriptValue>
-#include <QScriptValueList>
-#include <QScriptEngine>
 
+#include <shared/ScriptHelpers.h>
 #include "UndoStackScriptingInterface.h"
 
 UndoStackScriptingInterface::UndoStackScriptingInterface(QUndoStack* undoStack) : _undoStack(undoStack) {

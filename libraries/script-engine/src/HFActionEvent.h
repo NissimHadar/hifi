@@ -13,7 +13,7 @@
 #define hifi_HFActionEvent_h
 
 
-#include <qscriptengine.h>
+#include <shared/ScriptHelpers.h>
 
 #include <RegisteredMetaTypes.h>
 

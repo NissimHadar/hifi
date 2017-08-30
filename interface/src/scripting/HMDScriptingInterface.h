@@ -14,9 +14,7 @@
 
 #include <atomic>
 
-#include <QtScript/QScriptValue>
-class QScriptContext;
-class QScriptEngine;
+#include <shared/ScriptHelpers.h>
 
 #include <GLMHelpers.h>
 #include <DependencyManager.h>
@@ -82,6 +80,7 @@ signals:
 
 public:
     HMDScriptingInterface();
+
     static QScriptValue getHUDLookAtPosition2D(QScriptContext* context, QScriptEngine* engine);
     static QScriptValue getHUDLookAtPosition3D(QScriptContext* context, QScriptEngine* engine);
 

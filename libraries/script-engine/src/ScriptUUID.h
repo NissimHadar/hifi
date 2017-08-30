@@ -15,7 +15,8 @@
 #define hifi_ScriptUUID_h
 
 #include <QUuid>
-#include <QtScript/QScriptable>
+
+#include <shared/ScriptHelpers.h>
 
 /// Scriptable interface for a UUID helper class object. Used exclusively in the JavaScript API
 class ScriptUUID : public QObject, protected QScriptable {
