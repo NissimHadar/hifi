@@ -10,7 +10,9 @@
 #
 
 macro(PACKAGE_LIBRARIES_FOR_DEPLOYMENT)
-  if (WIN32)
+  if (UWP)
+  
+  elseif (WIN32)
     configure_file(
       ${HF_CMAKE_DIR}/templates/FixupBundlePostBuild.cmake.in
       ${CMAKE_CURRENT_BINARY_DIR}/FixupBundlePostBuild.cmake

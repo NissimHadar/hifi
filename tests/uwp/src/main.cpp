@@ -24,7 +24,6 @@ private:
 };
 
 
-
 UwpTestApp::UwpTestApp(int argc, char* argv[]) :
     QGuiApplication(argc, argv)
 {

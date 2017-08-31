@@ -4,11 +4,13 @@ if (UWP)
     setup_hifi_project(Gui)
 	set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Tests/manual-tests/")
 
+    #set(VS_DEPLOYMENT_LOCATION ".")
     find_program(WINDEPLOYQT_COMMAND windeployqt PATHS ${QT_DIR}/bin NO_DEFAULT_PATH)
+    
     add_custom_command(
       TARGET ${TARGET_NAME}
       POST_BUILD
-      COMMAND CMD /C "SET PATH=%PATH%;${QT_DIR}/bin && ${WINDEPLOYQT_COMMAND} --dir $<TARGET_FILE_DIR:${TARGET_NAME}>/AppX -verbose 2 ${EXTRA_DEPLOY_OPTIONS} $<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>,$<CONFIG:RelWithDebInfo>>:--release> \"$<TARGET_FILE:${TARGET_NAME}>\""
+      COMMAND CMD /C "${WINDEPLOYQT_COMMAND} ${EXTRA_DEPLOY_OPTIONS} --dir . --list relative $<$<OR:$<CONFIG:Release>,$<CONFIG:MinSizeRel>,$<CONFIG:RelWithDebInfo>>:--release> \"$<TARGET_FILE:${TARGET_NAME}>\" \> ${TARGET_NAME}.windeployqt.$<CONFIG>"
     )
 endif()
 
