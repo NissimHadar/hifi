@@ -130,13 +130,13 @@ public:
     StubScriptValue call(const StubScriptValue & thisObject = StubScriptValue(), const StubScriptValueList & args = StubScriptValueList()) { return StubScriptValue(); }
     StubScriptEngine* engine() const { return _enginePtr; }
 
-    StubScriptValue StubScriptValue::data() const { return StubScriptValue(); }
-    void StubScriptValue::setData(const StubScriptValue & data) {}
+    StubScriptValue data() const { return StubScriptValue(); }
+    void setData(const StubScriptValue & data) {}
 
-    StubScriptValue StubScriptValue::construct(const StubScriptValueList & args = StubScriptValueList()) { return StubScriptValue(); }
+    StubScriptValue construct(const StubScriptValueList & args = StubScriptValueList()) { return StubScriptValue(); }
 
-    void StubScriptValue::setPrototype(const StubScriptValue & prototype) {}
-    StubScriptValue StubScriptValue::prototype() const { return StubScriptValue(); }
+    void setPrototype(const StubScriptValue & prototype) {}
+    StubScriptValue prototype() const { return StubScriptValue(); }
 
 private:
     StubScriptEngine* _enginePtr;
