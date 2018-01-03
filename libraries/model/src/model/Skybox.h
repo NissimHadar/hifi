@@ -37,6 +37,8 @@ public:
     void setCubemap(const gpu::TexturePointer& cubemap);
     const gpu::TexturePointer& getCubemap() const { return _cubemap; }
 
+    void setRotation(glm::quat rotation);
+
     virtual bool empty() { return _empty; }
     virtual void clear();
 
@@ -61,6 +63,8 @@ protected:
 
     mutable gpu::BufferView _schemaBuffer;
     gpu::TexturePointer _cubemap;
+    static glm::quat _rotation;
+
     bool _empty{ true };
 };
 typedef std::shared_ptr<Skybox> SkyboxPointer;

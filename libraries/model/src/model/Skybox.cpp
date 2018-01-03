@@ -20,6 +20,8 @@
 
 using namespace model;
 
+glm::quat Skybox::_rotation;
+
 Skybox::Skybox() {
     Schema schema;
     _schemaBuffer = gpu::BufferView(std::make_shared<gpu::Buffer>(sizeof(Schema), (const gpu::Byte*) &schema));
@@ -35,6 +37,12 @@ void Skybox::setCubemap(const gpu::TexturePointer& cubemap) {
     if (cubemap) {
         _empty = false;
     }
+}
+
+void Skybox::setRotation(glm::quat rotation) {
+    // The zone rotations need to be negated
+    _rotation = rotation;
+    _rotation.w = -_rotation.w;
 }
 
 void Skybox::updateSchemaBuffer() const {
@@ -113,6 +121,10 @@ void Skybox::render(gpu::Batch& batch, const ViewFrustum& viewFrustum, const Sky
 
     Transform viewTransform;
     viewFrustum.evalViewTransform(viewTransform);
+
+    // Orientate view transform to be relative to zone
+    viewTransform.setRotation(_rotation * viewTransform.getRotation());
+
     batch.setProjectionTransform(projMat);
     batch.setViewTransform(viewTransform);
     batch.setModelTransform(Transform()); // only for Mac

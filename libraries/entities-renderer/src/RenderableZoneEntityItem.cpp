@@ -234,7 +234,7 @@ void ZoneEntityRenderer::doRenderUpdateSynchronousTyped(const ScenePointer& scen
     }
 #endif
 
-    updateKeyZoneItemFromEntity();
+    updateKeyZoneItemFromEntity(entity);
 
     if (sunChanged) {
         updateKeySunFromEntity();
@@ -377,7 +377,10 @@ void ZoneEntityRenderer::updateKeyBackgroundFromEntity(const TypedEntityPointer&
     setSkyboxURL(_skyboxProperties.getURL());
 }
 
-void ZoneEntityRenderer::updateKeyZoneItemFromEntity() {
+void ZoneEntityRenderer::updateKeyZoneItemFromEntity(const TypedEntityPointer& entity) {
+    // Update rotation values
+    editSkybox()->setRotation(entity->getTransform().getRotation());
+
     /* TODO: Implement the sun model behavior / Keep this code here for reference, this is how we
     {
     // Set the stage
