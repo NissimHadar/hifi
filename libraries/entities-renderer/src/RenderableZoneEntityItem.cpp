@@ -237,7 +237,7 @@ void ZoneEntityRenderer::doRenderUpdateSynchronousTyped(const ScenePointer& scen
     updateKeyZoneItemFromEntity(entity);
 
     if (sunChanged) {
-        updateKeySunFromEntity();
+        updateKeySunFromEntity(entity);
     }
 
     if (sunChanged || skyboxChanged) {
@@ -310,7 +310,7 @@ bool ZoneEntityRenderer::needsRenderUpdateFromTypedEntity(const TypedEntityPoint
     return false;
 }
 
-void ZoneEntityRenderer::updateKeySunFromEntity() {
+void ZoneEntityRenderer::updateKeySunFromEntity(const TypedEntityPointer& entity) {
     const auto& sunLight = editSunLight();
     sunLight->setType(model::Light::SUN);
     sunLight->setPosition(_lastPosition);
@@ -319,7 +319,7 @@ void ZoneEntityRenderer::updateKeySunFromEntity() {
     // Set the keylight
     sunLight->setColor(ColorUtils::toVec3(_keyLightProperties.getColor()));
     sunLight->setIntensity(_keyLightProperties.getIntensity());
-    sunLight->setDirection(_keyLightProperties.getDirection());
+    sunLight->setDirection(entity->getTransform().getRotation() * _keyLightProperties.getDirection());
 }
 
 void ZoneEntityRenderer::updateKeyAmbientFromEntity() {
@@ -379,7 +379,7 @@ void ZoneEntityRenderer::updateKeyBackgroundFromEntity(const TypedEntityPointer&
 
 void ZoneEntityRenderer::updateKeyZoneItemFromEntity(const TypedEntityPointer& entity) {
     // Update rotation values
-    editSkybox()->setRotation(entity->getTransform().getRotation());
+    editSkybox()->setOrientation(entity->getTransform().getRotation());
 
     /* TODO: Implement the sun model behavior / Keep this code here for reference, this is how we
     {

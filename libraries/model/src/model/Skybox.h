@@ -37,7 +37,7 @@ public:
     void setCubemap(const gpu::TexturePointer& cubemap);
     const gpu::TexturePointer& getCubemap() const { return _cubemap; }
 
-    void setRotation(glm::quat rotation);
+    void setOrientation(glm::quat rotation);
 
     virtual bool empty() { return _empty; }
     virtual void clear();

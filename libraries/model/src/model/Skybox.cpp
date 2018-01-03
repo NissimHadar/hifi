@@ -39,7 +39,7 @@ void Skybox::setCubemap(const gpu::TexturePointer& cubemap) {
     }
 }
 
-void Skybox::setRotation(glm::quat rotation) {
+void Skybox::setOrientation(glm::quat rotation) {
     // The zone rotations need to be negated
     _rotation = rotation;
     _rotation.w = -_rotation.w;
