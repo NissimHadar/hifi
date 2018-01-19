@@ -13,17 +13,10 @@
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-#include <QProgressBar>
-
-#include "ImageComparer.h"
-#include "ui/MismatchWindow.h"
 
 class Test {
 public: 
     Test();
-
-private:
-    MismatchWindow mismatchWindow;
 };
 
 #endif // hifi_test_h

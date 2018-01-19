@@ -9,10 +9,5 @@
 //
 #include "Test.h"
 
-#include <assert.h>
-#include <QtCore/QTextStream>
-#include <QDirIterator>
-
 Test::Test() {
-    mismatchWindow.setModal(true);
 }
