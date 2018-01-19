@@ -12,7 +12,6 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_CubemapCreator.h"
-#include "../Test.h"
 
 class CubemapCreator : public QMainWindow {
     Q_OBJECT
@@ -25,8 +24,6 @@ private slots:
 
 private:
     Ui::CubemapCreatorClass ui;
-
-    Test test;
 };
 
 #endif // hifi_CubemapCreator_h
