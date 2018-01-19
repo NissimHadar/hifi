@@ -13,9 +13,6 @@
 #include <QtCore/QTextStream>
 #include <QDirIterator>
 
-#include <quazip5/quazip.h>
-#include <quazip5/JlCompress.h>
-
 Test::Test() {
     snapshotFilenameFormat = QRegularExpression("hifi-snap-by-.*-on-\\d\\d\\d\\d-\\d\\d-\\d\\d_\\d\\d-\\d\\d-\\d\\d.jpg");
 
@@ -39,25 +36,6 @@ bool Test::createTestResultsFolderPathIfNeeded(QString directory) {
     } else {
         return true;
     }
-}
-
-void Test::zipAndDeleteTestResultsFolder() {
-    QString zippedResultsFileName { testResultsFolderPath + ".zip" };
-    QFileInfo fileInfo(zippedResultsFileName);
-    if (!fileInfo.exists()) {
-        QFile::remove(zippedResultsFileName);
-    }
-
-    QDir testResultsFolder(testResultsFolderPath);
-    if (!testResultsFolder.isEmpty()) {
-        JlCompress::compressDir(testResultsFolderPath + ".zip", testResultsFolderPath);
-    }
-
-    testResultsFolder.removeRecursively();
-
-    //In all cases, for the next evaluation
-    testResultsFolderPath = "";
-    index = 1;
 }
 
 bool Test::compareImageLists(QStringList expectedImages, QStringList resultImages, QString testDirectory, bool interactiveMode, QProgressBar* progressBar) {
@@ -223,8 +201,6 @@ void Test::evaluateTests(bool interactiveMode, QProgressBar* progressBar) {
     } else {
         messageBox.information(0, "Failure", "One or more images are not as expected");
     }
-
-    zipAndDeleteTestResultsFolder();
 }
 
 bool Test::isAValidDirectory(QString pathname) {
@@ -302,8 +278,6 @@ void Test::evaluateTestsRecursively(bool interactiveMode, QProgressBar* progress
     } else {
         messageBox.information(0, "Failure", "One or more images are not as expected");
     }
-
-    zipAndDeleteTestResultsFolder();
 }
 
 void Test::importTest(QTextStream& textStream, const QString& testPathname, int testNumber) {

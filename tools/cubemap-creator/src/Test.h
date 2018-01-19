@@ -41,7 +41,6 @@ public:
     void appendTestResultsToFile(QString testResultsFolderPath, TestFailure testFailure, QPixmap comparisonImage);
 
     bool createTestResultsFolderPathIfNeeded(QString directory);
-    void zipAndDeleteTestResultsFolder();
 
     bool isAValidDirectory(QString pathname);
 

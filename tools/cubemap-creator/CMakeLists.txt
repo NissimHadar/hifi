@@ -25,12 +25,6 @@ if (WIN32)
     set_property (TARGET cubemap-creator PROPERTY WIN32_EXECUTABLE true)
 endif()
 
-target_zlib()
-add_dependency_external_projects (quazip)
-find_package (QuaZip REQUIRED)
-target_include_directories( ${TARGET_NAME} SYSTEM PUBLIC ${QUAZIP_INCLUDE_DIRS})
-target_link_libraries(${TARGET_NAME} ${QUAZIP_LIBRARIES})
- 
 package_libraries_for_deployment()
 
 if (WIN32)
