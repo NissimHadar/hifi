@@ -12,30 +12,6 @@
 
 CubemapCreator::CubemapCreator(QWidget *parent) : QMainWindow(parent) {
     ui.setupUi(this);
-
-    ui.checkBoxInteractiveMode->setChecked(true);
-
-    ui.progressBar->setVisible(false);
-}
-
-void CubemapCreator::on_evaluateTestsButton_clicked() {
-    test.evaluateTests(ui.checkBoxInteractiveMode->isChecked(), ui.progressBar);
-}
-
-void CubemapCreator::on_evaluateTestsRecursivelyButton_clicked() {
-    test.evaluateTestsRecursively(ui.checkBoxInteractiveMode->isChecked(), ui.progressBar);
-}
-
-void CubemapCreator::on_createRecursiveScriptButton_clicked() {
-    test.createRecursiveScript();
-}
-
-void CubemapCreator::on_createTestButton_clicked() {
-    test.createTest();
-}
-
-void CubemapCreator::on_deleteOldSnapshotsButton_clicked() {
-    test.deleteOldSnapshots();
 }
 
 void CubemapCreator::on_closeButton_clicked() {

@@ -21,11 +21,6 @@ public:
     CubemapCreator(QWidget *parent = Q_NULLPTR);
 
 private slots:
-    void on_evaluateTestsButton_clicked();
-    void on_evaluateTestsRecursivelyButton_clicked();
-    void on_createRecursiveScriptButton_clicked();
-    void on_createTestButton_clicked();
-    void on_deleteOldSnapshotsButton_clicked();
     void on_closeButton_clicked();
 
 private:

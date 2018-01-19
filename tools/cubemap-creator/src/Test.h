@@ -13,7 +13,6 @@
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-#include <QtCore/QRegularExpression>
 #include <QProgressBar>
 
 #include "ImageComparer.h"
@@ -23,46 +22,8 @@ class Test {
 public: 
     Test();
 
-    void evaluateTests(bool interactiveMode, QProgressBar* progressBar);
-    void evaluateTestsRecursively(bool interactiveMode, QProgressBar* progressBar);
-    void createRecursiveScript();
-    void createTest();
-    void deleteOldSnapshots();
-
-    bool compareImageLists(QStringList expectedImages, QStringList resultImages, QString testDirectory, bool interactiveMode, QProgressBar* progressBar);
-
-    QStringList createListOfAllJPEGimagesInDirectory(QString pathToImageDirectory);
-
-    bool isInSnapshotFilenameFormat(QString filename);
-    bool isInExpectedImageFilenameFormat(QString filename);
-
-    void importTest(QTextStream& textStream, const QString& testPathname, int testNumber);
-
-    void appendTestResultsToFile(QString testResultsFolderPath, TestFailure testFailure, QPixmap comparisonImage);
-
-    bool createTestResultsFolderPathIfNeeded(QString directory);
-
-    bool isAValidDirectory(QString pathname);
-
 private:
-    const QString TEST_FILENAME { "test.js" };
-    const QString TEST_RESULTS_FOLDER { "TestResults" };
-    const QString TEST_RESULTS_FILENAME { "TestResults.txt" };
-
-    QMessageBox messageBox;
-
-    QDir imageDirectory;
-
-    QRegularExpression snapshotFilenameFormat;
-    QRegularExpression expectedImageFilenameFormat;
-
     MismatchWindow mismatchWindow;
-
-    ImageComparer imageComparer;
-
-
-    QString testResultsFolderPath { "" };
-    int index { 1 };
 };
 
 #endif // hifi_test_h
