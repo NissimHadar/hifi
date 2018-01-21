@@ -14,6 +14,10 @@ CubemapCreator::CubemapCreator(QWidget *parent) : QMainWindow(parent) {
     ui.setupUi(this);
 }
 
+void CubemapCreator::on_createButton_clicked() {
+    creator.create6ColorCube();
+}
+
 void CubemapCreator::on_closeButton_clicked() {
     exit(0);
 }
