@@ -10,12 +10,24 @@
 #ifndef hifi_Creator_h
 #define hifi_Creator_h
 
+#include <QImage>
+
 class Creator {
 public:
+    Creator();
+    ~Creator();
+
     void create6ColorCube();
+    void createSphericalGridCube();
 
 private:
     const int IMAGE_RESOLUTION { 2048 };
+    const int IMAGE_WIDTH { IMAGE_RESOLUTION };
+    const int IMAGE_HEIGHT { IMAGE_RESOLUTION * 6 };
+
+    unsigned char* buffer;
+
+    QImage* cubeMapImage;
 };
 
 #endif // hifi_Creator_h

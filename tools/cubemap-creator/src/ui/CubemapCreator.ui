@@ -27,7 +27,7 @@
      <string>Close</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="createButton">
+   <widget class="QPushButton" name="create6ColorsButton">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -37,7 +37,20 @@
      </rect>
     </property>
     <property name="text">
-     <string>Create</string>
+     <string>6 colours</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="createSphericalGridButton">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>140</y>
+      <width>220</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Spherical Grid</string>
     </property>
    </widget>
   </widget>

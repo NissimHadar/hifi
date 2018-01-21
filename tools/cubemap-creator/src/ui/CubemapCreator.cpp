@@ -14,8 +14,12 @@ CubemapCreator::CubemapCreator(QWidget *parent) : QMainWindow(parent) {
     ui.setupUi(this);
 }
 
-void CubemapCreator::on_createButton_clicked() {
+void CubemapCreator::on_create6ColorsButton_clicked() {
     creator.create6ColorCube();
+}
+
+void CubemapCreator::on_createSphericalGridButton_clicked() {
+    creator.createSphericalGridCube();
 }
 
 void CubemapCreator::on_closeButton_clicked() {
