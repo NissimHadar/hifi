@@ -26,5 +26,8 @@ if (BUILD_TOOLS)
 
   add_subdirectory(auto-tester)
   set_target_properties(auto-tester PROPERTIES FOLDER "Tools")
+
+  add_subdirectory(cubemap-creator)
+  set_target_properties(cubemap-creator PROPERTIES FOLDER "Tools")
 endif()
 
