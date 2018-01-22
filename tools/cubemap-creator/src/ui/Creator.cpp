@@ -10,8 +10,10 @@
 
 #include "Creator.h"
 
+#include <QPainter>
+
 Creator::Creator() {
-    buffer = new unsigned char[IMAGE_WIDTH * IMAGE_HEIGHT * 6 * 3];
+    buffer = new unsigned char[PIXEL_BUFFER_SIZE];
 
     cubeMapImage = new QImage(buffer, IMAGE_WIDTH, IMAGE_HEIGHT, QImage::Format_RGB888);
 }
@@ -43,15 +45,38 @@ void Creator::create6ColorCube() {
         }
     }
 
+    // Add axes
+    QRect rect = cubeMapImage->rect();
+    QPainter p;
+    p.begin(cubeMapImage);
+
+    p.setPen(QPen(Qt::black));
+    p.setFont(QFont("Times", 36, QFont::Bold));
+
+    p.drawText(QRect(0, 0 + 0 * IMAGE_WIDTH, IMAGE_WIDTH, IMAGE_WIDTH), Qt::AlignCenter, "+X");
+    p.drawText(QRect(0, 0 + 1 * IMAGE_WIDTH, IMAGE_WIDTH, IMAGE_WIDTH), Qt::AlignCenter, "-X");
+    p.drawText(QRect(0, 0 + 2 * IMAGE_WIDTH, IMAGE_WIDTH, IMAGE_WIDTH), Qt::AlignCenter, "+Y");
+    p.drawText(QRect(0, 0 + 3 * IMAGE_WIDTH, IMAGE_WIDTH, IMAGE_WIDTH), Qt::AlignCenter, "-Y");
+    p.drawText(QRect(0, 0 + 4 * IMAGE_WIDTH, IMAGE_WIDTH, IMAGE_WIDTH), Qt::AlignCenter, "+Z");
+    p.drawText(QRect(0, 0 + 5 * IMAGE_WIDTH, IMAGE_WIDTH, IMAGE_WIDTH), Qt::AlignCenter, "-Z");
+
+    p.end();
+
     cubeMapImage->save(("D:\\GitHub\\m.jpg"));
 }
 
 void Creator::createSphericalGridCube() {
+    // Image quality is improved by using 3x3 subsampling
+    // This will use a single byte for each sub-pixel
+    const int OVER_SAMPLING { 3 };
+    const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
+    unsigned char* rawBuffer = new unsigned char[RAW_BUFFER_SIZE];
+
     int offset { 0 };
-    const double HALF_WIDTH { IMAGE_RESOLUTION / 2.0 };
+    const double HALF_WIDTH { IMAGE_RESOLUTION * OVER_SAMPLING / 2.0 };
     for (int face = 0; face < 6; ++face) {
-        for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
-            for (int pix = 0; pix < IMAGE_RESOLUTION; ++pix) {
+        for (int row = 0; row < IMAGE_RESOLUTION * OVER_SAMPLING; ++row) {
+            for (int pix = 0; pix < IMAGE_RESOLUTION * OVER_SAMPLING; ++pix) {
                 // Assuming the cube size is 2x2x2, compute the spherical coordinates of the pixel
                 double x, y, z;
                 switch (face) {
@@ -91,15 +116,43 @@ void Creator::createSphericalGridCube() {
                 double r     = sqrt(x * x + z * z);
                 double theta = atan2(y, r);
 
-                if (z > 0.0) {
-                    buffer[offset++] = 255;
-                    buffer[offset++] = 0;
-                    buffer[offset++] = 255;
+                double phi_degs = phi * RAD_TO_DEG;
+                double theta_degs = theta * RAD_TO_DEG;
+
+                if (abs(fmod(phi_degs, 30)) < 0.2 || abs(fmod(theta_degs, 30)) < 0.2) {
+                    // Draw 30 degree latitude and longitude lines
+                    rawBuffer[offset++] = 1;
+                } else if (abs(fmod(phi_degs, 10)) < 0.1 || abs(fmod(theta_degs, 10)) < 0.1) {
+                    // Draw 10 degree latitude and longitude lines
+                    rawBuffer[offset++] = 1;
                 } else {
-                    buffer[offset++] = 0;
-                    buffer[offset++] = 255;
-                    buffer[offset++] = 255;
+                    rawBuffer[offset++] = 0;
                 }
+            }
+        }
+    }
+
+    // Now compute average for each pixel
+    // Note: outer 3 loops are over the output space
+    //       the two inner loops are over the sub-pixels
+    int bufferOffset { 0 };
+    for (int face = 0; face < 6; ++face) {
+        for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
+            for (int pix = 0; pix < IMAGE_RESOLUTION; ++pix) {
+                int sum { 0 };
+                int subRow { (face * IMAGE_RESOLUTION + row) * OVER_SAMPLING };
+                for (int i = 0; i < OVER_SAMPLING; ++i) {
+                    int subPix { pix * OVER_SAMPLING };
+                    for (int j = 0; j < OVER_SAMPLING; ++j) {
+                        sum += rawBuffer[subRow * IMAGE_RESOLUTION * OVER_SAMPLING + subPix++];
+                    }
+                    ++subRow;
+                }
+
+                unsigned char pixelIntensity = (255 * sum) / (OVER_SAMPLING * OVER_SAMPLING);
+                buffer[bufferOffset++] = pixelIntensity;
+                buffer[bufferOffset++] = pixelIntensity;
+                buffer[bufferOffset++] = pixelIntensity;
             }
         }
     }
