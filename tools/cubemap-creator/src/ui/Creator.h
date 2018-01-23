@@ -32,6 +32,7 @@ private:
 
     const double PI = 3.141592653589793;
     const double RAD_TO_DEG = 180.0 / PI;
+    const double DEG_TO_RAD = PI / 180.0;
 
     unsigned char* buffer;
 

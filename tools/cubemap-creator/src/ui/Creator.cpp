@@ -68,7 +68,7 @@ void Creator::create6ColorCube() {
 void Creator::createSphericalGridCube() {
     // Image quality is improved by using 3x3 subsampling
     // This will use a single byte for each sub-pixel
-    const int OVER_SAMPLING { 3 };
+    const int OVER_SAMPLING { 9 };
     const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
     unsigned char* rawBuffer = new unsigned char[RAW_BUFFER_SIZE];
 
@@ -156,6 +156,31 @@ void Creator::createSphericalGridCube() {
             }
         }
     }
+
+    // Add axes
+    double d = tan(30.0 * DEG_TO_RAD); // offset from centre for 30 degrees
+
+    QRect rect = cubeMapImage->rect();
+    QPainter p;
+    p.begin(cubeMapImage);
+
+    p.setPen(QPen(Qt::red));
+    p.setFont(QFont("Times", 36, QFont::Bold));
+
+    p.drawText(QPoint(IMAGE_WIDTH / 2,                       11 * IMAGE_WIDTH / 2),   "N");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 + d * IMAGE_WIDTH / 2, 11 * IMAGE_WIDTH / 2),  "30");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 - d * IMAGE_WIDTH / 2,  1 * IMAGE_WIDTH / 2),  "60");
+    p.drawText(QPoint(IMAGE_WIDTH / 2,                        1 * IMAGE_WIDTH / 2),   "E");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 + d * IMAGE_WIDTH / 2,  1 * IMAGE_WIDTH / 2), "120");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 - d * IMAGE_WIDTH / 2,  9 * IMAGE_WIDTH / 2), "150");
+    p.drawText(QPoint(IMAGE_WIDTH / 2,                        9 * IMAGE_WIDTH / 2),   "S");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 + d * IMAGE_WIDTH / 2,  9 * IMAGE_WIDTH / 2), "210");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 - d * IMAGE_WIDTH / 2,  3 * IMAGE_WIDTH / 2), "240");
+    p.drawText(QPoint(IMAGE_WIDTH / 2,                        3 * IMAGE_WIDTH / 2),   "W");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 + d * IMAGE_WIDTH / 2,  3 * IMAGE_WIDTH / 2), "300");
+    p.drawText(QPoint(IMAGE_WIDTH / 2 - d * IMAGE_WIDTH / 2, 11 * IMAGE_WIDTH / 2), "330");
+
+    p.end();
 
     cubeMapImage->save(("D:\\GitHub\\g.jpg"));
 }
