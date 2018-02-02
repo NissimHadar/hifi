@@ -10,7 +10,10 @@
 
 #include "Creator.h"
 
+#include <QFile>
+#include <QMessageBox>
 #include <QPainter>
+#include <QTextStream>
 
 Creator::Creator() {
     buffer = new unsigned char[PIXEL_BUFFER_SIZE];
@@ -112,7 +115,7 @@ void Creator::createSphericalGridCube() {
                     break;
                 }
 
-                double phi   = atan2(-x, -z);
+                double phi   = atan2(x, z);
                 double r     = sqrt(x * x + z * z);
                 double theta = atan2(y, r);
 
@@ -183,4 +186,96 @@ void Creator::createSphericalGridCube() {
     p.end();
 
     cubeMapImage->save(("D:\\GitHub\\g.jpg"));
+}
+
+void Creator::drawStar(Star* star) {
+    // Right ascension 0 is towards -z, increasing towards -x
+    // Declination of 90 degrees is towards +y
+    // Locate face.  The range is set to 2, then xyz are computed
+    const double R = 2.0;
+    star->rightAscension = 0 * 3.1416 / 180.0;
+    star->declination = 0 * 3.1416 / 180.0;
+    double x = -R * sin(star->rightAscension) * cos(star->declination);
+    double z = -R * cos(star->rightAscension) * cos(star->declination);
+    double y =  R * sin(star->declination);
+
+    // The face is determined by the largest of the 3 coordinates (absolute value)
+    // The other two coordinates are then divided by the largest coordinate
+    // It is safe to assume that the largest coordinate is non-zero
+    double abs_x = abs(x);
+    double abs_y = abs(y);
+    double abs_z = abs(z);
+
+    int face;
+    if (abs_x > abs_y && abs_x > abs_z) {
+        y /= abs_x;
+        z /= abs_x;
+        if (x > 0) {
+            face = 0; // (+x)
+        } else {
+            face = 1; // (-x)
+        }
+    } else if (abs_y > abs_x && abs_y > abs_z) {
+        x /= abs_y;
+        z /= abs_y;
+        if (y > 0) {
+            face = 2; //  (+y)
+        } else {
+            face = 3; // (-y)
+        }
+    } else if (abs_z > abs_x && abs_z > abs_y) {
+        x /= abs_z;
+        y /= abs_z;
+        if (z > 0) {
+            face = 4; // (+z)
+        } else {
+            face = 5; //  (-z)
+        }
+    }
+}
+
+void Creator::createStarMap() {
+    // Read in star data
+    QFile starDataFile("hygdata_v3.csv");
+    if (!starDataFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(0, "error", starDataFile.errorString());
+        exit(-1);
+    }
+
+    QTextStream starDataStream(&starDataFile);
+
+    // See "README for hygdata.md" for description
+    // First line is headers, second is the sun
+    starDataStream.readLine();
+    starDataStream.readLine();
+
+    QList<Star*> stars;
+
+    // Only display eye-visible stars
+    const double NAKED_EYE_MAGNITUDE = 6.5;
+
+    while (!starDataStream.atEnd()) {
+        QString line = starDataStream.readLine();
+        QStringList fields = line.split(",");
+
+        double magnitude = fields[13].toDouble();
+        if (magnitude <= NAKED_EYE_MAGNITUDE) {
+            Star* star = new Star;
+            star->rightAscension = fields[7].toDouble();
+            star->declination = fields[8].toDouble();
+            star->magnitude = magnitude;
+
+            stars.push_back(star);
+        }
+    }
+
+    // Draw stars
+    for (int i = 0; i < stars.size(); ++i) {
+        drawStar(stars[i]);
+    }
+
+    qDeleteAll(stars);
+    stars.clear();
+
+    starDataFile.close();
 }

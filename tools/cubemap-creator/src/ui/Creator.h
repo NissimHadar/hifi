@@ -13,6 +13,14 @@
 #include <math.h>
 
 #include <QImage>
+#include <QList>
+
+class Star {
+public:
+    double rightAscension;
+    double declination;
+    double magnitude;
+};
 
 class Creator {
 public:
@@ -21,6 +29,8 @@ public:
 
     void create6ColorCube();
     void createSphericalGridCube();
+    void createStarMap();
+    void drawStar(Star* star);
 
 private:
     const int IMAGE_RESOLUTION { 2048 };
