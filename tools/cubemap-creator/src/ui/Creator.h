@@ -10,7 +10,17 @@
 #ifndef hifi_Creator_h
 #define hifi_Creator_h
 
+#include <math.h>
+
 #include <QImage>
+#include <QList>
+
+class Star {
+public:
+    double rightAscension;
+    double declination;
+    double magnitude;
+};
 
 class Creator {
 public:
@@ -19,11 +29,20 @@ public:
 
     void create6ColorCube();
     void createSphericalGridCube();
+    void createStarMap();
+    void drawStar(Star* star);
 
 private:
     const int IMAGE_RESOLUTION { 2048 };
     const int IMAGE_WIDTH { IMAGE_RESOLUTION };
-    const int IMAGE_HEIGHT { IMAGE_RESOLUTION * 6 };
+    const int NUM_FACES { 6 };
+    const int IMAGE_HEIGHT { IMAGE_RESOLUTION * NUM_FACES };
+    const int NUM_BYTES_PER_PIXEL { 3 };
+    const int PIXEL_BUFFER_SIZE { IMAGE_WIDTH * IMAGE_HEIGHT * NUM_BYTES_PER_PIXEL };
+
+    const double PI = 3.141592653589793;
+    const double RAD_TO_DEG = 180.0 / PI;
+    const double DEG_TO_RAD = PI / 180.0;
 
     unsigned char* buffer;
 

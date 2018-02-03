@@ -22,6 +22,10 @@ void CubemapCreator::on_createSphericalGridButton_clicked() {
     creator.createSphericalGridCube();
 }
 
+void CubemapCreator::on_createStarMapButton_clicked() {
+    creator.createStarMap();
+}
+
 void CubemapCreator::on_closeButton_clicked() {
     exit(0);
 }

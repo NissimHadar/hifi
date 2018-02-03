@@ -53,6 +53,19 @@
      <string>Spherical Grid</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="createStarMapButton">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>190</y>
+      <width>220</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Star Map</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

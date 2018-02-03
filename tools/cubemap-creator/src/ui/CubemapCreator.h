@@ -24,6 +24,7 @@ private slots:
     void on_closeButton_clicked();
     void on_create6ColorsButton_clicked();
     void on_createSphericalGridButton_clicked();
+    void on_createStarMapButton_clicked();
 
 private:
     Ui::CubemapCreatorClass ui;
