@@ -12,7 +12,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_CubemapCreator.h"
-#include "Creator.h"
+#include "../Creator.h"
 
 class CubemapCreator : public QMainWindow {
     Q_OBJECT
