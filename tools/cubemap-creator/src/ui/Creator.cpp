@@ -219,7 +219,7 @@ void Creator::drawStar(Star* star) {
         x /= abs_y;
         z /= abs_y;
         if (y > 0) {
-            face = 2; //  (+y)
+            face = 2; // (+y)
         } else {
             face = 3; // (-y)
         }
@@ -229,7 +229,7 @@ void Creator::drawStar(Star* star) {
         if (z > 0) {
             face = 4; // (+z)
         } else {
-            face = 5; //  (-z)
+            face = 5; // (-z)
         }
     }
 }
