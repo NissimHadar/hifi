@@ -73,7 +73,7 @@ void Creator::create6ColorCube() {
 void Creator::createSphericalGridCube() {
     // Image quality is improved by using 3x3 subsampling
     // This will use a single byte for each sub-pixel
-    const int OVER_SAMPLING { 9 };
+    const int OVER_SAMPLING { 3 };
     const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
     unsigned char* rawBuffer = new unsigned char[RAW_BUFFER_SIZE];
 
@@ -195,9 +195,14 @@ void Creator::createSphericalGridCube() {
 void Creator::drawStars(QList<Star*> starList) {
     // Image quality is improved by using 3x3 subsampling
     // This will use a single byte for each sub-pixel
-    const int OVER_SAMPLING { 9 };
+    const int OVER_SAMPLING { 1 };
     const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
     unsigned char* rawBuffer = new unsigned char[RAW_BUFFER_SIZE];
+
+    // Set rawBuffer to 0, the following code only increments the current value
+    for (int i = 0; i < RAW_BUFFER_SIZE; ++i) {
+        rawBuffer[i] = 0;
+    }
 
     int offset { 0 };
     const double HALF_WIDTH { IMAGE_RESOLUTION * OVER_SAMPLING / 2.0 };
@@ -240,29 +245,23 @@ void Creator::drawStars(QList<Star*> starList) {
                 }
 
                 // Now that we have the position of the pixel, compare to each star
-                double pixelPosLength = pixelPos.length();
+                double pixelPosLength = glm::length(pixelPos);
 
                 for (int i = 0; i < starList.size(); ++i) {
                     Star* star = starList[i];
 
                     // Right ascension 0 is towards -z, increasing towards -x
                     // Declination of 90 degrees is towards +y
-                    // Locate face.  The range is set to 2, then xyz are computed
-                    const double R = 2.0;
-                    star->rightAscension = 0 * 3.1416 / 180.0;
-                    star->declination    = 0 * 3.1416 / 180.0;
-
+                    // Locate face.  The range is set to 1, then xyz are computed
                     glm::vec3 starPos;
-                    starPos.x = -R * sin(star->rightAscension) * cos(star->declination);
-                    starPos.z = -R * cos(star->rightAscension) * cos(star->declination);
-                    starPos.y =  R * sin(star->declination);
+                    starPos.x = -sin(star->rightAscension) * cos(star->declination);
+                    starPos.z = -cos(star->rightAscension) * cos(star->declination);
+                    starPos.y =  sin(star->declination);
 
-                    double angle = RAD_TO_DEG * acos(glm::dot(pixelPos, starPos)) / (pixelPosLength * starPos.length());
-                    const double STAR_HALF_ANGLE { 0.1 };
+                    double angle = RAD_TO_DEG * acos(glm::dot(pixelPos, starPos) / pixelPosLength);
+                    const double STAR_HALF_ANGLE { 0.2 };
                     if (angle <= STAR_HALF_ANGLE) {
-                        rawBuffer[offset] = 1;
-                    } else {
-                        rawBuffer[offset] = 0;
+                        rawBuffer[offset] = 255 * star->relativeBrightness;
                     }
                 }
                 ++offset;
@@ -287,7 +286,7 @@ void Creator::drawStars(QList<Star*> starList) {
                     ++subRow;
                 }
 
-                unsigned char pixelIntensity = (255 * sum) / (OVER_SAMPLING * OVER_SAMPLING);
+                unsigned char pixelIntensity = sum / (OVER_SAMPLING * OVER_SAMPLING);
                 buffer[bufferOffset++] = pixelIntensity;
                 buffer[bufferOffset++] = pixelIntensity;
                 buffer[bufferOffset++] = pixelIntensity;
@@ -315,9 +314,6 @@ void Creator::createStarMap() {
 
     QList<Star*> stars;
 
-    // Only display eye-visible stars
-    const double NAKED_EYE_MAGNITUDE { 3.0 };
-
     while (!starDataStream.atEnd()) {
         QString line = starDataStream.readLine();
         QStringList fields = line.split(",");
@@ -327,7 +323,9 @@ void Creator::createStarMap() {
             Star* star = new Star;
             star->rightAscension = fields[7].toDouble();
             star->declination = fields[8].toDouble();
-            star->magnitude = magnitude;
+
+            double deltaMagnitude = NAKED_EYE_MAGNITUDE - magnitude;
+            star->relativeBrightness = pow(POGSON_RATIO, -deltaMagnitude);
 
             stars.push_back(star);
         }

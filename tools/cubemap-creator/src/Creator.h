@@ -19,7 +19,7 @@ class Star {
 public:
     double rightAscension;
     double declination;
-    double magnitude;
+    double relativeBrightness;
 };
 
 class Creator {
@@ -40,9 +40,13 @@ private:
     const int NUM_BYTES_PER_PIXEL { 3 };
     const int PIXEL_BUFFER_SIZE { IMAGE_WIDTH * IMAGE_HEIGHT * NUM_BYTES_PER_PIXEL };
 
-    const double PI = 3.141592653589793;
-    const double RAD_TO_DEG = 180.0 / PI;
-    const double DEG_TO_RAD = PI / 180.0;
+    const double PI { 3.141592653589793 };
+    const double RAD_TO_DEG { 180.0 / PI };
+    const double DEG_TO_RAD { PI / 180.0 };
+    const double POGSON_RATIO = pow(100, 0.2);
+
+    // Only display eye-visible stars
+    const double NAKED_EYE_MAGNITUDE { 3.0 };
 
     unsigned char* buffer;
 
