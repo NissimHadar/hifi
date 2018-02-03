@@ -30,7 +30,7 @@ public:
     void create6ColorCube();
     void createSphericalGridCube();
     void createStarMap();
-    void drawStar(Star* star);
+    void drawStars(QList<Star*> starList);
 
 private:
     const int IMAGE_RESOLUTION { 2048 };

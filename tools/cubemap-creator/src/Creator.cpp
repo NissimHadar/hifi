@@ -15,6 +15,8 @@
 #include <QPainter>
 #include <QTextStream>
 
+#include <glm/glm.hpp>
+
 Creator::Creator() {
     buffer = new unsigned char[PIXEL_BUFFER_SIZE];
 
@@ -122,15 +124,18 @@ void Creator::createSphericalGridCube() {
                 double phi_degs = phi * RAD_TO_DEG;
                 double theta_degs = theta * RAD_TO_DEG;
 
-                if (abs(fmod(phi_degs, 30)) < 0.2 || abs(fmod(theta_degs, 30)) < 0.2) {
+                const double MAJOR_LINE_WIDTH { 0.2 };
+                const double MINOR_LINE_WIDTH { 0.1 };
+                if (abs(fmod(phi_degs, 30)) < MAJOR_LINE_WIDTH || abs(fmod(theta_degs, 30)) < MAJOR_LINE_WIDTH) {
                     // Draw 30 degree latitude and longitude lines
-                    rawBuffer[offset++] = 1;
-                } else if (abs(fmod(phi_degs, 10)) < 0.1 || abs(fmod(theta_degs, 10)) < 0.1) {
+                    rawBuffer[offset] = 1;
+                } else if (abs(fmod(phi_degs, 10)) < MINOR_LINE_WIDTH || abs(fmod(theta_degs, 10)) < MINOR_LINE_WIDTH) {
                     // Draw 10 degree latitude and longitude lines
-                    rawBuffer[offset++] = 1;
+                    rawBuffer[offset] = 1;
                 } else {
-                    rawBuffer[offset++] = 0;
+                    rawBuffer[offset] = 0;
                 }
+                ++offset;
             }
         }
     }
@@ -187,53 +192,110 @@ void Creator::createSphericalGridCube() {
     cubeMapImage->save(("D:\\GitHub\\g.jpg"));
 }
 
-void Creator::drawStar(Star* star) {
-    // Right ascension 0 is towards -z, increasing towards -x
-    // Declination of 90 degrees is towards +y
-    // Locate face.  The range is set to 2, then xyz are computed
-    const double R = 2.0;
-    star->rightAscension = 0 * 3.1416 / 180.0;
-    star->declination = 0 * 3.1416 / 180.0;
-    double x = -R * sin(star->rightAscension) * cos(star->declination);
-    double z = -R * cos(star->rightAscension) * cos(star->declination);
-    double y =  R * sin(star->declination);
+void Creator::drawStars(QList<Star*> starList) {
+    // Image quality is improved by using 3x3 subsampling
+    // This will use a single byte for each sub-pixel
+    const int OVER_SAMPLING { 9 };
+    const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
+    unsigned char* rawBuffer = new unsigned char[RAW_BUFFER_SIZE];
 
-    // The face is determined by the largest of the 3 coordinates (absolute value)
-    // The other two coordinates are then divided by the largest coordinate
-    // It is safe to assume that the largest coordinate is non-zero
-    double abs_x = abs(x);
-    double abs_y = abs(y);
-    double abs_z = abs(z);
+    int offset { 0 };
+    const double HALF_WIDTH { IMAGE_RESOLUTION * OVER_SAMPLING / 2.0 };
+    for (int face = 0; face < 6; ++face) {
+        for (int row = 0; row < IMAGE_RESOLUTION * OVER_SAMPLING; ++row) {
+            for (int pix = 0; pix < IMAGE_RESOLUTION * OVER_SAMPLING; ++pix) {
+                // Assuming the cube size is 2x2x2, compute the spherical coordinates of the pixel
+                glm::vec3 pixelPos;
+                switch (face) {
+                case 0:
+                    pixelPos.x = 1.0;
+                    pixelPos.y = (HALF_WIDTH - row) / HALF_WIDTH;
+                    pixelPos.z = (pix - HALF_WIDTH) / HALF_WIDTH;
+                    break;
+                case 1:
+                    pixelPos.x = -1.0;
+                    pixelPos.y = (HALF_WIDTH - row) / HALF_WIDTH;
+                    pixelPos.z = (HALF_WIDTH - pix) / HALF_WIDTH;
+                    break;
+                case 2:
+                    pixelPos.x = (pix - HALF_WIDTH) / HALF_WIDTH;
+                    pixelPos.y = 1.0;
+                    pixelPos.z = (HALF_WIDTH - row) / HALF_WIDTH;
+                    break;
+                case 3:
+                    pixelPos.x = (pix - HALF_WIDTH) / HALF_WIDTH;
+                    pixelPos.y = -1.0;
+                    pixelPos.z = (row - HALF_WIDTH) / HALF_WIDTH;
+                    break;
+                case 4:
+                    pixelPos.x = (HALF_WIDTH - pix) / HALF_WIDTH;
+                    pixelPos.y = (HALF_WIDTH - row) / HALF_WIDTH;
+                    pixelPos.z = 1.0;
+                    break;
+                case 5:
+                    pixelPos.x = (pix - HALF_WIDTH) / HALF_WIDTH;
+                    pixelPos.y = (HALF_WIDTH - row) / HALF_WIDTH;
+                    pixelPos.z = -1.0;
+                    break;
+                }
 
-    int face;
-    if (abs_x > abs_y && abs_x > abs_z) {
-        y /= abs_x;
-        z /= abs_x;
-        if (x > 0) {
-            face = 0; // (+x)
-        } else {
-            face = 1; // (-x)
-        }
-    } else if (abs_y > abs_x && abs_y > abs_z) {
-        x /= abs_y;
-        z /= abs_y;
-        if (y > 0) {
-            face = 2; // (+y)
-        } else {
-            face = 3; // (-y)
-        }
-    } else if (abs_z > abs_x && abs_z > abs_y) {
-        x /= abs_z;
-        y /= abs_z;
-        if (z > 0) {
-            face = 4; // (+z)
-        } else {
-            face = 5; // (-z)
+                // Now that we have the position of the pixel, compare to each star
+                double pixelPosLength = pixelPos.length();
+
+                for (int i = 0; i < starList.size(); ++i) {
+                    Star* star = starList[i];
+
+                    // Right ascension 0 is towards -z, increasing towards -x
+                    // Declination of 90 degrees is towards +y
+                    // Locate face.  The range is set to 2, then xyz are computed
+                    const double R = 2.0;
+                    star->rightAscension = 0 * 3.1416 / 180.0;
+                    star->declination    = 0 * 3.1416 / 180.0;
+
+                    glm::vec3 starPos;
+                    starPos.x = -R * sin(star->rightAscension) * cos(star->declination);
+                    starPos.z = -R * cos(star->rightAscension) * cos(star->declination);
+                    starPos.y =  R * sin(star->declination);
+
+                    double angle = RAD_TO_DEG * acos(glm::dot(pixelPos, starPos)) / (pixelPosLength * starPos.length());
+                    const double STAR_HALF_ANGLE { 0.1 };
+                    if (angle <= STAR_HALF_ANGLE) {
+                        rawBuffer[offset] = 1;
+                    } else {
+                        rawBuffer[offset] = 0;
+                    }
+                }
+                ++offset;
+            }
         }
     }
 
-    // The star centre is on the current face, at the appropriate x, y and z
-    // E.g. the very first pixel is on face 0, y = 0, 
+    // Now compute average for each pixel
+    // Note: outer 3 loops are over the output space
+    //       the two inner loops are over the sub-pixels
+    int bufferOffset { 0 };
+    for (int face = 0; face < 6; ++face) {
+        for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
+            for (int pix = 0; pix < IMAGE_RESOLUTION; ++pix) {
+                int sum { 0 };
+                int subRow { (face * IMAGE_RESOLUTION + row) * OVER_SAMPLING };
+                for (int i = 0; i < OVER_SAMPLING; ++i) {
+                    int subPix { pix * OVER_SAMPLING };
+                    for (int j = 0; j < OVER_SAMPLING; ++j) {
+                        sum += rawBuffer[subRow * IMAGE_RESOLUTION * OVER_SAMPLING + subPix++];
+                    }
+                    ++subRow;
+                }
+
+                unsigned char pixelIntensity = (255 * sum) / (OVER_SAMPLING * OVER_SAMPLING);
+                buffer[bufferOffset++] = pixelIntensity;
+                buffer[bufferOffset++] = pixelIntensity;
+                buffer[bufferOffset++] = pixelIntensity;
+            }
+        }
+    }
+
+    cubeMapImage->save(("D:\\GitHub\\starMap.jpg"));
 }
 
 void Creator::createStarMap() {
@@ -254,7 +316,7 @@ void Creator::createStarMap() {
     QList<Star*> stars;
 
     // Only display eye-visible stars
-    const double NAKED_EYE_MAGNITUDE = 6.5;
+    const double NAKED_EYE_MAGNITUDE { 3.0 };
 
     while (!starDataStream.atEnd()) {
         QString line = starDataStream.readLine();
@@ -273,17 +335,7 @@ void Creator::createStarMap() {
 
     starDataFile.close();
 
-    // Set buffer to background colour (black)
-    for (int i = 0; i < PIXEL_BUFFER_SIZE; ++i) {
-        buffer[i] = 0;
-    }
-
-    // Draw stars
-    for (int i = 0; i < stars.size(); ++i) {
-        drawStar(stars[i]);
-    }
-
-    cubeMapImage->save(("D:\\GitHub\\StarMap.jpg"));
+    drawStars(stars);
 
     qDeleteAll(stars);
     stars.clear();
