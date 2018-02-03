@@ -19,6 +19,7 @@ Creator::Creator() {
     buffer = new unsigned char[PIXEL_BUFFER_SIZE];
 
     cubeMapImage = new QImage(buffer, IMAGE_WIDTH, IMAGE_HEIGHT, QImage::Format_RGB888);
+    rect = cubeMapImage->rect();
 }
 
 Creator::~Creator() {
@@ -49,7 +50,6 @@ void Creator::create6ColorCube() {
     }
 
     // Add axes
-    QRect rect = cubeMapImage->rect();
     QPainter p;
     p.begin(cubeMapImage);
 
@@ -163,7 +163,6 @@ void Creator::createSphericalGridCube() {
     // Add axes
     double d = tan(30.0 * DEG_TO_RAD); // offset from centre for 30 degrees
 
-    QRect rect = cubeMapImage->rect();
     QPainter p;
     p.begin(cubeMapImage);
 
@@ -232,6 +231,9 @@ void Creator::drawStar(Star* star) {
             face = 5; // (-z)
         }
     }
+
+    // The star centre is on the current face, at the appropriate x, y and z
+    // E.g. the very first pixel is on face 0, y = 0, 
 }
 
 void Creator::createStarMap() {
@@ -269,13 +271,20 @@ void Creator::createStarMap() {
         }
     }
 
+    starDataFile.close();
+
+    // Set buffer to background colour (black)
+    for (int i = 0; i < PIXEL_BUFFER_SIZE; ++i) {
+        buffer[i] = 0;
+    }
+
     // Draw stars
     for (int i = 0; i < stars.size(); ++i) {
         drawStar(stars[i]);
     }
 
+    cubeMapImage->save(("D:\\GitHub\\StarMap.jpg"));
+
     qDeleteAll(stars);
     stars.clear();
-
-    starDataFile.close();
 }

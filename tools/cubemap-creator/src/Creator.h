@@ -47,6 +47,7 @@ private:
     unsigned char* buffer;
 
     QImage* cubeMapImage;
+    QRect rect;
 };
 
 #endif // hifi_Creator_h
