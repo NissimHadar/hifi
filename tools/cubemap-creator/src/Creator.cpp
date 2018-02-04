@@ -320,7 +320,9 @@ void Creator::createStarMap() {
         double magnitude = fields[13].toDouble();
         if (magnitude <= NAKED_EYE_MAGNITUDE) {
             Star* star = new Star;
-            star->rightAscension_rad = fields[7].toDouble() * DEG_TO_RAD;
+
+            // Note that right ascension is in hours
+            star->rightAscension_rad = fields[7].toDouble() * DEG_TO_RAD * 15.0;
             star->declination_rad    = fields[8].toDouble() * DEG_TO_RAD;
 
             double deltaMagnitude = magnitude - SIRIUS_MAGNITUDE;
