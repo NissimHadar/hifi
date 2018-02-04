@@ -195,7 +195,7 @@ void Creator::createSphericalGridCube() {
 void Creator::drawStars(QList<Star*> stars) {
     // Image quality is improved by using 3x3 subsampling
     // This will use a single byte for each sub-pixel
-    const int OVER_SAMPLING { 1 };
+    const int OVER_SAMPLING { 3 };
     const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
     unsigned char* rawBuffer = new unsigned char[RAW_BUFFER_SIZE];
 
