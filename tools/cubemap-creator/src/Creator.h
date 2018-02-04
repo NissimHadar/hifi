@@ -17,8 +17,8 @@
 
 class Star {
 public:
-    double rightAscension;
-    double declination;
+    double rightAscension_rad;
+    double declination_rad;
     double relativeBrightness;
 };
 
@@ -48,7 +48,12 @@ private:
     // Only display eye-visible stars
     const double NAKED_EYE_MAGNITUDE { 3.0 };
 
+    // Sirius is the brightest star
+    const double SIRIUS_MAGNITUDE { -1.44 };
     unsigned char* buffer;
+
+    // Half angle of star
+    const double STAR_HALF_ANGLE_RAD { 0.2 * DEG_TO_RAD };
 
     QImage* cubeMapImage;
     QRect rect;

@@ -192,7 +192,7 @@ void Creator::createSphericalGridCube() {
     cubeMapImage->save(("D:\\GitHub\\g.jpg"));
 }
 
-void Creator::drawStars(QList<Star*> starList) {
+void Creator::drawStars(QList<Star*> stars) {
     // Image quality is improved by using 3x3 subsampling
     // This will use a single byte for each sub-pixel
     const int OVER_SAMPLING { 1 };
@@ -247,20 +247,19 @@ void Creator::drawStars(QList<Star*> starList) {
                 // Now that we have the position of the pixel, compare to each star
                 double pixelPosLength = glm::length(pixelPos);
 
-                for (int i = 0; i < starList.size(); ++i) {
-                    Star* star = starList[i];
+                for (int i = 0; i < stars.size(); ++i) {
+                    Star* star = stars[i];
 
                     // Right ascension 0 is towards -z, increasing towards -x
                     // Declination of 90 degrees is towards +y
                     // Locate face.  The range is set to 1, then xyz are computed
                     glm::vec3 starPos;
-                    starPos.x = -sin(star->rightAscension) * cos(star->declination);
-                    starPos.z = -cos(star->rightAscension) * cos(star->declination);
-                    starPos.y =  sin(star->declination);
+                    starPos.x = -sin(star->rightAscension_rad) * cos(star->declination_rad);
+                    starPos.z = -cos(star->rightAscension_rad) * cos(star->declination_rad);
+                    starPos.y =  sin(star->declination_rad);
 
-                    double angle = RAD_TO_DEG * acos(glm::dot(pixelPos, starPos) / pixelPosLength);
-                    const double STAR_HALF_ANGLE { 0.2 };
-                    if (angle <= STAR_HALF_ANGLE) {
+                    double angle_rad = acos(glm::dot(pixelPos, starPos) / pixelPosLength);
+                    if (angle_rad <= STAR_HALF_ANGLE_RAD) {
                         rawBuffer[offset] = 255 * star->relativeBrightness;
                     }
                 }
@@ -294,7 +293,7 @@ void Creator::drawStars(QList<Star*> starList) {
         }
     }
 
-    cubeMapImage->save(("D:\\GitHub\\starMap.jpg"));
+    cubeMapImage->save(("D:\\GitHub\\StarMap.jpg"));
 }
 
 void Creator::createStarMap() {
@@ -321,11 +320,11 @@ void Creator::createStarMap() {
         double magnitude = fields[13].toDouble();
         if (magnitude <= NAKED_EYE_MAGNITUDE) {
             Star* star = new Star;
-            star->rightAscension = fields[7].toDouble();
-            star->declination = fields[8].toDouble();
+            star->rightAscension_rad = fields[7].toDouble() * DEG_TO_RAD;
+            star->declination_rad    = fields[8].toDouble() * DEG_TO_RAD;
 
-            double deltaMagnitude = NAKED_EYE_MAGNITUDE - magnitude;
-            star->relativeBrightness = pow(POGSON_RATIO, -deltaMagnitude);
+            double deltaMagnitude = magnitude - SIRIUS_MAGNITUDE;
+            star->relativeBrightness = pow(POGSON_RATIO, deltaMagnitude);
 
             stars.push_back(star);
         }
