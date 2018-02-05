@@ -325,6 +325,10 @@ void Creator::createStarMap() {
             double deltaMagnitude = magnitude - SIRIUS_MAGNITUDE;
             star->relativeBrightness = pow(POGSON_RATIO, deltaMagnitude);
 
+            // The star's colour is determined by the spectrum.
+            // Due to the very limited colour gamut, only the first character is used
+            QString spectrum = fields[15][0];
+
             stars.push_back(star);
         }
     }
