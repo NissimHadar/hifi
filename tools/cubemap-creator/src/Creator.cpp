@@ -15,8 +15,6 @@
 #include <QPainter>
 #include <QTextStream>
 
-#include <glm/glm.hpp>
-
 Creator::Creator() {
     buffer = new unsigned char[PIXEL_BUFFER_SIZE];
 
@@ -250,15 +248,7 @@ void Creator::drawStars(QList<Star*> stars) {
                 for (int i = 0; i < stars.size(); ++i) {
                     Star* star = stars[i];
 
-                    // Right ascension 0 is towards -z, increasing towards -x
-                    // Declination of 90 degrees is towards +y
-                    // Locate face.  The range is set to 1, then xyz are computed
-                    glm::vec3 starPos;
-                    starPos.x = -sin(star->rightAscension_rad) * cos(star->declination_rad);
-                    starPos.z = -cos(star->rightAscension_rad) * cos(star->declination_rad);
-                    starPos.y =  sin(star->declination_rad);
-
-                    double angle_rad = acos(glm::dot(pixelPos, starPos) / pixelPosLength);
+                    double angle_rad = acos(glm::dot(pixelPos, star->position) / pixelPosLength);
                     if (angle_rad <= STAR_HALF_ANGLE_RAD) {
                         rawBuffer[offset] = 255 * star->relativeBrightness;
                     }
@@ -322,8 +312,15 @@ void Creator::createStarMap() {
             Star* star = new Star;
 
             // Note that right ascension is in hours
-            star->rightAscension_rad = fields[7].toDouble() * DEG_TO_RAD * 15.0;
-            star->declination_rad    = fields[8].toDouble() * DEG_TO_RAD;
+            double rightAscension_rad = fields[7].toDouble() * DEG_TO_RAD * 15.0;
+            double declination_rad    = fields[8].toDouble() * DEG_TO_RAD;
+
+            // Right ascension 0 is towards -z, increasing towards -x
+            // Declination of 90 degrees is towards +y
+            // Locate face.  The range is set to 1, then xyz are computed
+            star->position.x = -sin(rightAscension_rad) * cos(declination_rad);
+            star->position.z = -cos(rightAscension_rad) * cos(declination_rad);
+            star->position.y =  sin(declination_rad);
 
             double deltaMagnitude = magnitude - SIRIUS_MAGNITUDE;
             star->relativeBrightness = pow(POGSON_RATIO, deltaMagnitude);

@@ -12,13 +12,14 @@
 
 #include <math.h>
 
+#include <glm/glm.hpp>
+
 #include <QImage>
 #include <QList>
 
 class Star {
 public:
-    double rightAscension_rad;
-    double declination_rad;
+    glm::vec3 position;
     double relativeBrightness;
 };
 
