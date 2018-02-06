@@ -94,7 +94,7 @@ void Creator::create6ColorCube() {
 
     p.end();
 
-    cubeMapImage->save(("D:\\GitHub\\m.jpg"));
+    cubeMapImage->save(("D:\\GitHub\\colours.jpg"));
 }
 
 void Creator::createSphericalGridCube() {
@@ -216,7 +216,7 @@ void Creator::createSphericalGridCube() {
 
     p.end();
 
-    cubeMapImage->save(("D:\\GitHub\\g.jpg"));
+    cubeMapImage->save(("D:\\GitHub\\grid.jpg"));
 }
 
 void Creator::drawStars(QList<Star*> stars) {
@@ -371,7 +371,7 @@ void Creator::createStarMap() {
             star->relativeBrightness = pow(POGSON_RATIO, -deltaMagnitude);
             
             double sqrtRelativeBrightness = sqrt(star->relativeBrightness);
-            star->halfAngle_rads = A * sqrtRelativeBrightness + B;
+            star->halfAngle_rads = DEG_TO_RAD * (A * sqrtRelativeBrightness + B);
 
             // The star's colour is determined by the spectrum.
             // Due to the very limited colour gamut, only the first character is used
