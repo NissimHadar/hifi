@@ -17,10 +17,14 @@
 #include <QImage>
 #include <QList>
 
+#include <map>
+
 class Star {
 public:
     glm::vec3 position;
-    double relativeBrightness;
+    double    relativeBrightness;
+    glm::vec3 color;
+    double    halfAngle_rads;
 };
 
 class Creator {
@@ -53,11 +57,17 @@ private:
     const double SIRIUS_MAGNITUDE { -1.44 };
     unsigned char* buffer;
 
-    // Half angle of star
-    const double STAR_HALF_ANGLE_RAD { 0.10 * DEG_TO_RAD };
+    // Half angle of star (min and max)
+    const double STAR_HALF_ANGLE_MAX_DEG { 0.50 };
+    const double STAR_HALF_ANGLE_MIN_DEG { 0.10 };
 
     QImage* cubeMapImage;
     QRect rect;
+
+    using ColorMap = std::map<QString, int>;
+    ColorMap mapR;
+    ColorMap mapG;
+    ColorMap mapB;
 };
 
 #endif // hifi_Creator_h

@@ -20,6 +20,35 @@ Creator::Creator() {
 
     cubeMapImage = new QImage(buffer, IMAGE_WIDTH, IMAGE_HEIGHT, QImage::Format_RGB888);
     rect = cubeMapImage->rect();
+
+    // Initialize colour maps - see http://www.vendian.org/mncharity/dir3/starcolor/
+    mapR["O"] = 155;
+    mapG["O"] = 176;
+    mapB["O"] = 255;
+
+    mapR["B"] = 170;
+    mapG["B"] = 191;
+    mapB["B"] = 255;
+
+    mapR["A"] = 202;
+    mapG["A"] = 215;
+    mapB["A"] = 255;
+
+    mapR["F"] = 248;
+    mapG["F"] = 247;
+    mapB["F"] = 255;
+
+    mapR["G"] = 255;
+    mapG["G"] = 244;
+    mapB["G"] = 234;
+
+    mapR["K"] = 255;
+    mapG["K"] = 210;
+    mapB["K"] = 161;
+
+    mapR["M"] = 255;
+    mapG["M"] = 204;
+    mapB["M"] = 111;
 }
 
 Creator::~Creator() {
@@ -195,11 +224,15 @@ void Creator::drawStars(QList<Star*> stars) {
     // This will use a single byte for each sub-pixel
     const int OVER_SAMPLING { 3 };
     const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
-    unsigned char* rawBuffer = new unsigned char[RAW_BUFFER_SIZE];
+    unsigned char* rawBufferR = new unsigned char[RAW_BUFFER_SIZE];
+    unsigned char* rawBufferG = new unsigned char[RAW_BUFFER_SIZE];
+    unsigned char* rawBufferB = new unsigned char[RAW_BUFFER_SIZE];
 
     // Set rawBuffer to 0, the following code only increments the current value
     for (int i = 0; i < RAW_BUFFER_SIZE; ++i) {
-        rawBuffer[i] = 0;
+        rawBufferR[i] = 0;
+        rawBufferG[i] = 0;
+        rawBufferB[i] = 0;
     }
 
     int offset { 0 };
@@ -249,8 +282,10 @@ void Creator::drawStars(QList<Star*> stars) {
                     Star* star = stars[i];
 
                     double angle_rad = acos(glm::dot(pixelPos, star->position) / pixelPosLength);
-                    if (angle_rad <= STAR_HALF_ANGLE_RAD) {
-                        rawBuffer[offset] = 255 * star->relativeBrightness;
+                    if (angle_rad <= star->halfAngle_rads) {
+                        rawBufferR[offset] = star->color.r * star->relativeBrightness;
+                        rawBufferG[offset] = star->color.g * star->relativeBrightness;
+                        rawBufferB[offset] = star->color.b * star->relativeBrightness;
                     }
                 }
                 ++offset;
@@ -265,20 +300,22 @@ void Creator::drawStars(QList<Star*> stars) {
     for (int face = 0; face < 6; ++face) {
         for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
             for (int pix = 0; pix < IMAGE_RESOLUTION; ++pix) {
-                int sum { 0 };
+                glm::vec3 sum { 0 };
                 int subRow { (face * IMAGE_RESOLUTION + row) * OVER_SAMPLING };
                 for (int i = 0; i < OVER_SAMPLING; ++i) {
                     int subPix { pix * OVER_SAMPLING };
                     for (int j = 0; j < OVER_SAMPLING; ++j) {
-                        sum += rawBuffer[subRow * IMAGE_RESOLUTION * OVER_SAMPLING + subPix++];
+                        sum.r += rawBufferR[subRow * IMAGE_RESOLUTION * OVER_SAMPLING + subPix];
+                        sum.g += rawBufferG[subRow * IMAGE_RESOLUTION * OVER_SAMPLING + subPix];
+                        sum.b += rawBufferB[subRow * IMAGE_RESOLUTION * OVER_SAMPLING + subPix];
+                        ++subPix;
                     }
                     ++subRow;
                 }
 
-                unsigned char pixelIntensity = sum / (OVER_SAMPLING * OVER_SAMPLING);
-                buffer[bufferOffset++] = pixelIntensity;
-                buffer[bufferOffset++] = pixelIntensity;
-                buffer[bufferOffset++] = pixelIntensity;
+                buffer[bufferOffset++] = sum.r / (OVER_SAMPLING * OVER_SAMPLING);
+                buffer[bufferOffset++] = sum.g / (OVER_SAMPLING * OVER_SAMPLING);
+                buffer[bufferOffset++] = sum.b / (OVER_SAMPLING * OVER_SAMPLING);
             }
         }
     }
@@ -295,6 +332,14 @@ void Creator::createStarMap() {
     }
 
     QTextStream starDataStream(&starDataFile);
+
+    // The angular size of a displayed star is proportional to the square root of it's brightness
+    // This effect provides some control over a star's brightness, as the dynamic range is insufficient
+    // This is computed as A * sqrt(brightness difference) + B
+    const double MAX_DELTA_MAGNITUDE = NAKED_EYE_MAGNITUDE - SIRIUS_MAGNITUDE;
+    const double SQRT_MIN_RELATIVE_BRIGHTNESS = sqrt(pow(POGSON_RATIO, -MAX_DELTA_MAGNITUDE));
+    const double A = (STAR_HALF_ANGLE_MAX_DEG - STAR_HALF_ANGLE_MIN_DEG) / (1.0 - SQRT_MIN_RELATIVE_BRIGHTNESS);
+    const double B = STAR_HALF_ANGLE_MAX_DEG - A;
 
     // See "README for hygdata.md" for description
     // First line is headers, second is the sun
@@ -323,11 +368,18 @@ void Creator::createStarMap() {
             star->position.y =  sin(declination_rad);
 
             double deltaMagnitude = magnitude - SIRIUS_MAGNITUDE;
-            star->relativeBrightness = pow(POGSON_RATIO, deltaMagnitude);
+            star->relativeBrightness = pow(POGSON_RATIO, -deltaMagnitude);
+            
+            double sqrtRelativeBrightness = sqrt(star->relativeBrightness);
+            star->halfAngle_rads = A * sqrtRelativeBrightness + B;
 
             // The star's colour is determined by the spectrum.
             // Due to the very limited colour gamut, only the first character is used
             QString spectrum = fields[15][0];
+
+            star->color.r = mapR[spectrum];
+            star->color.g = mapB[spectrum];
+            star->color.b = mapG[spectrum];
 
             stars.push_back(star);
         }
