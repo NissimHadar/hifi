@@ -58,7 +58,7 @@ private:
     unsigned char* buffer;
 
     // Half angle of star (min and max)
-    const double STAR_HALF_ANGLE_MAX_DEG { 0.3 };
+    const double STAR_HALF_ANGLE_MAX_DEG { 0.35 };
     const double STAR_HALF_ANGLE_MIN_DEG { 0.15 };
 
     QImage* cubeMapImage;

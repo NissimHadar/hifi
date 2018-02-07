@@ -283,9 +283,10 @@ void Creator::drawStars(QList<Star*> stars) {
 
                     double angle_rad = acos(glm::dot(pixelPos, star->position) / pixelPosLength);
                     if (angle_rad <= star->halfAngle_rads) {
-                        rawBufferR[offset] = star->color.r * star->relativeBrightness;
-                        rawBufferG[offset] = star->color.g * star->relativeBrightness;
-                        rawBufferB[offset] = star->color.b * star->relativeBrightness;
+                        float modulationFactor = (star->halfAngle_rads - angle_rad) / star->halfAngle_rads;
+                        rawBufferR[offset] = star->color.r  * modulationFactor;
+                        rawBufferG[offset] = star->color.g  * modulationFactor;
+                        rawBufferB[offset] = star->color.b  * modulationFactor;
                     }
                 }
                 ++offset;
@@ -375,11 +376,12 @@ void Creator::createStarMap() {
 
             // The star's colour is determined by the spectrum.
             // Due to the very limited colour gamut, only the first character is used
+            // As an optimization, the colour is modulated by the brightness at this early stage
             QString spectrum = fields[15][0];
 
-            star->color.r = mapR[spectrum];
-            star->color.g = mapB[spectrum];
-            star->color.b = mapG[spectrum];
+            star->color.r = mapR[spectrum] * star->relativeBrightness;
+            star->color.g = mapB[spectrum] * star->relativeBrightness;
+            star->color.b = mapG[spectrum] * star->relativeBrightness;
 
             stars.push_back(star);
         }
