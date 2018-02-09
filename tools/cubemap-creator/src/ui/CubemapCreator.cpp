@@ -12,6 +12,8 @@
 
 CubemapCreator::CubemapCreator(QWidget *parent) : QMainWindow(parent) {
     ui.setupUi(this);
+
+    ui.progressBar->setVisible(false);
 }
 
 void CubemapCreator::on_create6ColorsButton_clicked() {
@@ -23,7 +25,7 @@ void CubemapCreator::on_createSphericalGridButton_clicked() {
 }
 
 void CubemapCreator::on_createStarMapButton_clicked() {
-    creator.createStarMap();
+    creator.createStarMap(ui.progressBar);
 }
 
 void CubemapCreator::on_closeButton_clicked() {

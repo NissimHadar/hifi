@@ -16,6 +16,7 @@
 
 #include <QImage>
 #include <QList>
+#include <QProgressBar>
 
 #include <map>
 
@@ -34,13 +35,13 @@ public:
 
     void create6ColorCube();
     void createSphericalGridCube();
-    void createStarMap();
-    void drawStars(QList<Star*> starList);
+    void createStarMap(QProgressBar* progressBar);
+    void drawStars(QList<Star*> starList, QProgressBar* progressBar);
 
 private:
+    const int NUM_FACES{ 6 };
     const int IMAGE_RESOLUTION { 2048 };
     const int IMAGE_WIDTH { IMAGE_RESOLUTION };
-    const int NUM_FACES { 6 };
     const int IMAGE_HEIGHT { IMAGE_RESOLUTION * NUM_FACES };
     const int NUM_BYTES_PER_PIXEL { 3 };
     const int PIXEL_BUFFER_SIZE { IMAGE_WIDTH * IMAGE_HEIGHT * NUM_BYTES_PER_PIXEL };
@@ -58,8 +59,8 @@ private:
     unsigned char* buffer;
 
     // Half angle of star (min and max)
-    const double STAR_HALF_ANGLE_MAX_DEG { 0.35 };
-    const double STAR_HALF_ANGLE_MIN_DEG { 0.2 };
+    const double STAR_HALF_ANGLE_MAX_DEG { 0.32 };
+    const double STAR_HALF_ANGLE_MIN_DEG { 0.16 };
 
     QImage* cubeMapImage;
     QRect rect;

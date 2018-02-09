@@ -10,6 +10,7 @@
 
 #include "Creator.h"
 
+#include <QApplication>
 #include <QFile>
 #include <QMessageBox>
 #include <QPainter>
@@ -68,7 +69,7 @@ void Creator::create6ColorCube() {
     //
 
     int offset { 0 };
-    for (int face = 0; face < 6; ++face) {
+    for (int face = 0; face < NUM_FACES; ++face) {
         for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
             for (int pixel = 0; pixel < IMAGE_RESOLUTION; ++pixel) {
                 buffer[offset++] = (face == 0 || face == 3 || face == 5) ? 255 : 0; // red
@@ -106,7 +107,7 @@ void Creator::createSphericalGridCube() {
 
     int offset { 0 };
     const double HALF_WIDTH { IMAGE_RESOLUTION * OVER_SAMPLING / 2.0 };
-    for (int face = 0; face < 6; ++face) {
+    for (int face = 0; face < NUM_FACES; ++face) {
         for (int row = 0; row < IMAGE_RESOLUTION * OVER_SAMPLING; ++row) {
             for (int pix = 0; pix < IMAGE_RESOLUTION * OVER_SAMPLING; ++pix) {
                 // Assuming the cube size is 2x2x2, compute the spherical coordinates of the pixel
@@ -171,7 +172,7 @@ void Creator::createSphericalGridCube() {
     // Note: outer 3 loops are over the output space
     //       the two inner loops are over the sub-pixels
     int bufferOffset { 0 };
-    for (int face = 0; face < 6; ++face) {
+    for (int face = 0; face < NUM_FACES; ++face) {
         for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
             for (int pix = 0; pix < IMAGE_RESOLUTION; ++pix) {
                 int sum { 0 };
@@ -219,7 +220,12 @@ void Creator::createSphericalGridCube() {
     cubeMapImage->save(("D:\\GitHub\\grid.jpg"));
 }
 
-void Creator::drawStars(QList<Star*> stars) {
+void Creator::drawStars(QList<Star*> stars, QProgressBar* progressBar) {
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(100);
+    progressBar->setValue(0);
+    progressBar->setVisible(true);
+
     // Image quality is improved by using 3x3 subsampling
     // This will use a single byte for each sub-pixel
     const int OVER_SAMPLING { 3 };
@@ -236,9 +242,15 @@ void Creator::drawStars(QList<Star*> stars) {
     }
 
     int offset { 0 };
+
+    // progress bar advances for each line
+    const int FULL_PROGRESS_BAR = NUM_FACES * IMAGE_RESOLUTION * OVER_SAMPLING;
     const double HALF_WIDTH { IMAGE_RESOLUTION * OVER_SAMPLING / 2.0 };
-    for (int face = 0; face < 6; ++face) {
+    for (int face = 0; face < NUM_FACES; ++face) {
         for (int row = 0; row < IMAGE_RESOLUTION * OVER_SAMPLING; ++row) {
+            progressBar->setValue((float)(100.0 * face * IMAGE_RESOLUTION * OVER_SAMPLING + row) / FULL_PROGRESS_BAR);
+            QApplication::processEvents();
+
             for (int pix = 0; pix < IMAGE_RESOLUTION * OVER_SAMPLING; ++pix) {
                 // Assuming the cube size is 2x2x2, compute the spherical coordinates of the pixel
                 glm::vec3 pixelPos;
@@ -299,7 +311,7 @@ void Creator::drawStars(QList<Star*> stars) {
     // Note: outer 3 loops are over the output space
     //       the two inner loops are over the sub-pixels
     int bufferOffset { 0 };
-    for (int face = 0; face < 6; ++face) {
+    for (int face = 0; face < NUM_FACES; ++face) {
         for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
             for (int pix = 0; pix < IMAGE_RESOLUTION; ++pix) {
                 glm::vec3 sum { 0 };
@@ -323,9 +335,11 @@ void Creator::drawStars(QList<Star*> stars) {
     }
 
     cubeMapImage->save(("D:\\GitHub\\StarMap.jpg"));
+
+    progressBar->setVisible(false);
 }
 
-void Creator::createStarMap() {
+void Creator::createStarMap(QProgressBar* progressBar) {
     // Read in star data
     QFile starDataFile("hygdata_v3.csv");
     if (!starDataFile.open(QIODevice::ReadOnly)) {
@@ -369,11 +383,13 @@ void Creator::createStarMap() {
             star->position.z = -cos(rightAscension_rad) * cos(declination_rad);
             star->position.y =  sin(declination_rad);
 
+            // The sqrt of the relative brightness is stored.
+            // This is to reduce the dynamic range
             double deltaMagnitude = magnitude - SIRIUS_MAGNITUDE;
-            star->relativeBrightness = pow(POGSON_RATIO, -deltaMagnitude);
+            star->relativeBrightness = pow(POGSON_RATIO, -deltaMagnitude / 2.0);
             
-            double sqrtRelativeBrightness = sqrt(star->relativeBrightness);
-            star->halfAngle_rads = DEG_TO_RAD * (A * sqrtRelativeBrightness + B);
+            // A and B are explained above
+            star->halfAngle_rads = DEG_TO_RAD * (A * star->relativeBrightness + B);
 
             // The star's colour is determined by the spectrum.
             // Due to the very limited colour gamut, only the first character is used
@@ -390,7 +406,7 @@ void Creator::createStarMap() {
 
     starDataFile.close();
 
-    drawStars(stars);
+    drawStars(stars, progressBar);
 
     qDeleteAll(stars);
     stars.clear();
