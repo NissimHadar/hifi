@@ -248,7 +248,7 @@ void Creator::drawStars(QList<Star*> stars, QProgressBar* progressBar) {
     const double HALF_WIDTH { IMAGE_RESOLUTION * OVER_SAMPLING / 2.0 };
     for (int face = 0; face < NUM_FACES; ++face) {
         for (int row = 0; row < IMAGE_RESOLUTION * OVER_SAMPLING; ++row) {
-            progressBar->setValue((float)(100.0 * face * IMAGE_RESOLUTION * OVER_SAMPLING + row) / FULL_PROGRESS_BAR);
+            progressBar->setValue((float)100.0 * (face * IMAGE_RESOLUTION * OVER_SAMPLING + row) / FULL_PROGRESS_BAR);
             QApplication::processEvents();
 
             for (int pix = 0; pix < IMAGE_RESOLUTION * OVER_SAMPLING; ++pix) {
