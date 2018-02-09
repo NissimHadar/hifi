@@ -284,7 +284,7 @@ void Creator::drawStars(QList<Star*> stars) {
                     double angle_rad = acos(glm::dot(pixelPos, star->position) / pixelPosLength);
                     if (angle_rad <= star->halfAngle_rads) {
                         // The modulation factor is a small power of the angle cosine.  This is a number that is usually close to 1
-                        float modulationFactor = pow((star->halfAngle_rads - angle_rad) / star->halfAngle_rads, 0.2);
+                        float modulationFactor = pow((star->halfAngle_rads - angle_rad) / star->halfAngle_rads, 0.15);
                         rawBufferR[offset] = star->color.r  * modulationFactor;
                         rawBufferG[offset] = star->color.g  * modulationFactor;
                         rawBufferB[offset] = star->color.b  * modulationFactor;

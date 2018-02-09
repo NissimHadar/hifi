@@ -51,7 +51,7 @@ private:
     const double POGSON_RATIO = pow(100, 0.2);
 
     // Only display eye-visible stars
-    const double NAKED_EYE_MAGNITUDE { 4.5 };
+    const double NAKED_EYE_MAGNITUDE { 5.0 };
 
     // Sirius is the brightest star
     const double SIRIUS_MAGNITUDE { -1.44 };
@@ -59,7 +59,7 @@ private:
 
     // Half angle of star (min and max)
     const double STAR_HALF_ANGLE_MAX_DEG { 0.35 };
-    const double STAR_HALF_ANGLE_MIN_DEG { 0.15 };
+    const double STAR_HALF_ANGLE_MIN_DEG { 0.2 };
 
     QImage* cubeMapImage;
     QRect rect;
