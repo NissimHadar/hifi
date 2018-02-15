@@ -52,10 +52,12 @@ private:
     const double POGSON_RATIO = pow(100, 0.2);
 
     // Only display eye-visible stars
-    const double NAKED_EYE_MAGNITUDE { 5.0 };
+    const double NAKED_EYE_MAGNITUDE { 6.0 };
 
     // Sirius is the brightest star
     const double SIRIUS_MAGNITUDE { -1.44 };
+
+    // Buffer used to write star images into.  This is the final data that will be saved to file
     unsigned char* buffer;
 
     // Half angle of star (min and max)

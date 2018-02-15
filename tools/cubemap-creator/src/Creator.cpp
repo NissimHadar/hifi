@@ -227,7 +227,7 @@ void Creator::drawStars(QList<Star*> stars, QProgressBar* progressBar) {
     progressBar->setVisible(true);
 
     // Image quality is improved by using 3x3 subsampling
-    // This will use a single byte for each sub-pixel
+    // This will use a single byte for each colour of each sub-pixel
     const int OVER_SAMPLING { 3 };
     const int RAW_BUFFER_SIZE { IMAGE_WIDTH * OVER_SAMPLING * IMAGE_HEIGHT * OVER_SAMPLING };
     unsigned char* rawBufferR = new unsigned char[RAW_BUFFER_SIZE];
