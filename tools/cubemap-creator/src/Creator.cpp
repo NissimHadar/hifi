@@ -56,6 +56,21 @@ Creator::~Creator() {
     delete[] buffer;
 }
 
+void Creator::createYellowCube() {
+    int offset{ 0 };
+    for (int face = 0; face < NUM_FACES; ++face) {
+        for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
+            for (int pixel = 0; pixel < IMAGE_RESOLUTION; ++pixel) {
+                buffer[offset++] = 255;  // red
+                buffer[offset++] = 255;  // green
+                buffer[offset++] =   0;  // blue
+            }
+        }
+    }
+
+    cubeMapImage->save(("D:\\GitHub\\YellowCube.jpg"));
+}
+
 void Creator::create6ColorCube() {
     // cubemap is 6 consecutive squares, ordered as follows (when looking down -Z axis)
     //      +X (right)        red

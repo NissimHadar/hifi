@@ -33,6 +33,7 @@ public:
     Creator();
     ~Creator();
 
+    void createYellowCube();
     void create6ColorCube();
     void createSphericalGridCube();
     void createStarMap(QProgressBar* progressBar);

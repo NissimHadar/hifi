@@ -16,6 +16,10 @@ CubemapCreator::CubemapCreator(QWidget *parent) : QMainWindow(parent) {
     ui.progressBar->setVisible(false);
 }
 
+void CubemapCreator::on_yellowButton_clicked() {
+    creator.createYellowCube();
+}
+
 void CubemapCreator::on_create6ColorsButton_clicked() {
     creator.create6ColorCube();
 }
