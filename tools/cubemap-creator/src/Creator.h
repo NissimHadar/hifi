@@ -33,6 +33,7 @@ public:
     Creator();
     ~Creator();
 
+    void createWhiteCube();
     void createYellowCube();
     void create6ColorCube();
     void createSphericalGridCube();

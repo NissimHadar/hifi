@@ -92,6 +92,19 @@
      <string>Yellow</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="whiteButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>90</y>
+      <width>220</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>White</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

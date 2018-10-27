@@ -56,6 +56,21 @@ Creator::~Creator() {
     delete[] buffer;
 }
 
+void Creator::createWhiteCube() {
+    int offset{ 0 };
+    for (int face = 0; face < NUM_FACES; ++face) {
+        for (int row = 0; row < IMAGE_RESOLUTION; ++row) {
+            for (int pixel = 0; pixel < IMAGE_RESOLUTION; ++pixel) {
+                buffer[offset++] = 255;  // red
+                buffer[offset++] = 255;  // green
+                buffer[offset++] = 255;  // blue
+            }
+        }
+    }
+
+    cubeMapImage->save(("D:\\GitHub\\WhiteCube.jpg"));
+}
+
 void Creator::createYellowCube() {
     int offset{ 0 };
     for (int face = 0; face < NUM_FACES; ++face) {

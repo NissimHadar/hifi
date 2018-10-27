@@ -22,6 +22,7 @@ public:
 
 private slots:
     void on_closeButton_clicked();
+    void on_whiteButton_clicked();
     void on_yellowButton_clicked();
     void on_create6ColorsButton_clicked();
     void on_createSphericalGridButton_clicked();
