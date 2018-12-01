@@ -204,7 +204,14 @@ void AWSInterface::writeTable(QTextStream& stream) {
         QDir().rename(originalNamesSuccesses[i], _htmlSuccessesFolder + "/" + newNamesSuccesses[i]);
     }
 
+    // Mac does not read folders in lexicographic order, so this step is divided into 2
+    // Each test consists of teh test name and its index.  A simple way to sort them as a pair is to first
+    // concatenate them into a single string, sort, and then split when needed
+    // A slash is used as the separator is this is illegal in filenames
+    // We also
     QDirIterator it2(_htmlFailuresFolder);
+    QStringList testCases;
+    
     while (it2.hasNext()) {
         QString nextDirectory = it2.next();
 
@@ -216,9 +223,20 @@ void AWSInterface::writeTable(QTextStream& stream) {
         QStringList pathComponents = nextDirectory.split('/');
         QString filename = pathComponents[pathComponents.length() - 1];
         int splitIndex = filename.lastIndexOf(".");
+        
         QString testName = filename.left(splitIndex).replace(".", " / ");
         QString testNumber = filename.right(filename.length() - (splitIndex + 1));
+        
+        testCases << testName + '/' + testNumber + '/' + filename;
+    }
 
+    testCases.sort();
+    for (const auto& testCase : testCases) {
+        QStringList parts = testCase.split('/');
+        QString testName = parts[0];
+        QString testNumber = parts[1];
+        QString filename = parts[2];
+        
         // The failures are ordered lexicographically, so we know that we can rely on the testName changing to create a new table
         if (testName != previousTestName) {
             if (!previousTestName.isEmpty()) {
