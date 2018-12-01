@@ -207,7 +207,7 @@ void AWSInterface::writeTable(QTextStream& stream) {
     // Mac does not read folders in lexicographic order, so this step is divided into 2
     // Each test consists of teh test name and its index.  A simple way to sort them as a pair is to first
     // concatenate them into a single string, sort, and then split when needed
-    // A slash is used as the separator is this is illegal in filenames
+    // A slash is used as the separator as is this is illegal in filenames
     // We also
     QDirIterator it2(_htmlFailuresFolder);
     QStringList testCases;
