@@ -107,8 +107,8 @@ private:
     Ui::NitpickClass _ui;
     TestCreator* _testCreator{ nullptr };
 
-    TestRunnerDesktop* _testCreatorRunnerDesktop{ nullptr };
-    TestRunnerMobile* _testCreatorRunnerMobile{ nullptr };
+    TestRunnerDesktop* _testRunnerDesktop{ nullptr };
+    TestRunnerMobile* _testRunnerMobile{ nullptr };
 
     std::vector<Downloader*> _downloaders;
 

@@ -54,12 +54,12 @@ Nitpick::~Nitpick() {
         delete _testCreator;
     }
 
-    if (_testCreatorRunnerDesktop) {
-        delete _testCreatorRunnerDesktop;
+    if (_testRunnerDesktop) {
+        delete _testRunnerDesktop;
     }
 
-    if (_testCreatorRunnerMobile) {
-        delete _testCreatorRunnerMobile;
+    if (_testRunnerMobile) {
+        delete _testRunnerMobile;
     }
 }
 
@@ -91,10 +91,10 @@ void Nitpick::setup() {
     timeEdits.emplace_back(_ui.timeEdit4);
 
     // Create the two test runners
-    if (_testCreatorRunnerDesktop) {
-        delete _testCreatorRunnerDesktop;
+    if (_testRunnerDesktop) {
+        delete _testRunnerDesktop;
     }
-    _testCreatorRunnerDesktop = new TestRunnerDesktop(
+    _testRunnerDesktop = new TestRunnerDesktop(
         dayCheckboxes, 
         timeEditCheckboxes, 
         timeEdits, 
@@ -106,10 +106,10 @@ void Nitpick::setup() {
         _ui.statusLabelOnDesktop
     );
 
-    if (_testCreatorRunnerMobile) {
-        delete _testCreatorRunnerMobile;
+    if (_testRunnerMobile) {
+        delete _testRunnerMobile;
     }
-    _testCreatorRunnerMobile = new TestRunnerMobile(
+    _testRunnerMobile = new TestRunnerMobile(
         _ui.workingFolderRunOnMobileLabel, 
         _ui.connectDevicePushbutton, 
         _ui.pullFolderPushbutton, 
@@ -193,7 +193,7 @@ void Nitpick::on_createTestRailRunButton_clicked() {
 }
 
 void Nitpick::on_setWorkingFolderRunOnDesktopPushbutton_clicked() {
-    _testCreatorRunnerDesktop->setWorkingFolderAndEnableControls();
+    _testRunnerDesktop->setWorkingFolderAndEnableControls();
 }
 
 void Nitpick::enableRunTabControls() {
@@ -203,7 +203,7 @@ void Nitpick::enableRunTabControls() {
 }
 
 void Nitpick::on_runNowPushbutton_clicked() {
-    _testCreatorRunnerDesktop->run();
+    _testRunnerDesktop->run();
 }
 
 void Nitpick::on_runLatestOnDesktopCheckBox_clicked() {
@@ -211,7 +211,7 @@ void Nitpick::on_runLatestOnDesktopCheckBox_clicked() {
 }
 
 void Nitpick::automaticTestRunEvaluationComplete(QString zippedFolderName, int numberOfFailures) {
-    _testCreatorRunnerDesktop->automaticTestRunEvaluationComplete(zippedFolderName, numberOfFailures);
+    _testRunnerDesktop->automaticTestRunEvaluationComplete(zippedFolderName, numberOfFailures);
 }
 
 void Nitpick::on_updateTestRailRunResultsPushbutton_clicked() {
@@ -311,10 +311,10 @@ void Nitpick::saveFile(int index) {
         disconnect(_signalMapper, SIGNAL(mapped(int)), this, SLOT(saveFile(int)));
         if (_caller == _testCreator) {
             _testCreator->finishTestsEvaluation();
-        } else if (_caller == _testCreatorRunnerDesktop) {
-            _testCreatorRunnerDesktop->downloadComplete();
-        } else if (_caller == _testCreatorRunnerMobile) {
-            _testCreatorRunnerMobile->downloadComplete();
+        } else if (_caller == _testRunnerDesktop) {
+            _testRunnerDesktop->downloadComplete();
+        } else if (_caller == _testRunnerMobile) {
+            _testRunnerMobile->downloadComplete();
         }
 
         _ui.progressBar->setVisible(false);
@@ -353,11 +353,11 @@ void Nitpick::appendLogWindow(const QString& message) {
 
 // Test on Mobile
 void Nitpick::on_setWorkingFolderRunOnMobilePushbutton_clicked() {
-    _testCreatorRunnerMobile->setWorkingFolderAndEnableControls();
+    _testRunnerMobile->setWorkingFolderAndEnableControls();
 }
 
 void Nitpick::on_connectDevicePushbutton_clicked() {
-    _testCreatorRunnerMobile->connectDevice();
+    _testRunnerMobile->connectDevice();
 }
 
 void Nitpick::on_runLatestOnMobileCheckBox_clicked() {
@@ -365,17 +365,17 @@ void Nitpick::on_runLatestOnMobileCheckBox_clicked() {
 }
 
 void Nitpick::on_downloadAPKPushbutton_clicked() {
-    _testCreatorRunnerMobile->downloadAPK();
+    _testRunnerMobile->downloadAPK();
 }
 
 void Nitpick::on_installAPKPushbutton_clicked() {
-    _testCreatorRunnerMobile->installAPK();
+    _testRunnerMobile->installAPK();
 }
 
 void Nitpick::on_runInterfacePushbutton_clicked() {
-    _testCreatorRunnerMobile->runInterface();
+    _testRunnerMobile->runInterface();
 }
 
 void Nitpick::on_pullFolderPushbutton_clicked() {
-    _testCreatorRunnerMobile->pullFolder();
+    _testRunnerMobile->pullFolder();
 }
