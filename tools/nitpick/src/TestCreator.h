@@ -1,5 +1,5 @@
 //
-//  Test.h
+//  TestCreator.h
 //
 //  Created by Nissim Hadar on 2 Nov 2017.
 //  Copyright 2013 High Fidelity, Inc.
@@ -8,8 +8,8 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
-#ifndef hifi_test_h
-#define hifi_test_h
+#ifndef hifi_TestCreator_h
+#define hifi_TestCreator_h
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -40,9 +40,9 @@ enum TestRailCreateMode {
     XML
 };
 
-class Test {
+class TestCreator {
 public: 
-    Test(QProgressBar* progressBar, QCheckBox* checkBoxInteractiveMode);
+    TestCreator(QProgressBar* progressBar, QCheckBox* checkBoxInteractiveMode);
 
     void startTestsEvaluation(const bool isRunningFromCommandLine,
                               const bool isRunningInAutomaticTestRun, 
@@ -165,4 +165,4 @@ private:
     AWSInterface* _awsInterface;
 };
 
-#endif // hifi_test_h
+#endif

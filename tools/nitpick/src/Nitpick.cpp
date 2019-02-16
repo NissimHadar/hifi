@@ -50,24 +50,24 @@ Nitpick::Nitpick(QWidget* parent) : QMainWindow(parent) {
 Nitpick::~Nitpick() {
     delete _signalMapper;
 
-    if (_test) {
-        delete _test;
+    if (_testCreator) {
+        delete _testCreator;
     }
 
-    if (_testRunnerDesktop) {
-        delete _testRunnerDesktop;
+    if (_testCreatorRunnerDesktop) {
+        delete _testCreatorRunnerDesktop;
     }
 
-    if (_testRunnerMobile) {
-        delete _testRunnerMobile;
+    if (_testCreatorRunnerMobile) {
+        delete _testCreatorRunnerMobile;
     }
 }
 
 void Nitpick::setup() {
-    if (_test) {
-        delete _test;
+    if (_testCreator) {
+        delete _testCreator;
     }
-    _test = new Test(_ui.progressBar, _ui.checkBoxInteractiveMode);
+    _testCreator = new TestCreator(_ui.progressBar, _ui.checkBoxInteractiveMode);
 
     std::vector<QCheckBox*> dayCheckboxes;
     dayCheckboxes.emplace_back(_ui.mondayCheckBox);
@@ -91,10 +91,10 @@ void Nitpick::setup() {
     timeEdits.emplace_back(_ui.timeEdit4);
 
     // Create the two test runners
-    if (_testRunnerDesktop) {
-        delete _testRunnerDesktop;
+    if (_testCreatorRunnerDesktop) {
+        delete _testCreatorRunnerDesktop;
     }
-    _testRunnerDesktop = new TestRunnerDesktop(
+    _testCreatorRunnerDesktop = new TestRunnerDesktop(
         dayCheckboxes, 
         timeEditCheckboxes, 
         timeEdits, 
@@ -106,10 +106,10 @@ void Nitpick::setup() {
         _ui.statusLabelOnDesktop
     );
 
-    if (_testRunnerMobile) {
-        delete _testRunnerMobile;
+    if (_testCreatorRunnerMobile) {
+        delete _testCreatorRunnerMobile;
     }
-    _testRunnerMobile = new TestRunnerMobile(
+    _testCreatorRunnerMobile = new TestRunnerMobile(
         _ui.workingFolderRunOnMobileLabel, 
         _ui.connectDevicePushbutton, 
         _ui.pullFolderPushbutton, 
@@ -130,7 +130,7 @@ void Nitpick::startTestsEvaluation(const bool isRunningFromCommandLine,
                                       const QString& branch,
                                       const QString& user
 ) {
-    _test->startTestsEvaluation(isRunningFromCommandLine, isRunningInAutomaticTestRun, snapshotDirectory, branch, user);
+    _testCreator->startTestsEvaluation(isRunningFromCommandLine, isRunningInAutomaticTestRun, snapshotDirectory, branch, user);
 }
 
 void Nitpick::on_tabWidget_currentChanged(int index) {
@@ -149,51 +149,51 @@ void Nitpick::on_tabWidget_currentChanged(int index) {
 }
 
 void Nitpick::on_evaluateTestsPushbutton_clicked() {
-    _test->startTestsEvaluation(false, false);
+    _testCreator->startTestsEvaluation(false, false);
 }
 
 void Nitpick::on_createRecursiveScriptPushbutton_clicked() {
-    _test->createRecursiveScript();
+    _testCreator->createRecursiveScript();
 }
 
 void Nitpick::on_createAllRecursiveScriptsPushbutton_clicked() {
-    _test->createAllRecursiveScripts();
+    _testCreator->createAllRecursiveScripts();
 }
 
 void Nitpick::on_createTestsPushbutton_clicked() {
-    _test->createTests(_ui.clientProfileComboBox->currentText());
+    _testCreator->createTests(_ui.clientProfileComboBox->currentText());
 }
 
 void Nitpick::on_createMDFilePushbutton_clicked() {
-    _test->createMDFile();
+    _testCreator->createMDFile();
 }
 
 void Nitpick::on_createAllMDFilesPushbutton_clicked() {
-    _test->createAllMDFiles();
+    _testCreator->createAllMDFiles();
 }
 
 void Nitpick::on_createTestAutoScriptPushbutton_clicked() {
-    _test->createTestAutoScript();
+    _testCreator->createTestAutoScript();
 }
 
 void Nitpick::on_createAllTestAutoScriptsPushbutton_clicked() {
-    _test->createAllTestAutoScripts();
+    _testCreator->createAllTestAutoScripts();
 }
 
 void Nitpick::on_createTestsOutlinePushbutton_clicked() {
-    _test->createTestsOutline();
+    _testCreator->createTestsOutline();
 }
 
 void Nitpick::on_createTestRailTestCasesPushbutton_clicked() {
-    _test->createTestRailTestCases();
+    _testCreator->createTestRailTestCases();
 }
 
 void Nitpick::on_createTestRailRunButton_clicked() {
-    _test->createTestRailRun();
+    _testCreator->createTestRailRun();
 }
 
 void Nitpick::on_setWorkingFolderRunOnDesktopPushbutton_clicked() {
-    _testRunnerDesktop->setWorkingFolderAndEnableControls();
+    _testCreatorRunnerDesktop->setWorkingFolderAndEnableControls();
 }
 
 void Nitpick::enableRunTabControls() {
@@ -203,7 +203,7 @@ void Nitpick::enableRunTabControls() {
 }
 
 void Nitpick::on_runNowPushbutton_clicked() {
-    _testRunnerDesktop->run();
+    _testCreatorRunnerDesktop->run();
 }
 
 void Nitpick::on_runLatestOnDesktopCheckBox_clicked() {
@@ -211,11 +211,11 @@ void Nitpick::on_runLatestOnDesktopCheckBox_clicked() {
 }
 
 void Nitpick::automaticTestRunEvaluationComplete(QString zippedFolderName, int numberOfFailures) {
-    _testRunnerDesktop->automaticTestRunEvaluationComplete(zippedFolderName, numberOfFailures);
+    _testCreatorRunnerDesktop->automaticTestRunEvaluationComplete(zippedFolderName, numberOfFailures);
 }
 
 void Nitpick::on_updateTestRailRunResultsPushbutton_clicked() {
-    _test->updateTestRailRunResult();
+    _testCreator->updateTestRailRunResult();
 }
 
 // To toggle between show and hide
@@ -247,15 +247,15 @@ void Nitpick::on_closePushbutton_clicked() {
 }
 
 void Nitpick::on_createPythonScriptRadioButton_clicked() {
-    _test->setTestRailCreateMode(PYTHON);
+    _testCreator->setTestRailCreateMode(PYTHON);
 }
 
 void Nitpick::on_createXMLScriptRadioButton_clicked() {
-    _test->setTestRailCreateMode(XML);
+    _testCreator->setTestRailCreateMode(XML);
 }
 
 void Nitpick::on_createWebPagePushbutton_clicked() {
-    _test->createWebPage(_ui.updateAWSCheckBox, _ui.awsURLLineEdit);
+    _testCreator->createWebPage(_ui.updateAWSCheckBox, _ui.awsURLLineEdit);
 }
 
 void Nitpick::downloadFile(const QUrl& url) {
@@ -309,12 +309,12 @@ void Nitpick::saveFile(int index) {
 
     if (_numberOfFilesDownloaded == _numberOfFilesToDownload) {
         disconnect(_signalMapper, SIGNAL(mapped(int)), this, SLOT(saveFile(int)));
-        if (_caller == _test) {
-            _test->finishTestsEvaluation();
-        } else if (_caller == _testRunnerDesktop) {
-            _testRunnerDesktop->downloadComplete();
-        } else if (_caller == _testRunnerMobile) {
-            _testRunnerMobile->downloadComplete();
+        if (_caller == _testCreator) {
+            _testCreator->finishTestsEvaluation();
+        } else if (_caller == _testCreatorRunnerDesktop) {
+            _testCreatorRunnerDesktop->downloadComplete();
+        } else if (_caller == _testCreatorRunnerMobile) {
+            _testCreatorRunnerMobile->downloadComplete();
         }
 
         _ui.progressBar->setVisible(false);
@@ -353,11 +353,11 @@ void Nitpick::appendLogWindow(const QString& message) {
 
 // Test on Mobile
 void Nitpick::on_setWorkingFolderRunOnMobilePushbutton_clicked() {
-    _testRunnerMobile->setWorkingFolderAndEnableControls();
+    _testCreatorRunnerMobile->setWorkingFolderAndEnableControls();
 }
 
 void Nitpick::on_connectDevicePushbutton_clicked() {
-    _testRunnerMobile->connectDevice();
+    _testCreatorRunnerMobile->connectDevice();
 }
 
 void Nitpick::on_runLatestOnMobileCheckBox_clicked() {
@@ -365,17 +365,17 @@ void Nitpick::on_runLatestOnMobileCheckBox_clicked() {
 }
 
 void Nitpick::on_downloadAPKPushbutton_clicked() {
-    _testRunnerMobile->downloadAPK();
+    _testCreatorRunnerMobile->downloadAPK();
 }
 
 void Nitpick::on_installAPKPushbutton_clicked() {
-    _testRunnerMobile->installAPK();
+    _testCreatorRunnerMobile->installAPK();
 }
 
 void Nitpick::on_runInterfacePushbutton_clicked() {
-    _testRunnerMobile->runInterface();
+    _testCreatorRunnerMobile->runInterface();
 }
 
 void Nitpick::on_pullFolderPushbutton_clicked() {
-    _testRunnerMobile->pullFolder();
+    _testCreatorRunnerMobile->pullFolder();
 }

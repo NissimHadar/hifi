@@ -16,7 +16,7 @@
 #include "ui_Nitpick.h"
 
 #include "Downloader.h"
-#include "Test.h"
+#include "TestCreator.h"
 
 #include "TestRunnerDesktop.h"
 #include "TestRunnerMobile.h"
@@ -105,10 +105,10 @@ private slots:
 
 private:
     Ui::NitpickClass _ui;
-    Test* _test{ nullptr };
+    TestCreator* _testCreator{ nullptr };
 
-    TestRunnerDesktop* _testRunnerDesktop{ nullptr };
-    TestRunnerMobile* _testRunnerMobile{ nullptr };
+    TestRunnerDesktop* _testCreatorRunnerDesktop{ nullptr };
+    TestRunnerMobile* _testCreatorRunnerMobile{ nullptr };
 
     std::vector<Downloader*> _downloaders;
 
