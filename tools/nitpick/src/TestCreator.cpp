@@ -392,7 +392,7 @@ void TestCreator::includeTest(QTextStream& textStream, const QString& testPathna
 }
 
 void TestCreator::createTests(const QString& clientProfile) {
-    // Rename files sequentially, as ExpectedResult_00000.png, ExpectedResult_00001.png and so on
+    // Rename files sequentially, as ExpectedResult_00000_<client profile>.png, ExpectedResult_00001.png and so on
     // Any existing expected result images will be deleted
     QString previousSelection = _snapshotDirectory;
     QString parent = previousSelection.left(previousSelection.lastIndexOf('/'));
@@ -450,7 +450,7 @@ void TestCreator::createTests(const QString& clientProfile) {
             }
 
             // The image _index is the penultimate component of the path parts (the last being the file extension)
-            QString newFilename = "ExpectedImage_" + pathParts[pathParts.size() - 2].rightJustified(5, '0') + ".png";
+            QString newFilename = "ExpectedImage_" + pathParts[pathParts.size() - 2].rightJustified(5, '0') + "_" + clientProfile + ".png";
             fullNewFileName += "/" + newFilename;
 
             try {
@@ -466,7 +466,7 @@ void TestCreator::createTests(const QString& clientProfile) {
         }
     }
 
-    QMessageBox::information(0, "Success", "TestCreator images have been created");
+    QMessageBox::information(0, "Success", "Test images have been created");
 }
 
 ExtractedText TestCreator::getTestScriptLines(QString testFileName) {
