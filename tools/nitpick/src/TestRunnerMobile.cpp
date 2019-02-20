@@ -47,6 +47,7 @@ TestRunnerMobile::TestRunnerMobile(
     folderLineEdit->setText("/sdcard/DCIM/TEST");
 
     modelNames["SM_G955U1"] = "Samsung S8+ unlocked";
+    modelNames["SM_N960U1"] = "Samsung Note 9 unlocked";
 }
 
 TestRunnerMobile::~TestRunnerMobile() {
@@ -93,7 +94,7 @@ void TestRunnerMobile::connectDevice() {
             QString deviceID = tokens[0];
             
             QString modelID = tokens[3].split(':')[1];
-            QString modelName = "UKNOWN";
+            QString modelName = "UNKNOWN";
             if (modelNames.count(modelID) == 1) {
                 modelName = modelNames[modelID];
             }
