@@ -175,6 +175,12 @@ void TestRunnerDesktop::run() {
     _branch = nitpick->getSelectedBranch();
     _user = nitpick->getSelectedUser();
 
+    // Create snapshot folder
+    createSnapshotFolder();
+
+    // Download assets that need to be available locally
+    downloadAssets();
+
     // This will be restored at the end of the tests
     saveExistingHighFidelityAppDataFolder();
 
@@ -281,8 +287,6 @@ void TestRunnerDesktop::runInstaller() {
 
 void TestRunnerDesktop::installationComplete() {
     verifyInstallationSucceeded();
-
-    createSnapshotFolder();
 
     _statusLabel->setText("Running tests");
 

@@ -188,6 +188,73 @@ void TestRunner::appendLog(const QString& message) {
     nitpick->appendLogWindow(message);
 }
 
+void TestRunner::downloadAssets() {
+    QString filename{ _workingFolder + "/downloadAssets.py" };
+
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(0, "Internal error: " + QString(__FILE__) + ":" + QString::number(__LINE__),
+            "Could not create 'downloadAssets.py'");
+        exit(-1);
+    }
+
+    QTextStream stream(&file);
+
+    // Import modules
+    stream << "import os\n";
+    stream << "import shutil\n";
+    stream << "import requests\n\n";
+ 
+    // Utility variables
+    stream << "assetsFolder = '" + _snapshotFolder + "/downloaded_assets'\n";
+    stream << "contentsFile = assetsFolder + '/contents.txt'\n\n";
+
+    // Create the downloaded assests folder, after deleting any previous folder
+    stream << "if os.path.exists(assetsFolder):\n";
+    stream << "    shutil.rmtree(assetsFolder)\n";
+    stream << "os.mkdir(assetsFolder)\n\n";
+
+    // Read the asset contents into a file
+    stream << "url = 'https://github.com/" + _user + "/hifi_tests/tree/" + _branch + "/assets/assets_to_download'\n";
+    stream << "r = requests.get(url)\n";
+    stream << "open(contentsFile, 'wb').write(r.content)\n\n";
+
+    // Read the contets
+    stream << "file = open(contentsFile, 'rt')\n";
+    stream << "lines  = file.readlines()\n";
+    stream << "file.close()\n\n";
+
+    stream << "for i in range(len(lines)):\n";
+    stream << "    if '<td class=\"content\">' in lines[i]:\n";
+    stream << "        title = lines[i+1].split('title=\"')[1].split('\"')[0]\n";
+    stream << "        url = 'https://raw.githubusercontent.com/" + _user + "/hifi_tests/" + _branch + "/assets/assets_to_download/' + title\n";
+    stream << "        r = requests.get(url)\n";
+    stream << "        open(assetsFolder + '/' + title, 'wb').write(r.content)\n\n";
+    stream << "os.remove(contentsFile)\n";
+
+    file.close();
+
+    // Setup python
+    PythonInterface* pythonInterface = new PythonInterface();
+    QString pythonCommand = pythonInterface->getPythonCommand();
+
+#ifdef Q_OS_WIN
+    QProcess* process = new QProcess();
+
+    QStringList parameters = QStringList() << filename;
+    process->start(pythonCommand, parameters);
+#elif defined Q_OS_MAC
+    QProcess* process = new QProcess();
+    QStringList parameters = QStringList() << "-c" << _pythonCommand + " " + filename;
+    process->start("sh", parameters);
+
+    // Wait for the contents file to be deleted
+    while (QFile::exists(_workingFolder + "/downloaded_assets/contents.txt") {
+        QThread::msleep(200);
+    }
+#endif
+}
+
 void Worker::setCommandLine(const QString& commandLine) {
     _commandLine = commandLine;
 }

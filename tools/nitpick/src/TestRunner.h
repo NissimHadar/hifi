@@ -48,6 +48,8 @@ public:
 
     void appendLog(const QString& message);
 
+    void downloadAssets();
+
 protected:
     Downloader* _downloader;
 
@@ -60,12 +62,16 @@ protected:
     QLineEdit* _scriptURL;
 
     QString _workingFolder;
+    QString _snapshotFolder;
 
     const QString DEV_BUILD_XML_URL{ "https://highfidelity.com/dev-builds.xml" };
     const QString DEV_BUILD_XML_FILENAME{ "dev-builds.xml" };
 
     bool buildXMLDownloaded;
     BuildInformation _buildInformation;
+
+    QString _branch;
+    QString _user;
 
 #ifdef Q_OS_WIN
     const QString INSTALLER_FILENAME_LATEST{ "HighFidelity-Beta-latest-dev.exe" };

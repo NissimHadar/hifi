@@ -90,13 +90,9 @@ private:
     QDir _savedAppDataFolder;
 
     QString _installationFolder;
-    QString _snapshotFolder;
 
     const QString UNIQUE_FOLDER_NAME{ "fgadhcUDHSFaidsfh3478JJJFSDFIUSOEIrf" };
     const QString SNAPSHOT_FOLDER_NAME{ "snapshots" };
-
-    QString _branch;
-    QString _user;
 
     std::vector<QCheckBox*> _dayCheckboxes;
     std::vector<QCheckBox*> _timeEditCheckboxes;
