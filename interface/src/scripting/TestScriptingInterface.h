@@ -18,10 +18,6 @@ class QScriptValue;
 class TestScriptingInterface : public QObject {
     Q_OBJECT
 
-public:
-    void setTestResultsLocation(const QString path) { _testResultsLocation = path; }
-    const QString& getTestResultsLocation() { return _testResultsLocation;  };
-
 public slots:
     static TestScriptingInterface* getInstance();
 
@@ -162,6 +158,17 @@ public slots:
     * @returns {number} Current number of replicas of other-avatars.
     */
     Q_INVOKABLE int getOtherAvatarsReplicaCount();
+
+    /**jsdoc
+     * @function Snapshot.setTestResultsLocation
+     */
+    void setTestResultsLocation(const QString path);
+
+    /**jsdoc
+     * @function Snapshot.getTestResultsLocation
+     * @returns {string}
+     */
+    QString getTestResultsLocation();
 
 private:
     bool waitForCondition(qint64 maxWaitMs, std::function<bool()> condition);

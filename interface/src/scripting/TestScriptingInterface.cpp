@@ -199,3 +199,14 @@ void TestScriptingInterface::setOtherAvatarsReplicaCount(int count) {
 int TestScriptingInterface::getOtherAvatarsReplicaCount() {
     return qApp->getOtherAvatarsReplicaCount();
 }
+
+#pragma optimize("", off)
+void TestScriptingInterface::setTestResultsLocation(const QString path) {
+    _testResultsLocation = path;
+}
+
+
+#pragma optimize("", off)
+QString TestScriptingInterface::getTestResultsLocation() {
+    return _testResultsLocation;
+}
