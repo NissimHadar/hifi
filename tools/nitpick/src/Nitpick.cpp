@@ -41,6 +41,7 @@ Nitpick::Nitpick(QWidget* parent) : QMainWindow(parent) {
 
     setWindowTitle("Nitpick - " + nitpickVersion);
 
+    // Populate GPU vendor combo and set default value
     _GPUVendors << "Nvidia" << "AMD";
     _ui.gpuVendorComboBox->insertItems(0, _GPUVendors);
 
@@ -49,6 +50,17 @@ Nitpick::Nitpick(QWidget* parent) : QMainWindow(parent) {
         _ui.gpuVendorComboBox->setCurrentIndex(0);
     } else {
         _ui.gpuVendorComboBox->setCurrentIndex(1);
+    }
+
+    // Populate Platform combo and set default value
+    _platforms << "Windows" << "MacOS" << "Quest" << "Android";
+    _ui.platformComboBox->insertItems(0, _platforms);
+
+    QString platform = Platform::getPlatform();
+    if (platform.contains("WINDOWS")) {
+        _ui.platformComboBox->setCurrentIndex(0);
+    } else {
+        _ui.platformComboBox->setCurrentIndex(1);
     }
 }
 
@@ -207,6 +219,19 @@ void Nitpick::on_createTestRailTestCasesPushbutton_clicked() {
 
 void Nitpick::on_createTestRailRunButton_clicked() {
     _testCreator->createTestRailRun();
+}
+
+// Download Installer controls
+void Nitpick::on_setWorkingFolderDownloadInstallerPushbutton_clicked() {
+    int i = 456;
+}
+
+void Nitpick::on_latestStableCheckBox_clicked() {
+    _ui.releaseComboBox->setEnabled(!_ui.latestStableCheckBox->isChecked());
+}
+
+void Nitpick::on_latestBuildCheckBox_clicked() {
+    _ui.buildComboBox->setEnabled(!_ui.latestBuildCheckBox->isChecked());
 }
 
 void Nitpick::on_setWorkingFolderRunOnDesktopPushbutton_clicked() {

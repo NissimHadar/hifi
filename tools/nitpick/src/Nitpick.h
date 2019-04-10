@@ -68,6 +68,12 @@ private slots:
     void on_createTestRailTestCasesPushbutton_clicked();
     void on_createTestRailRunButton_clicked();
 
+    // Download Installer controls
+    void on_setWorkingFolderDownloadInstallerPushbutton_clicked();
+    void on_latestStableCheckBox_clicked();
+    void on_latestBuildCheckBox_clicked();
+
+
     void on_setWorkingFolderRunOnDesktopPushbutton_clicked();
     void on_runNowPushbutton_clicked();
 
@@ -114,6 +120,7 @@ private:
     bool _isRunningFromCommandline{ false };
 
     QStringList _GPUVendors;
+    QStringList _platforms;
 };
 
 #endif  // hifi_Nitpick_h
