@@ -152,13 +152,22 @@ void Nitpick::on_tabWidget_currentChanged(int index) {
 #endif
         _ui.userLineEdit->setDisabled(false);
         _ui.branchLineEdit->setDisabled(false);
-        _ui.gpuVendorComboBox->setDisabled(false);
     } else {
         _ui.userLineEdit->setDisabled(true);
         _ui.branchLineEdit->setDisabled(true);
+    }
+
+// Enable GPU Vendor combo as required
+#ifdef Q_OS_WIN
+    if (index == 0 || index == 3 || index == 5) {
+#else
+    if (index == 0 || index == 2 || index == 4) {
+#endif
+        _ui.gpuVendorComboBox->setDisabled(false);
+    } else {
         _ui.gpuVendorComboBox->setDisabled(true);
     }
-}
+    }
 
 void Nitpick::on_createRecursiveScriptPushbutton_clicked() {
     _testCreator->createRecursiveScript();
