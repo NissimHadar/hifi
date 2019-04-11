@@ -363,11 +363,11 @@
        </widget>
       </widget>
      </widget>
-     <widget class="QLabel" name="workingFolderRunOnDesktopLabel_2">
+     <widget class="QLabel" name="workingFolderDownloadInstallerLabel">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>30</y>
+        <x>190</x>
+        <y>20</y>
         <width>320</width>
         <height>30</height>
        </rect>
@@ -379,8 +379,8 @@
      <widget class="QPushButton" name="setWorkingFolderDownloadInstallerPushbutton">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>30</y>
+        <x>10</x>
+        <y>20</y>
         <width>160</width>
         <height>30</height>
        </rect>

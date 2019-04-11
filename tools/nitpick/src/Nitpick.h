@@ -18,6 +18,7 @@
 
 #include "TestRunnerDesktop.h"
 #include "TestRunnerMobile.h"
+#include "DownloadInstaller.h"
 
 class Nitpick : public QMainWindow {
     Q_OBJECT
@@ -116,6 +117,7 @@ private:
 
     TestRunnerDesktop* _testRunnerDesktop{ nullptr };
     TestRunnerMobile* _testRunnerMobile{ nullptr };
+    DownloadInstaller* _downloadInstaller{ nullptr };
 
     bool _isRunningFromCommandline{ false };
 

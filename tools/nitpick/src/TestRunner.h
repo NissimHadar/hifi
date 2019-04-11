@@ -39,8 +39,6 @@ public:
         QCheckBox* runFullSuite,
         QLineEdit* scriptURL
     );
-
-    void setWorkingFolder(QLabel* workingFolderLabel);
  
     void downloadBuildXml(void* caller);
     void parseBuildInformation();
@@ -58,8 +56,6 @@ protected:
     QLineEdit* _url;
     QCheckBox* _runFullSuite;
     QLineEdit* _scriptURL;
-
-    QString _workingFolder;
 
     const QString DEV_BUILD_XML_URL{ "https://highfidelity.com/dev-builds.xml" };
     const QString DEV_BUILD_XML_FILENAME{ "dev-builds.xml" };

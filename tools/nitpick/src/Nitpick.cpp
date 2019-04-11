@@ -76,6 +76,10 @@ Nitpick::~Nitpick() {
     if (_testRunnerMobile) {
         delete _testRunnerMobile;
     }
+
+    if (_downloadInstaller) {
+        delete _downloadInstaller;
+    }
 }
 
 void Nitpick::setup() {
@@ -142,6 +146,14 @@ void Nitpick::setup() {
         _ui.runFullSuiteOnMobileCheckBox,
         _ui.scriptURLOnMobileLineEdit,
         _ui.statusLabelOnMobile
+    );
+
+    // Create the installer downloader
+    if (_downloadInstaller) {
+        delete _downloadInstaller;
+    }
+    _downloadInstaller = new DownloadInstaller(
+        _ui.workingFolderDownloadInstallerLabel
     );
 }
 
@@ -223,7 +235,7 @@ void Nitpick::on_createTestRailRunButton_clicked() {
 
 // Download Installer controls
 void Nitpick::on_setWorkingFolderDownloadInstallerPushbutton_clicked() {
-    int i = 456;
+    _downloadInstaller->setWorkingFolderAndEnableControls();
 }
 
 void Nitpick::on_latestStableCheckBox_clicked() {

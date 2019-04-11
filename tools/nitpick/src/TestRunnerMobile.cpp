@@ -14,6 +14,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
 
+#include "PathUtils.h"
+
 #include "Nitpick.h"
 extern Nitpick* nitpick;
 
@@ -58,7 +60,7 @@ TestRunnerMobile::~TestRunnerMobile() {
 }
 
 void TestRunnerMobile::setWorkingFolderAndEnableControls() {
-    setWorkingFolder(_workingFolderLabel);
+    PathUtils::setWorkingFolder(_workingFolderLabel);
 
     _connectDeviceButton->setEnabled(true);
     _downloadAPKPushbutton->setEnabled(true);
@@ -71,7 +73,7 @@ void TestRunnerMobile::connectDevice() {
     }
     
     // Get list of devices
-    QString devicesFullFilename{ _workingFolder + "/devices.txt" };
+    QString devicesFullFilename{ workingFolder + "/devices.txt" };
     QString command = _adbInterface->getAdbCommand() + " devices -l > " + devicesFullFilename;
     appendLog(command);
     system(command.toStdString().c_str());
@@ -82,7 +84,7 @@ void TestRunnerMobile::connectDevice() {
     }
 
     // Get device IP address
-    QString ifconfigFullFilename{ _workingFolder + "/ifconfig.txt" };
+    QString ifconfigFullFilename{ workingFolder + "/ifconfig.txt" };
     command = _adbInterface->getAdbCommand() + " shell ifconfig > " + ifconfigFullFilename;
     appendLog(command);
     system(command.toStdString().c_str());
@@ -173,7 +175,7 @@ void TestRunnerMobile::downloadComplete() {
 
        _statusLabel->setText("Downloading installer");
 
-       _downloader->downloadFiles(urls, _workingFolder, filenames, (void*)this);
+       _downloader->downloadFiles(urls, workingFolder, filenames, (void*)this);
     } else {
         _statusLabel->setText("Installer download complete");
     }
@@ -185,7 +187,7 @@ void TestRunnerMobile::installAPK() {
         _adbInterface = new AdbInterface();
     }
 
-    QString installerPathname = QFileDialog::getOpenFileName(nullptr, "Please select the APK", _workingFolder,
+    QString installerPathname = QFileDialog::getOpenFileName(nullptr, "Please select the APK", workingFolder,
         "Available APKs (*.apk)"
     );
 
@@ -194,7 +196,7 @@ void TestRunnerMobile::installAPK() {
     }
 
     _statusLabel->setText("Installing");
-    QString command = _adbInterface->getAdbCommand() + " install -r -d " + installerPathname + " >" + _workingFolder  + "/installOutput.txt";
+    QString command = _adbInterface->getAdbCommand() + " install -r -d " + installerPathname + " >" + workingFolder  + "/installOutput.txt";
     appendLog(command);
     system(command.toStdString().c_str());
     _statusLabel->setText("Installation complete");
@@ -250,7 +252,7 @@ void TestRunnerMobile::pullFolder() {
     }
 
     _statusLabel->setText("Pulling folder");
-    QString command = _adbInterface->getAdbCommand() + " pull " + _folderLineEdit->text() + " " + _workingFolder;
+    QString command = _adbInterface->getAdbCommand() + " pull " + _folderLineEdit->text() + " " + workingFolder;
     appendLog(command);
     system(command.toStdString().c_str());
     _statusLabel->setText("Pull complete");
@@ -259,7 +261,7 @@ void TestRunnerMobile::pullFolder() {
 
 QString TestRunnerMobile::getServerIP() {
     // Get device IP (ifconfig.txt was created when connecting)
-    QFile ifconfigFile{ _workingFolder + "/ifconfig.txt" };
+    QFile ifconfigFile{ workingFolder + "/ifconfig.txt" };
     if (!ifconfigFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::critical(0, "Internal error: " + QString(__FILE__) + ":" + QString::number(__LINE__),
             "Could not open 'ifconfig.txt'");

@@ -34,29 +34,6 @@ TestRunner::TestRunner(
     _downloader = new Downloader();
 }
 
-void TestRunner::setWorkingFolder(QLabel* workingFolderLabel) {
-    // Everything will be written to this folder
-    QString previousSelection = _workingFolder;
-    QString parent = previousSelection.left(previousSelection.lastIndexOf('/'));
-    if (!parent.isNull() && parent.right(1) != "/") {
-        parent += "/";
-    }
-
-    _workingFolder = QFileDialog::getExistingDirectory(nullptr, "Please select a working folder for temporary files", parent,
-        QFileDialog::ShowDirsOnly);
-
-    // If user canceled then restore previous selection and return
-    if (_workingFolder == "") {
-        _workingFolder = previousSelection;
-        return;
-    }
-
-    workingFolderLabel->setText(QDir::toNativeSeparators(_workingFolder));
-
-    // This file is used for debug purposes.
-    _logFile.setFileName(_workingFolder + "/log.txt");
-}
-
 void TestRunner::downloadBuildXml(void* caller) {
     // Download the latest High Fidelity build XML.
     //      Note that this is not needed for PR builds (or whenever `Run Latest` is unchecked)
@@ -69,13 +46,13 @@ void TestRunner::downloadBuildXml(void* caller) {
     urls << DEV_BUILD_XML_URL;
     filenames << DEV_BUILD_XML_FILENAME;
 
-    _downloader->downloadFiles(urls, _workingFolder, filenames, caller);
+    _downloader->downloadFiles(urls, workingFolder, filenames, caller);
 }
 
 void TestRunner::parseBuildInformation() {
     try {
         QDomDocument domDocument;
-        QString filename{ _workingFolder + "/" + DEV_BUILD_XML_FILENAME };
+        QString filename{ workingFolder + "/" + DEV_BUILD_XML_FILENAME };
         QFile file(filename);
         if (!file.open(QIODevice::ReadOnly) || !domDocument.setContent(&file)) {
             throw QString("Could not open " + filename);

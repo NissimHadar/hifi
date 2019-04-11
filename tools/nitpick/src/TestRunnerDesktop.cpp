@@ -18,6 +18,8 @@
 #include <tlhelp32.h>
 #endif
 
+#include "PathUtils.h"
+
 #include "Nitpick.h"
 extern Nitpick* nitpick;
 
@@ -74,12 +76,12 @@ TestRunnerDesktop::~TestRunnerDesktop() {
 }
 
 void TestRunnerDesktop::setWorkingFolderAndEnableControls() {
-    setWorkingFolder(_workingFolderLabel);
+    PathUtils::setWorkingFolder(_workingFolderLabel);
 
 #ifdef Q_OS_WIN
-    _installationFolder = _workingFolder + "/High Fidelity";
+    _installationFolder = workingFolder + "/High Fidelity";
 #elif defined Q_OS_MAC
-    _installationFolder = _workingFolder + "/High_Fidelity";
+    _installationFolder = workingFolder + "/High_Fidelity";
 #endif
 
     nitpick->enableRunTabControls();
@@ -212,7 +214,7 @@ void TestRunnerDesktop::downloadComplete() {
 
         _statusLabel->setText("Downloading installer");
 
-        _downloader->downloadFiles(urls, _workingFolder, filenames, (void*)this);
+        _downloader->downloadFiles(urls, workingFolder, filenames, (void*)this);
 
         downloadComplete();
 
@@ -237,7 +239,7 @@ void TestRunnerDesktop::runInstaller() {
 
     QStringList arguments{ QStringList() << QString("/S") << QString("/D=") + QDir::toNativeSeparators(_installationFolder) };
 
-    QString installerFullPath = _workingFolder + "/" + _installerFilename;
+    QString installerFullPath = workingFolder + "/" + _installerFilename;
 
     QString commandLine;
 #ifdef Q_OS_WIN
@@ -351,7 +353,7 @@ void TestRunnerDesktop::saveExistingHighFidelityAppDataFolder() {
 }
 
 void TestRunnerDesktop::createSnapshotFolder() {
-    _snapshotFolder = _workingFolder + "/" + SNAPSHOT_FOLDER_NAME;
+    _snapshotFolder = workingFolder + "/" + SNAPSHOT_FOLDER_NAME;
 
     // Just delete all PNGs from the folder if it already exists
     if (QDir(_snapshotFolder).exists()) {

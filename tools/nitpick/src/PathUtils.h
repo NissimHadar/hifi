@@ -10,11 +10,15 @@
 #ifndef hifi_PathUtils_h
 #define hifi_PathUtils_h
 
+#include "common.h"
+
+#include <QLabel>
 #include <QString>
 
 class PathUtils {
 public:
     static QString getPathToExecutable(const QString& executableName);
+    static void setWorkingFolder(QLabel* workingFolderLabel);
 };
 
 #endif
