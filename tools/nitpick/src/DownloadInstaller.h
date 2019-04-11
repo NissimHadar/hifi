@@ -25,6 +25,7 @@ public:
 
 private:
     QLabel* _workingFolderLabel;
+    QString _workingFolder;
 };
 
 #endif

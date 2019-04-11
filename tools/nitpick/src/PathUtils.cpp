@@ -31,7 +31,7 @@ QString PathUtils::getPathToExecutable(const QString& executableName) {
     return QString();
 }
 
-void PathUtils::setWorkingFolder(QLabel* workingFolderLabel) {
+void PathUtils::setWorkingFolder(QLabel* workingFolderLabel, QString& workingFolder) {
     // Everything will be written to this folder
     QString previousSelection = workingFolder;
     QString parent = previousSelection.left(previousSelection.lastIndexOf('/'));

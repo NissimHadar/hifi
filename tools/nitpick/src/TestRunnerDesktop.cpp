@@ -76,12 +76,13 @@ TestRunnerDesktop::~TestRunnerDesktop() {
 }
 
 void TestRunnerDesktop::setWorkingFolderAndEnableControls() {
-    PathUtils::setWorkingFolder(_workingFolderLabel);
+    PathUtils::setWorkingFolder(_workingFolderLabel, _workingFolder);
+    _logFile.setFileName(_workingFolder + "/log.txt");
 
 #ifdef Q_OS_WIN
-    _installationFolder = workingFolder + "/High Fidelity";
+    _installationFolder = _workingFolder + "/High Fidelity";
 #elif defined Q_OS_MAC
-    _installationFolder = workingFolder + "/High_Fidelity";
+    _installationFolder = _workingFolder + "/High_Fidelity";
 #endif
 
     nitpick->enableRunTabControls();
@@ -184,7 +185,7 @@ void TestRunnerDesktop::run() {
         installationComplete();
     } else {
         _statusLabel->setText("Downloading Build XML");
-        downloadBuildXml((void*)this);
+        downloadBuildXml();
 
         downloadComplete();
     }
@@ -214,7 +215,7 @@ void TestRunnerDesktop::downloadComplete() {
 
         _statusLabel->setText("Downloading installer");
 
-        _downloader->downloadFiles(urls, workingFolder, filenames, (void*)this);
+        _downloader->downloadFiles(urls, _workingFolder, filenames);
 
         downloadComplete();
 
@@ -239,7 +240,7 @@ void TestRunnerDesktop::runInstaller() {
 
     QStringList arguments{ QStringList() << QString("/S") << QString("/D=") + QDir::toNativeSeparators(_installationFolder) };
 
-    QString installerFullPath = workingFolder + "/" + _installerFilename;
+    QString installerFullPath = _workingFolder + "/" + _installerFilename;
 
     QString commandLine;
 #ifdef Q_OS_WIN
@@ -353,7 +354,7 @@ void TestRunnerDesktop::saveExistingHighFidelityAppDataFolder() {
 }
 
 void TestRunnerDesktop::createSnapshotFolder() {
-    _snapshotFolder = workingFolder + "/" + SNAPSHOT_FOLDER_NAME;
+    _snapshotFolder = _workingFolder + "/" + SNAPSHOT_FOLDER_NAME;
 
     // Just delete all PNGs from the folder if it already exists
     if (QDir(_snapshotFolder).exists()) {

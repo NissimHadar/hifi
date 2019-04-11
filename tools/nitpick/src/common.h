@@ -62,5 +62,10 @@ const double B_Y = 0.072187f;
 
 const QString nitpickVersion{ "v3.3.0" }; 
 
-static QString workingFolder;
+const QString BUILD_XML_URL{ "https://highfidelity.com/builds.xml" };
+const QString BUILD_XML_FILENAME{ "builds.xml" };
+
+const QString DEV_BUILD_XML_URL{ "https://highfidelity.com/dev-builds.xml" };
+const QString DEV_BUILD_XML_FILENAME{ "dev-builds.xml" };
+
 #endif // hifi_common_h

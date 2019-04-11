@@ -18,7 +18,7 @@
 class PathUtils {
 public:
     static QString getPathToExecutable(const QString& executableName);
-    static void setWorkingFolder(QLabel* workingFolderLabel);
+    static void setWorkingFolder(QLabel* workingFolderLabel, QString& workingFolder);
 };
 
 #endif

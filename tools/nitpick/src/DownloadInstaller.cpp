@@ -18,5 +18,5 @@ DownloadInstaller::DownloadInstaller(
 }
 
 void DownloadInstaller::setWorkingFolderAndEnableControls() {
-    PathUtils::setWorkingFolder(_workingFolderLabel);
+    PathUtils::setWorkingFolder(_workingFolderLabel, _workingFolder);
 }

@@ -40,7 +40,7 @@ public:
         QLineEdit* scriptURL
     );
  
-    void downloadBuildXml(void* caller);
+    void downloadBuildXml();
     void parseBuildInformation();
     QString getInstallerNameFromURL(const QString& url);
 
@@ -57,8 +57,7 @@ protected:
     QCheckBox* _runFullSuite;
     QLineEdit* _scriptURL;
 
-    const QString DEV_BUILD_XML_URL{ "https://highfidelity.com/dev-builds.xml" };
-    const QString DEV_BUILD_XML_FILENAME{ "dev-builds.xml" };
+    QString _workingFolder;
 
     bool buildXMLDownloaded;
     BuildInformation _buildInformation;
@@ -73,7 +72,6 @@ protected:
 
     QDateTime _testStartDateTime;
 
-private:
     QFile _logFile;
 };
 

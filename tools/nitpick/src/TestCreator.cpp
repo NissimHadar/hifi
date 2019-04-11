@@ -341,7 +341,7 @@ void TestCreator::startTestsEvaluation(
         }
     }
 
-    _downloader->downloadFiles(expectedImagesURLs, _snapshotDirectory, _expectedImagesFilenames, (void *)this);
+    _downloader->downloadFiles(expectedImagesURLs, _snapshotDirectory, _expectedImagesFilenames);
     finishTestsEvaluation(gpuVendor->currentText());
 }
 
