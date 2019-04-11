@@ -21,7 +21,7 @@ Downloader::Downloader() {
     _pythonCommand = pythonInterface->getPythonCommand();
 }
 
-void Downloader::downloadFiles(const QStringList& URLs, const QString& directoryName, const QStringList& filenames, void *caller) {
+void Downloader::downloadFiles(const QStringList& URLs, const QString& directoryName, const QStringList& filenames) {
     if (URLs.size() <= 0) {
         return;
     }
@@ -58,7 +58,7 @@ void Downloader::downloadFiles(const QStringList& URLs, const QString& directory
     connect(process, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this,
             [=](int exitCode, QProcess::ExitStatus exitStatus) { _busyWindow.hide(); });
 
-    QStringList parameters = QStringList() << filename;
+    QStringList parameters = QStringList() << "-3" << filename;
     process->start(_pythonCommand, parameters);
 #elif defined Q_OS_MAC
     QProcess* process = new QProcess();
