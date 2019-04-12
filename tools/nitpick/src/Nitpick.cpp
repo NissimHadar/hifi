@@ -235,15 +235,34 @@ void Nitpick::on_createTestRailRunButton_clicked() {
 
 // Download Installer controls
 void Nitpick::on_setWorkingFolderDownloadInstallerPushbutton_clicked() {
-    _downloadInstaller->setWorkingFolderAndEnableControls();
+    _downloadInstaller->setWorkingFolder();
+
+    _ui.loadDataStablePushbutton->setEnabled(true);
+    _ui.loadDataDevelopmentPushbutton->setEnabled(true);
+    _ui.loadDataPRPushbutton->setEnabled(true);
+}
+
+void Nitpick::on_loadDataStablePushbutton_clicked() {
+    _downloadInstaller->loadReleases();
+    _ui.latestStableCheckBox->setEnabled(true);
 }
 
 void Nitpick::on_latestStableCheckBox_clicked() {
     _ui.releaseComboBox->setEnabled(!_ui.latestStableCheckBox->isChecked());
 }
 
+void Nitpick::on_loadDataDevelopmentPushbutton_clicked() {
+    _downloadInstaller->loadBuilds();
+    _ui.latestBuildCheckBox->setEnabled(true);
+}
+
 void Nitpick::on_latestBuildCheckBox_clicked() {
     _ui.buildComboBox->setEnabled(!_ui.latestBuildCheckBox->isChecked());
+}
+
+void Nitpick::on_loadDataPRPushbutton_clicked() {
+    _downloadInstaller->loadPRs();
+    _ui.prComboBox->setEnabled(true);
 }
 
 void Nitpick::on_setWorkingFolderRunOnDesktopPushbutton_clicked() {

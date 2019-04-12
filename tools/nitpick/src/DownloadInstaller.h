@@ -1,7 +1,7 @@
 //
 //  DownloadInstaller.h
 //
-//  Created by Nissim Hadar on 1 Sept 2018.
+//  Created by Nissim Hadar on 11 Apr 2018.
 //  Copyright 2013 High Fidelity, Inc.
 //
 //  Distributed under the Apache License, Version 2.0.
@@ -10,6 +10,8 @@
 
 #ifndef hifi_downloadInstaller_h
 #define hifi_downloadInstaller_h
+
+#include "Downloader.h"
 
 #include <QLabel>
 #include <QObject>
@@ -21,11 +23,20 @@ public:
         QLabel* workingFolderLabel
     );
 
-    void DownloadInstaller::setWorkingFolderAndEnableControls();
+    void DownloadInstaller::setWorkingFolder();
+    
+    void loadReleases();
+    void loadBuilds();
+    void loadPRs();
+    
+    void downloadBuildXml();
+    void downloadDevBuildXml();
 
 private:
     QLabel* _workingFolderLabel;
     QString _workingFolder;
+
+    Downloader* _downloader;
 };
 
 #endif

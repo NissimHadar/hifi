@@ -196,9 +196,9 @@
       <property name="geometry">
        <rect>
         <x>110</x>
-        <y>80</y>
+        <y>90</y>
         <width>180</width>
-        <height>40</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="font">
@@ -242,10 +242,13 @@
         <string>Stable</string>
        </attribute>
        <widget class="QCheckBox" name="latestStableCheckBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>40</y>
+          <y>90</y>
           <width>70</width>
           <height>20</height>
          </rect>
@@ -258,7 +261,7 @@
         <property name="geometry">
          <rect>
           <x>120</x>
-          <y>40</y>
+          <y>90</y>
           <width>40</width>
           <height>20</height>
          </rect>
@@ -268,10 +271,13 @@
         </property>
        </widget>
        <widget class="QComboBox" name="releaseComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>180</x>
-          <y>40</y>
+          <y>90</y>
           <width>180</width>
           <height>20</height>
          </rect>
@@ -282,16 +288,35 @@
          </font>
         </property>
        </widget>
+       <widget class="QPushButton" name="loadDataStablePushbutton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>40</y>
+          <width>160</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load Data</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_9">
        <attribute name="title">
         <string>Development</string>
        </attribute>
        <widget class="QComboBox" name="buildComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>180</x>
-          <y>40</y>
+          <y>90</y>
           <width>180</width>
           <height>20</height>
          </rect>
@@ -303,10 +328,13 @@
         </property>
        </widget>
        <widget class="QCheckBox" name="latestBuildCheckBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>40</y>
+          <y>90</y>
           <width>70</width>
           <height>20</height>
          </rect>
@@ -319,7 +347,7 @@
         <property name="geometry">
          <rect>
           <x>120</x>
-          <y>40</y>
+          <y>90</y>
           <width>40</width>
           <height>20</height>
          </rect>
@@ -328,16 +356,35 @@
          <string>Build</string>
         </property>
        </widget>
+       <widget class="QPushButton" name="loadDataDevelopmentPushbutton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>40</y>
+          <width>160</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load Data</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_8">
        <attribute name="title">
         <string>PR</string>
        </attribute>
-       <widget class="QComboBox" name="gpuVendorComboBox_4">
+       <widget class="QComboBox" name="prComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
-          <x>80</x>
-          <y>40</y>
+          <x>180</x>
+          <y>90</y>
           <width>180</width>
           <height>20</height>
          </rect>
@@ -351,14 +398,30 @@
        <widget class="QLabel" name="workingFolderLabel_10">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>40</y>
+          <x>120</x>
+          <y>90</y>
           <width>60</width>
           <height>20</height>
          </rect>
         </property>
         <property name="text">
          <string>PR number</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="loadDataPRPushbutton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>40</y>
+          <width>160</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load Data</string>
         </property>
        </widget>
       </widget>
@@ -1398,9 +1461,9 @@
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>60</y>
+      <y>70</y>
       <width>180</width>
-      <height>40</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -1413,7 +1476,7 @@
     <property name="geometry">
      <rect>
       <x>505</x>
-      <y>40</y>
+      <y>50</y>
       <width>81</width>
       <height>16</height>
      </rect>
