@@ -157,10 +157,10 @@ void TestRunnerMobile::downloadComplete() {
         QStringList urls;
         QStringList filenames;
         if (_runLatest->isChecked()) {
-            parseBuildInformation();
+            // TODO - the APKs are not directly referenced in the dev builds XML
+            _buildInformation = _buildXMLParser.getLatestBuild("windows", _workingFolder + "/" + DEV_BUILD_XML_FILENAME);
 
             _installerFilename = INSTALLER_FILENAME_LATEST;
-
 
             // Replace the `exe` extension with `apk`
             _installerFilename = _installerFilename.replace(_installerFilename.length() - 3, 3, "apk");

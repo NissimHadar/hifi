@@ -11,19 +11,19 @@
 #ifndef hifi_downloadInstaller_h
 #define hifi_downloadInstaller_h
 
+#include "BuildXMLParser.h"
 #include "Downloader.h"
 
+#include <QComboBox>
 #include <QLabel>
 #include <QObject>
 
 class DownloadInstaller : public QObject {
     Q_OBJECT
 public:
-    DownloadInstaller(
-        QLabel* workingFolderLabel
-    );
+    DownloadInstaller(QLabel* workingFolderLabel, QComboBox* platformCombo);
 
-    void DownloadInstaller::setWorkingFolder();
+    void setWorkingFolder();
     
     void loadReleases();
     void loadBuilds();
@@ -34,9 +34,12 @@ public:
 
 private:
     QLabel* _workingFolderLabel;
+    QComboBox* _platformCombo;
     QString _workingFolder;
 
     Downloader* _downloader;
+    BuildXMLParser _buildXMLParser;
+    std::vector<BuildInformation> _buildInformation;
 };
 
 #endif

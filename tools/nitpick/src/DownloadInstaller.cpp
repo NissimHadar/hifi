@@ -11,10 +11,11 @@
 #include "DownloadInstaller.h"
 #include "PathUtils.h"
 
-DownloadInstaller::DownloadInstaller(
-    QLabel* workingFolderLabel
-) {
+#include <QFile>
+
+DownloadInstaller::DownloadInstaller(QLabel* workingFolderLabel, QComboBox* platformCombo) {
     _workingFolderLabel = workingFolderLabel;
+    _platformCombo = platformCombo;
 
     _downloader = new Downloader();
 }
@@ -25,10 +26,12 @@ void DownloadInstaller::setWorkingFolder() {
 
 void DownloadInstaller::loadReleases() {
     downloadBuildXml();
+    _buildInformation = _buildXMLParser.getBuilds("windows", _workingFolder + "/" + BUILD_XML_FILENAME);
 }
  
 void DownloadInstaller::loadBuilds() {
     downloadDevBuildXml();
+    _buildInformation = _buildXMLParser.getBuilds("windows", _workingFolder + "/" + DEV_BUILD_XML_FILENAME);
 }
 
 void DownloadInstaller::loadPRs() {
@@ -41,6 +44,12 @@ void DownloadInstaller::downloadBuildXml() {
     urls << BUILD_XML_URL;
     filenames << BUILD_XML_FILENAME;
 
+    // Delete any existing file
+    QFile file(_workingFolder + "/" + BUILD_XML_FILENAME);
+    if (file.exists()) {
+        file.remove();
+    }
+
     _downloader->downloadFiles(urls, _workingFolder, filenames);
 }
 
@@ -50,6 +59,12 @@ void DownloadInstaller::downloadDevBuildXml() {
 
     urls << DEV_BUILD_XML_URL;
     filenames << DEV_BUILD_XML_FILENAME;
+
+    // Delete any existing file
+    QFile file(_workingFolder + "/" + DEV_BUILD_XML_FILENAME);
+    if (file.exists()) {
+        file.remove();
+    }
 
     _downloader->downloadFiles(urls, _workingFolder, filenames);
 }

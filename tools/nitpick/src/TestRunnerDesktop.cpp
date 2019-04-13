@@ -200,7 +200,13 @@ void TestRunnerDesktop::downloadComplete() {
         QStringList urls;
         QStringList filenames;
         if (_runLatest->isChecked()) {
-            parseBuildInformation();
+            QString platformOfInterest;
+#ifdef Q_OS_WIN
+            platformOfInterest = "windows";
+#elif defined(Q_OS_MAC)
+            platformOfInterest = "mac";
+#endif
+            _buildInformation = _buildXMLParser.getLatestBuild(platformOfInterest, _workingFolder + "/" + DEV_BUILD_XML_FILENAME);
 
             _installerFilename = INSTALLER_FILENAME_LATEST;
 
@@ -597,7 +603,7 @@ void TestRunnerDesktop::addBuildNumberToResults(const QString& zippedFolderName)
     if (!_runLatest->isChecked()) {
         augmentedFilename.replace("local", getPRNumberFromURL(_url->text()));
     } else {
-        augmentedFilename.replace("local", _buildInformation.build);
+        augmentedFilename.replace("local", _buildInformation.version);
     }
 
     if (!QFile::rename(zippedFolderName, augmentedFilename)) {

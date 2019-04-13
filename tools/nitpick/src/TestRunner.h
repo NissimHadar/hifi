@@ -11,6 +11,7 @@
 #ifndef hifi_testRunner_h
 #define hifi_testRunner_h
 
+#include "BuildXMLParser.h"
 #include "Downloader.h"
 
 #include <QCheckBox>
@@ -21,12 +22,6 @@
 #include <QTimeEdit>
 
 class Worker;
-
-class BuildInformation {
-public:
-    QString build;
-    QString url;
-};
 
 class TestRunner {
 public:
@@ -41,7 +36,6 @@ public:
     );
  
     void downloadBuildXml();
-    void parseBuildInformation();
     QString getInstallerNameFromURL(const QString& url);
 
     void appendLog(const QString& message);
@@ -73,6 +67,8 @@ protected:
     QDateTime _testStartDateTime;
 
     QFile _logFile;
+
+    BuildXMLParser _buildXMLParser;
 };
 
 class Worker : public QObject {

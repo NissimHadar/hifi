@@ -152,9 +152,7 @@ void Nitpick::setup() {
     if (_downloadInstaller) {
         delete _downloadInstaller;
     }
-    _downloadInstaller = new DownloadInstaller(
-        _ui.workingFolderDownloadInstallerLabel
-    );
+    _downloadInstaller = new DownloadInstaller(_ui.workingFolderDownloadInstallerLabel, _ui.platformComboBox);
 }
 
 void Nitpick::startTestsEvaluation(
