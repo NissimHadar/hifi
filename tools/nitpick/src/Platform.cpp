@@ -125,5 +125,7 @@ QString Platform::getPlatform() {
     return "WINDOWS";
 #elif defined Q_OS_MAC
     return "MACOS";
+#else
+    return "UNKNOWN";
 #endif
 }
