@@ -9,7 +9,10 @@ Note: The prerequisites will require about 10 GB of space on your drive. You wil
 
 If you don’t have Community or Professional edition of Visual Studio 2017, download [Visual Studio Community 2017](https://www.visualstudio.com/downloads/).
 
-When selecting components, check "Desktop development with C++".  Also on the right on the Summary toolbar, check "Windows 8.1 SDK and UCRT SDK" and "VC++ 2015.3 v140 toolset (x86,x64)".  If you do not already have a python development environment installed, also check  "Python Development" in this screen.
+When selecting components, check "Desktop development with C++".  
+Leave the default options checked in the summary.  
+
+If you do not already have a python development environment installed, also check  "Python Development" in this screen.
 
 If you already have Visual Studio installed and need to add python, open the "Add or remove programs" control panel and find the "Microsoft Visual Studio Installer".  Select it and click "Modify".  In the installer, select "Modify" again, then check "Python Development" and allow the installer to apply the changes.
 
@@ -19,9 +22,10 @@ If you do not wish to use the Python installation bundled with Visual Studio, yo
 
 ### Step 2. Installing CMake
 
-Download and install the latest version of CMake 3.9.
+Download and install the latest version of CMake (currently 3.13.4)
 
-Download the file named win64-x64 Installer from the [CMake Website](https://cmake.org/download/). You can access the installer on this [3.9 Version page](https://cmake.org/files/v3.9/). During installation, make sure to check "Add CMake to system PATH for all users" when prompted.
+Download the file named *cmake-3.13.4-win64-x64.msi* from the [CMake Website](https://cmake.org/download/) (Direct download [here](https://github.com/Kitware/CMake/releases/download/v3.13.4/cmake-3.13.4-win64-x64.msi))     
+During installation, make sure to check "Add CMake to system PATH for all users" when prompted.
 
 ### Step 3. Installing Qt
 
