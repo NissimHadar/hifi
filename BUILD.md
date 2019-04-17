@@ -7,7 +7,7 @@
 
 ### Dependencies
 
-- [cmake](https://cmake.org/download/):  3.9
+- [cmake](https://cmake.org/download/):  3.13
 - [Qt](https://www.qt.io/download-open-source):   5.10.1
 - [Python](https://www.python.org/downloads/): 3.6 or higher
 
