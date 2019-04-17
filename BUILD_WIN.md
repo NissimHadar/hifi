@@ -29,7 +29,7 @@ During installation, make sure to check "Add CMake to system PATH for all users"
 
 ### Step 3. Installing Qt
 
-Download and install the [Qt Open Source Online Installer](https://www.qt.io/download-open-source/?hsCtaTracking=f977210e-de67-475f-a32b-65cec207fd03%7Cd62710cd-e1db-46aa-8d4d-2f1c1ffdacea). While installing, you only need to have the following components checked under Qt 5.10.1: "msvc2017 64-bit", "Qt WebEngine", and "Qt Script (Deprecated)".
+Download and install the [Qt Open Source Online Installer](https://www.qt.io/download-qt-installer?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5). While installing, you only need to have the following components checked under Qt 5.12.2: "msvc2017 64-bit", "Qt WebEngine", and "Qt Script (Deprecated)".
 
 Note: Installing the Sources is optional but recommended if you have room for them (~2GB).
 
@@ -37,7 +37,7 @@ Note: Installing the Sources is optional but recommended if you have room for th
 
 Go to `Control Panel > System > Advanced System Settings > Environment Variables > New...` (or search “Environment Variables” in Start Search).
 * Set "Variable name": `QT_CMAKE_PREFIX_PATH`
-* Set "Variable value": `C:\Qt\5.10.1\msvc2017_64\lib\cmake`
+* Set "Variable value": `C:\Qt\5.12.2\msvc2017_64\lib\cmake`
 
 ### Step 5. Running CMake to Generate Build Files
 
@@ -89,4 +89,4 @@ Remove `CMakeCache.txt` found in the `%HIFI_DIR%\build` directory.  Verify that 
 
 #### Qt is throwing an error
 
-Make sure you have the correct version (5.10.1) installed and `QT_CMAKE_PREFIX_PATH` environment variable is set correctly.
+Make sure you have the correct version (5.12.2) installed and `QT_CMAKE_PREFIX_PATH` environment variable is set correctly.

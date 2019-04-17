@@ -19,11 +19,17 @@ sudo apt-get update
 ```
 
 ### Prepare environment
-Install Qt 5.10.1:
-```bash
-wget http://debian.highfidelity.com/pool/h/hi/hifiqt5.10.1_5.10.1_amd64.deb
-sudo dpkg -i hifiqt5.10.1_5.10.1_amd64.deb
-```
+#### Install Qt 5.12.2:  
+Download and install the [Qt Open Source Online Installer](https://www.qt.io/download-qt-installer?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5).
+
+Make installer executable:  
+cd ~/Downlaods  
+chmod +x qt-unified-linux-x64-3.1.0-online.run
+./qt-unified-linux-x64-3.1.0-online.run
+
+While installing, you only need to have the following components checked under Qt 5.12.2: "Desktop gcc 64 bit", "Qt WebEngine", and "Qt Script (Deprecated)".  
+
+Note: Installing the Sources is optional but recommended if you have room for them (~2GB).  
 
 Install build dependencies:
 ```bash
@@ -35,23 +41,19 @@ To compile interface in a server you must install:
 sudo apt-get -y install libpulse0 libnss3 libnspr4 libfontconfig1 libxcursor1 libxcomposite1 libxtst6 libxslt1.1
 ```
 
-Install build tools:
-```bash
-# For Ubuntu 18.04
-sudo apt-get install cmake
-```
-```bash
-# For Ubuntu 16.04
-wget https://cmake.org/files/v3.9/cmake-3.9.5-Linux-x86_64.sh
+#### Install build tools:
+```bash```
+##### For Ubuntu 18.04
+```sudo apt-get install cmake bash```
+##### For Ubuntu 16.04
+```wget https://cmake.org/files/v3.9/cmake-3.9.5-Linux-x86_64.sh
 sudo sh cmake-3.9.5-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
 ```
 
-Install Python 3:
+##### Install Python 3:
 ```bash
 sudo apt-get install python3.6
 ```
-
-
 ### Get code and checkout the tag you need
 
 Clone this repository:
@@ -80,7 +82,7 @@ cd hifi/build
 
 Prepare makefiles:
 ```bash
-cmake -DQT_CMAKE_PREFIX_PATH=/usr/local/Qt5.10.1/5.10.1/gcc_64/lib/cmake ..
+cmake -DQT_CMAKE_PREFIX_PATH=~/Qt/5.12.2/gcc_64/lib/cmake ..
 ```
 
 Start compilation of the server and get a cup of coffee:

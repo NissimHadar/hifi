@@ -17,16 +17,16 @@ For OpenSSL installed via homebrew, set OPENSSL_ROOT_DIR:
 
     export OPENSSL_ROOT_DIR=/usr/local/Cellar/openssl/1.0.2l
 
-Note that this uses the version from the homebrew formula at the time of this writing, and the version in the path will likely change.
+**Note** that this uses the version from the homebrew formula at the time of this writing, and the version in the path will likely change.
 
 ### Qt
 
 Assuming you've installed Qt using the homebrew instructions above, you'll need to set QT_CMAKE_PREFIX_PATH so CMake can find your installations.
 For Qt installed via homebrew, set QT_CMAKE_PREFIX_PATH:
 
-    export QT_CMAKE_PREFIX_PATH=/usr/local/Cellar/qt/5.10.1/lib/cmake
+    export QT_CMAKE_PREFIX_PATH=/usr/local/Cellar/qt/5.12.2/lib/cmake
 
-Note that this uses the version from the homebrew formula at the time of this writing, and the version in the path will likely change.
+**Note** that this uses the version from the homebrew formula at the time of this writing, and the version in the path will likely change.
 
 ### Xcode
 
