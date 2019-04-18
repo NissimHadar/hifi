@@ -2,9 +2,9 @@ Please read the [general build guide](BUILD.md) for information on dependencies 
 
 ### Homebrew
 
-[Homebrew](https://brew.sh/) is an excellent package manager for macOS. It makes install of some High Fidelity dependencies very simple.
+[Homebrew](https://brew.sh/) is an excellent package manager for macOS. It makes the installation of some High Fidelity dependencies very simple.
 
-    brew install cmake openssl qt
+    brew install cmake openssl
 
 ### Python 3
 
@@ -20,11 +20,12 @@ For OpenSSL installed via homebrew, set OPENSSL_ROOT_DIR:
 **Note** that this uses the version from the homebrew formula at the time of this writing, and the version in the path will likely change.
 
 ### Qt
+Download and install the [Qt Open Source Online Installer](https://www.qt.io/download) - choose the Open Source option.
 
-Assuming you've installed Qt using the homebrew instructions above, you'll need to set QT_CMAKE_PREFIX_PATH so CMake can find your installations.
-For Qt installed via homebrew, set QT_CMAKE_PREFIX_PATH:
+Set QT_CMAKE_PREFIX_PATH so CMake can find your installations.
+For Qt installed as described above, set QT_CMAKE_PREFIX_PATH (in *.bash_profile*):
 
-    export QT_CMAKE_PREFIX_PATH=/usr/local/Cellar/qt/5.12.2/lib/cmake
+    export QT_CMAKE_PREFIX_PATH=/Users/<your user>/Qt/5.12.3/clang_64/lib/cmake
 
 **Note** that this uses the version from the homebrew formula at the time of this writing, and the version in the path will likely change.
 

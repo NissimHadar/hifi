@@ -19,15 +19,15 @@ sudo apt-get update
 ```
 
 ### Prepare environment
-#### Install Qt 5.12.2:  
-Download and install the [Qt Open Source Online Installer](https://www.qt.io/download-qt-installer?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5).
+#### Install Qt 5.12.3:  
+Download and install the [Qt Open Source Online Installer](https://www.qt.io/download) - choose the Open Source option.
 
 Make installer executable:  
-cd ~/Downlaods  
+cd ~/Downloads  
 chmod +x qt-unified-linux-x64-3.1.0-online.run
 ./qt-unified-linux-x64-3.1.0-online.run
 
-While installing, you only need to have the following components checked under Qt 5.12.2: "Desktop gcc 64 bit", "Qt WebEngine", and "Qt Script (Deprecated)".  
+While installing, you only need to have the following components checked under Qt 5.12.3: "Desktop gcc 64 bit", "Qt WebEngine", and "Qt Script (Deprecated)".  
 
 Note: Installing the Sources is optional but recommended if you have room for them (~2GB).  
 
