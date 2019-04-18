@@ -17,7 +17,12 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+
+#ifdef Q_OS_WIN
 #include <shared/bitset>
+#else
+#include <bitset>
+#endif
 
 // Why a macro and not a fancy template you will ask me ?
 // Because some of the fields are bool packed tightly in the State::Cache class

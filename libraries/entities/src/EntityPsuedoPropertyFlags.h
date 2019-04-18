@@ -14,7 +14,12 @@
 #ifndef hifi_EntityPsuedoPropertyFlag_h
 #define hifi_EntityPsuedoPropertyFlag_h
 
+#ifdef Q_OS_WIN
 #include <shared/bitset>
+#else
+#include <bitset>
+#endif
+
 #include <type_traits>
 
 namespace EntityPsuedoPropertyFlag {

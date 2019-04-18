@@ -12,7 +12,11 @@
 #ifndef hifi_AudioClient_h
 #define hifi_AudioClient_h
 
+#ifdef _WIN32
 #include <shared/bitset>
+#else
+#include <bitset>
+#endif
 
 #include <fstream>
 #include <memory>
@@ -56,16 +60,16 @@
 #include "AudioFileWav.h"
 
 #ifdef _WIN32
-#pragma warning( push )
-#pragma warning( disable : 4273 )
-#pragma warning( disable : 4305 )
+#pragma warning(push)
+#pragma warning(disable : 4273)
+#pragma warning(disable : 4305)
 #endif
 
 #ifdef _WIN32
-#pragma warning( pop )
+#pragma warning(pop)
 #endif
 
-#if defined (Q_OS_ANDROID)
+#if defined(Q_OS_ANDROID)
 #define VOICE_RECOGNITION "voicerecognition"
 #define VOICE_COMMUNICATION "voicecommunication"
 
@@ -85,6 +89,7 @@ class AudioClient : public AbstractAudioInterface, public Dependency {
     SINGLETON_DEPENDENCY
 
     using LocalInjectorsStream = AudioMixRingBuffer;
+
 public:
     static const int MIN_BUFFER_FRAMES;
     static const int MAX_BUFFER_FRAMES;
@@ -97,15 +102,21 @@ public:
 
     class AudioOutputIODevice : public QIODevice {
     public:
-        AudioOutputIODevice(LocalInjectorsStream& localInjectorsStream, MixedProcessedAudioStream& receivedAudioStream,
-                AudioClient* audio) :
-            _localInjectorsStream(localInjectorsStream), _receivedAudioStream(receivedAudioStream),
-            _audio(audio), _unfulfilledReads(0) {}
+        AudioOutputIODevice(LocalInjectorsStream& localInjectorsStream,
+                            MixedProcessedAudioStream& receivedAudioStream,
+                            AudioClient* audio) :
+            _localInjectorsStream(localInjectorsStream),
+            _receivedAudioStream(receivedAudioStream), _audio(audio), _unfulfilledReads(0) {}
 
         void start() { open(QIODevice::ReadOnly | QIODevice::Unbuffered); }
-        qint64 readData(char * data, qint64 maxSize) override;
-        qint64 writeData(const char * data, qint64 maxSize) override { return 0; }
-        int getRecentUnfulfilledReads() { int unfulfilledReads = _unfulfilledReads; _unfulfilledReads = 0; return unfulfilledReads; }
+        qint64 readData(char* data, qint64 maxSize) override;
+        qint64 writeData(const char* data, qint64 maxSize) override { return 0; }
+        int getRecentUnfulfilledReads() {
+            int unfulfilledReads = _unfulfilledReads;
+            _unfulfilledReads = 0;
+            return unfulfilledReads;
+        }
+
     private:
         LocalInjectorsStream& _localInjectorsStream;
         MixedProcessedAudioStream& _receivedAudioStream;
@@ -153,7 +164,7 @@ public:
     void setIsPlayingBackRecording(bool isPlayingBackRecording) { _isPlayingBackRecording = isPlayingBackRecording; }
 
     Q_INVOKABLE void setAvatarBoundingBoxParameters(glm::vec3 corner, glm::vec3 scale);
-    
+
     bool outputLocalInjector(const AudioInjectorPointer& injector) override;
 
     QAudioDeviceInfo getActiveAudioDevice(QAudio::Mode mode) const;
@@ -350,11 +361,11 @@ private:
     LocalInjectorsStream _localInjectorsStream;
     // In order to use _localInjectorsStream as a lock-free pipe,
     // use it with a single producer/consumer, and track available samples and injectors
-    std::atomic<int> _localSamplesAvailable { 0 };
-    std::atomic<bool> _localInjectorsAvailable { false };
+    std::atomic<int> _localSamplesAvailable{ 0 };
+    std::atomic<bool> _localInjectorsAvailable{ false };
     MixedProcessedAudioStream _receivedAudioStream;
     bool _isStereoInput;
-    std::atomic<bool> _enablePeakValues { false };
+    std::atomic<bool> _enablePeakValues{ false };
 
     quint64 _outputStarveDetectionStartTimeMsec;
     int _outputStarveDetectionCount;
@@ -365,9 +376,9 @@ private:
 
     StDev _stdev;
     QElapsedTimer _timeSinceLastReceived;
-    float _lastRawInputLoudness;    // before mute/gate
+    float _lastRawInputLoudness;  // before mute/gate
     float _lastSmoothedRawInputLoudness;
-    float _lastInputLoudness;       // after mute/gate
+    float _lastInputLoudness;  // after mute/gate
     float _timeSinceLastClip;
     int _totalInputAudioSamples;
 
@@ -381,9 +392,9 @@ private:
     AudioEffectOptions _scriptReverbOptions;
     AudioEffectOptions _zoneReverbOptions;
     AudioEffectOptions* _reverbOptions;
-    AudioReverb _sourceReverb { AudioConstants::SAMPLE_RATE };
-    AudioReverb _listenerReverb { AudioConstants::SAMPLE_RATE };
-    AudioReverb _localReverb { AudioConstants::SAMPLE_RATE };
+    AudioReverb _sourceReverb{ AudioConstants::SAMPLE_RATE };
+    AudioReverb _listenerReverb{ AudioConstants::SAMPLE_RATE };
+    AudioReverb _localReverb{ AudioConstants::SAMPLE_RATE };
 
     // possible streams needed for resample
     AudioSRC* _inputToNetworkResampler;
@@ -394,19 +405,19 @@ private:
     int16_t _networkScratchBuffer[AudioConstants::NETWORK_FRAME_SAMPLES_AMBISONIC];
 
     // for output audio (used by this thread)
-    int _outputPeriod { 0 };
-    float* _outputMixBuffer { NULL };
-    int16_t* _outputScratchBuffer { NULL };
+    int _outputPeriod{ 0 };
+    float* _outputMixBuffer{ NULL };
+    int16_t* _outputScratchBuffer{ NULL };
 
     // for local audio (used by audio injectors thread)
-    std::atomic<float> _localInjectorGain { 1.0f };
-    std::atomic<float> _systemInjectorGain { 1.0f };
+    std::atomic<float> _localInjectorGain{ 1.0f };
+    std::atomic<float> _systemInjectorGain{ 1.0f };
     float _localMixBuffer[AudioConstants::NETWORK_FRAME_SAMPLES_STEREO];
     int16_t _localScratchBuffer[AudioConstants::NETWORK_FRAME_SAMPLES_AMBISONIC];
-    float* _localOutputMixBuffer { NULL };
+    float* _localOutputMixBuffer{ NULL };
     Mutex _localAudioMutex;
     AudioLimiter _audioLimiter;
-    
+
     // Adds Reverb
     void configureReverb();
     void updateReverbOptions();
@@ -426,8 +437,8 @@ private:
 
     AudioIOStats _stats;
 
-    AudioGate* _audioGate { nullptr };
-    bool _audioGateOpen { true };
+    AudioGate* _audioGate{ nullptr };
+    bool _audioGateOpen{ true };
 
     AudioPositionGetter _positionGetter;
     AudioOrientationGetter _orientationGetter;
@@ -443,16 +454,16 @@ private:
 
     AudioFileWav _audioFileWav;
 
-    bool _hasReceivedFirstPacket { false };
+    bool _hasReceivedFirstPacket{ false };
 
     QVector<AudioInjectorPointer> _activeLocalAudioInjectors;
 
-    bool _isPlayingBackRecording { false };
-    bool _audioPaused { false };
+    bool _isPlayingBackRecording{ false };
+    bool _audioPaused{ false };
 
     CodecPluginPointer _codec;
     QString _selectedCodecName;
-    Encoder* _encoder { nullptr }; // for outbound mic stream
+    Encoder* _encoder{ nullptr };  // for outbound mic stream
 
     RateCounter<> _silentOutbound;
     RateCounter<> _audioOutbound;
@@ -460,18 +471,17 @@ private:
     RateCounter<> _audioInbound;
 
 #if defined(Q_OS_ANDROID)
-    bool _shouldRestartInputSetup { true }; // Should we restart the input device because of an unintended stop?
+    bool _shouldRestartInputSetup{ true };  // Should we restart the input device because of an unintended stop?
 #endif
 
     AudioSolo _solo;
-    
-    Mutex _checkDevicesMutex;
-    QTimer* _checkDevicesTimer { nullptr };
-    Mutex _checkPeakValuesMutex;
-    QTimer* _checkPeakValuesTimer { nullptr };
 
-    bool _isRecording { false };
+    Mutex _checkDevicesMutex;
+    QTimer* _checkDevicesTimer{ nullptr };
+    Mutex _checkPeakValuesMutex;
+    QTimer* _checkPeakValuesTimer{ nullptr };
+
+    bool _isRecording{ false };
 };
 
-
-#endif // hifi_AudioClient_h
+#endif  // hifi_AudioClient_h

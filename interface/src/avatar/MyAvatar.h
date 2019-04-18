@@ -12,7 +12,11 @@
 #ifndef hifi_MyAvatar_h
 #define hifi_MyAvatar_h
 
+#ifdef _WIN32
 #include <shared/bitset>
+#else
+#include <bitset>
+#endif
 
 #include <glm/glm.hpp>
 

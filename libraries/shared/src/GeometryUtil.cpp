@@ -14,7 +14,13 @@
 #include <assert.h>
 #include <cstring>
 #include <cmath>
+
+#ifdef _WIN32
 #include "shared/bitset"
+#else
+#include <bitset>
+#endif
+
 #include <complex>
 #include <qmath.h>
 #include <glm/gtx/quaternion.hpp>

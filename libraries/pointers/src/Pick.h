@@ -10,7 +10,12 @@
 
 #include <memory>
 #include <stdint.h>
+
+#ifdef _WIN32
 #include <shared/bitset>
+#else
+#include <bitset>
+#endif
 
 #include <QtCore/QUuid>
 #include <QVector>

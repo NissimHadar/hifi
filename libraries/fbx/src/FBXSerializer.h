@@ -12,7 +12,11 @@
 #ifndef hifi_FBXSerializer_h
 #define hifi_FBXSerializer_h
 
+#ifdef _WIN32
 #include <shared/bitset>
+#else
+#include <bitset>
+#endif
 
 #include <QtGlobal>
 #include <QMetaType>

@@ -14,7 +14,13 @@
 #include <assert.h>
 #include <functional>
 #include <memory>
+
+#ifdef _WIN32
 #include <shared/bitset>
+#else
+#include <bitset>
+#endif
+
 #include <queue>
 #include <utility>
 #include <list>
