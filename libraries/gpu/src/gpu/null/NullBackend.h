@@ -10,7 +10,7 @@
 
 #include <assert.h>
 #include <functional>
-#include <bitset>
+#include <shared/bitset>
 #include <queue>
 #include <utility>
 #include <list>

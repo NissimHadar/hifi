@@ -21,7 +21,7 @@
 #include <QtCore/QtGlobal>
 
 #include <vector>
-#include <bitset>
+#include "shared/bitset"
 #include <array>
 #include <string>
 

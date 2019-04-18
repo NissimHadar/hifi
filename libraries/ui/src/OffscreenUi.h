@@ -12,6 +12,8 @@
 #ifndef hifi_OffscreenUi_h
 #define hifi_OffscreenUi_h
 
+#include <shared/bitset>
+
 #include <unordered_map>
 #include <functional>
 

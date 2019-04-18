@@ -14,7 +14,7 @@
 #ifndef hifi_EntityPsuedoPropertyFlag_h
 #define hifi_EntityPsuedoPropertyFlag_h
 
-#include <bitset>
+#include <shared/bitset>
 #include <type_traits>
 
 namespace EntityPsuedoPropertyFlag {

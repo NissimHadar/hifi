@@ -12,7 +12,7 @@
 #ifndef hifi_MyAvatar_h
 #define hifi_MyAvatar_h
 
-#include <bitset>
+#include <shared/bitset>
 
 #include <glm/glm.hpp>
 

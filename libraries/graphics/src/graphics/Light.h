@@ -11,7 +11,7 @@
 #ifndef hifi_model_Light_h
 #define hifi_model_Light_h
 
-#include <bitset>
+#include <shared/bitset>
 #include <map>
 
 #include <glm/glm.hpp>

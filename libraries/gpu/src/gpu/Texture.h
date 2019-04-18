@@ -12,7 +12,7 @@
 #define hifi_gpu_Texture_h
 
 #include <algorithm> //min max and more
-#include <bitset>
+#include <shared/bitset>
 
 #include <QMetaType>
 #include <QUrl>

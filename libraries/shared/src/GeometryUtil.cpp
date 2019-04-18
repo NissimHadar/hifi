@@ -14,7 +14,7 @@
 #include <assert.h>
 #include <cstring>
 #include <cmath>
-#include <bitset>
+#include "shared/bitset"
 #include <complex>
 #include <qmath.h>
 #include <glm/gtx/quaternion.hpp>

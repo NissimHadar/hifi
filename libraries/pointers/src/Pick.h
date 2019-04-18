@@ -10,7 +10,7 @@
 
 #include <memory>
 #include <stdint.h>
-#include <bitset>
+#include <shared/bitset>
 
 #include <QtCore/QUuid>
 #include <QVector>

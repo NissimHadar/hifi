@@ -13,7 +13,7 @@
 
 #include <QMutex>
 
-#include <bitset>
+#include <shared/bitset>
 #include <map>
 #include <unordered_map>
 #include <queue>

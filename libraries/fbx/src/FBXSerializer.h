@@ -12,6 +12,8 @@
 #ifndef hifi_FBXSerializer_h
 #define hifi_FBXSerializer_h
 
+#include <shared/bitset>
+
 #include <QtGlobal>
 #include <QMetaType>
 #include <QSet>

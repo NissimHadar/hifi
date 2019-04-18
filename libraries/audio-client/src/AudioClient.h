@@ -12,6 +12,8 @@
 #ifndef hifi_AudioClient_h
 #define hifi_AudioClient_h
 
+#include <shared/bitset>
+
 #include <fstream>
 #include <memory>
 #include <vector>

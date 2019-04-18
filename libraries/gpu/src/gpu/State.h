@@ -17,7 +17,7 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
-#include <bitset>
+#include <shared/bitset>
 
 // Why a macro and not a fancy template you will ask me ?
 // Because some of the fields are bool packed tightly in the State::Cache class

@@ -9,7 +9,7 @@
 #ifndef hifi_PickFilter_h
 #define hifi_PickFilter_h
 
-#include <bitset>
+#include <shared/bitset>
 
 class PickFilter {
 public:
