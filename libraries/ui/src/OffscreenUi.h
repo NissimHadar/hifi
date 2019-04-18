@@ -12,12 +12,6 @@
 #ifndef hifi_OffscreenUi_h
 #define hifi_OffscreenUi_h
 
-#ifdef _WIN32
-#include <shared/bitset>
-#else
-#include <bitset>
-#endif
-
 #include <unordered_map>
 #include <functional>
 

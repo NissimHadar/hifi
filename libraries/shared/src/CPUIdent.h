@@ -21,13 +21,7 @@
 #include <QtCore/QtGlobal>
 
 #include <vector>
-
-#ifdef _WIN32
-#include "shared/bitset"
-#else
 #include <bitset>
-#endif
-
 #include <array>
 #include <string>
 

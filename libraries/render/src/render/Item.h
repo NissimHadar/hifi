@@ -13,13 +13,7 @@
 #define hifi_render_Item_h
 
 #include <atomic>
-
-#ifdef _WIN32
-#include <shared/bitset>
-#else
 #include <bitset>
-#endif
-
 #include <map>
 #include <memory>
 #include <mutex>

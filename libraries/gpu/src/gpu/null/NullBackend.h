@@ -10,13 +10,7 @@
 
 #include <assert.h>
 #include <functional>
-
-#ifdef Q_OS_WIN
-#include <shared/bitset>
-#else
 #include <bitset>
-#endif
-
 #include <queue>
 #include <utility>
 #include <list>

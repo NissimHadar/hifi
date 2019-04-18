@@ -17,11 +17,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#ifdef _WIN32
-#include "shared/bitset"
-#else
 #include <bitset>
-#endif
 
 #include <memory>
 
