@@ -21,7 +21,13 @@
 class DownloadInstaller : public QObject {
     Q_OBJECT
 public:
-    DownloadInstaller(QLabel* workingFolderLabel, QComboBox* platformCombo);
+    DownloadInstaller(
+        QLabel* workingFolderLabel, 
+        QComboBox* platformComboBox,
+        QComboBox* releaseComboBox, 
+        QComboBox* buildComboBox,
+        QComboBox* prComboBox
+    );
 
     void setWorkingFolder();
     
@@ -34,7 +40,11 @@ public:
 
 private:
     QLabel* _workingFolderLabel;
-    QComboBox* _platformCombo;
+    QComboBox* _platformComboBox;
+    QComboBox* _releaseComboBox;
+    QComboBox* _buildComboBox;
+    QComboBox* _prComboBox;
+
     QString _workingFolder;
 
     Downloader* _downloader;

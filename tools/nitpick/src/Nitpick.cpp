@@ -152,7 +152,13 @@ void Nitpick::setup() {
     if (_downloadInstaller) {
         delete _downloadInstaller;
     }
-    _downloadInstaller = new DownloadInstaller(_ui.workingFolderDownloadInstallerLabel, _ui.platformComboBox);
+    _downloadInstaller = new DownloadInstaller(
+        _ui.workingFolderDownloadInstallerLabel, 
+        _ui.platformComboBox,
+        _ui.releaseComboBox,
+        _ui.buildComboBox,
+        _ui.prComboBox
+    );
 }
 
 void Nitpick::startTestsEvaluation(
@@ -242,25 +248,17 @@ void Nitpick::on_setWorkingFolderDownloadInstallerPushbutton_clicked() {
 
 void Nitpick::on_loadDataStablePushbutton_clicked() {
     _downloadInstaller->loadReleases();
-    _ui.latestStableCheckBox->setEnabled(true);
-}
-
-void Nitpick::on_latestStableCheckBox_clicked() {
-    _ui.releaseComboBox->setEnabled(!_ui.latestStableCheckBox->isChecked());
+    _ui.downloadInstallerStablePushbutton->setEnabled(true);
 }
 
 void Nitpick::on_loadDataDevelopmentPushbutton_clicked() {
     _downloadInstaller->loadBuilds();
-    _ui.latestBuildCheckBox->setEnabled(true);
-}
-
-void Nitpick::on_latestBuildCheckBox_clicked() {
-    _ui.buildComboBox->setEnabled(!_ui.latestBuildCheckBox->isChecked());
+    _ui.downloadInstallerDevelopmentPushbutton->setEnabled(true);
 }
 
 void Nitpick::on_loadDataPRPushbutton_clicked() {
     _downloadInstaller->loadPRs();
-    _ui.prComboBox->setEnabled(true);
+    _ui.downloadInstallerPRPushbutton->setEnabled(true);
 }
 
 void Nitpick::on_setWorkingFolderRunOnDesktopPushbutton_clicked() {

@@ -13,9 +13,19 @@
 
 #include <QFile>
 
-DownloadInstaller::DownloadInstaller(QLabel* workingFolderLabel, QComboBox* platformCombo) {
+DownloadInstaller::DownloadInstaller(
+    QLabel* workingFolderLabel, 
+    QComboBox* platformComboBox,
+    QComboBox* releaseComboBox,
+    QComboBox* buildComboBox,
+    QComboBox* prComboBox
+) {
     _workingFolderLabel = workingFolderLabel;
-    _platformCombo = platformCombo;
+
+    _platformComboBox = platformComboBox;
+    _releaseComboBox = releaseComboBox;
+    _buildComboBox = buildComboBox;
+    _prComboBox = prComboBox;
 
     _downloader = new Downloader();
 }
@@ -27,11 +37,29 @@ void DownloadInstaller::setWorkingFolder() {
 void DownloadInstaller::loadReleases() {
     downloadBuildXml();
     _buildInformation = _buildXMLParser.getBuilds("windows", _workingFolder + "/" + BUILD_XML_FILENAME);
+
+    QStringList releases;
+    for (int i = 0; i < _buildInformation.size(); ++i) {
+        releases << _buildInformation[i].stable_version + " [" + _buildInformation[i].version + "]";
+    }
+    
+    _releaseComboBox->clear();
+    _releaseComboBox->insertItems(0, releases);
+    _releaseComboBox->setEnabled(true);
 }
- 
+
 void DownloadInstaller::loadBuilds() {
     downloadDevBuildXml();
     _buildInformation = _buildXMLParser.getBuilds("windows", _workingFolder + "/" + DEV_BUILD_XML_FILENAME);
+
+    QStringList builds;
+    for (int i = 0; i < _buildInformation.size(); ++i) {
+        builds << _buildInformation[i].version;
+    }
+
+    _buildComboBox->clear();
+    _buildComboBox->insertItems(0, builds);
+    _buildComboBox->setEnabled(true);
 }
 
 void DownloadInstaller::loadPRs() {
