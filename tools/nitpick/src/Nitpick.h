@@ -73,8 +73,13 @@ private slots:
     void on_setWorkingFolderDownloadInstallerPushbutton_clicked();
     
     void on_loadDataStablePushbutton_clicked();
+    void on_downloadInstallerStablePushbutton_clicked();
+
     void on_loadDataDevelopmentPushbutton_clicked();
+    void on_downloadInstallerDevelopmentPushbutton_clicked();
+
     void on_loadDataPRPushbutton_clicked();
+    void on_downloadInstallerPRPushbutton_clicked();
 
     void on_setWorkingFolderRunOnDesktopPushbutton_clicked();
     void on_runNowPushbutton_clicked();

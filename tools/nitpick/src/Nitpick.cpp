@@ -155,8 +155,8 @@ void Nitpick::setup() {
     _downloadInstaller = new DownloadInstaller(
         _ui.workingFolderDownloadInstallerLabel, 
         _ui.platformComboBox,
-        _ui.releaseComboBox,
-        _ui.buildComboBox,
+        _ui.stableComboBox,
+        _ui.developmentComboBox,
         _ui.prComboBox
     );
 }
@@ -247,18 +247,30 @@ void Nitpick::on_setWorkingFolderDownloadInstallerPushbutton_clicked() {
 }
 
 void Nitpick::on_loadDataStablePushbutton_clicked() {
-    _downloadInstaller->loadReleases();
+    _downloadInstaller->loadStableBuilds();
     _ui.downloadInstallerStablePushbutton->setEnabled(true);
 }
 
+void Nitpick::on_downloadInstallerStablePushbutton_clicked() {
+    _downloadInstaller->downloadStableBuild();
+}
+
 void Nitpick::on_loadDataDevelopmentPushbutton_clicked() {
-    _downloadInstaller->loadBuilds();
+    _downloadInstaller->loadDevelopmentBuilds();
     _ui.downloadInstallerDevelopmentPushbutton->setEnabled(true);
 }
 
+void Nitpick::on_downloadInstallerDevelopmentPushbutton_clicked() {
+    _downloadInstaller->downloadDevelopmentBuild();
+}
+
 void Nitpick::on_loadDataPRPushbutton_clicked() {
-    _downloadInstaller->loadPRs();
+    _downloadInstaller->loadPRBuilds();
     _ui.downloadInstallerPRPushbutton->setEnabled(true);
+}
+
+void Nitpick::on_downloadInstallerPRPushbutton_clicked() {
+    _downloadInstaller->downloadPRBuild();
 }
 
 void Nitpick::on_setWorkingFolderRunOnDesktopPushbutton_clicked() {

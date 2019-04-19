@@ -24,16 +24,21 @@ public:
     DownloadInstaller(
         QLabel* workingFolderLabel, 
         QComboBox* platformComboBox,
-        QComboBox* releaseComboBox, 
-        QComboBox* buildComboBox,
+        QComboBox* stableComboBox, 
+        QComboBox* developmentComboBox,
         QComboBox* prComboBox
     );
 
     void setWorkingFolder();
     
-    void loadReleases();
-    void loadBuilds();
-    void loadPRs();
+    void loadStableBuilds();
+    void downloadStableBuild();
+
+    void loadDevelopmentBuilds();
+    void downloadDevelopmentBuild();
+
+    void loadPRBuilds();
+    void downloadPRBuild();
     
     void downloadBuildXml();
     void downloadDevBuildXml();
@@ -41,15 +46,18 @@ public:
 private:
     QLabel* _workingFolderLabel;
     QComboBox* _platformComboBox;
-    QComboBox* _releaseComboBox;
-    QComboBox* _buildComboBox;
+    QComboBox* _stableComboBox;
+    QComboBox* _developmentComboBox;
     QComboBox* _prComboBox;
 
     QString _workingFolder;
 
     Downloader* _downloader;
     BuildXMLParser _buildXMLParser;
-    std::vector<BuildInformation> _buildInformation;
+
+    std::vector<BuildInformation> _stableBuildInformation;
+    std::vector<BuildInformation> _developmentBuildInformation;
+    std::vector<BuildInformation> _prBuildInformation;
 };
 
 #endif

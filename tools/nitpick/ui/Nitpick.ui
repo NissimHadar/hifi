@@ -254,7 +254,7 @@
          <string>Release</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="releaseComboBox">
+       <widget class="QComboBox" name="stableComboBox">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -309,7 +309,7 @@
        <attribute name="title">
         <string>Development</string>
        </attribute>
-       <widget class="QComboBox" name="buildComboBox">
+       <widget class="QComboBox" name="developmentComboBox">
         <property name="enabled">
          <bool>false</bool>
         </property>

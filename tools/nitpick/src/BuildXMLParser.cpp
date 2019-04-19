@@ -159,6 +159,7 @@ std::vector<BuildInformation> BuildXMLParser::getBuilds(QString platformOfIntere
                 throw("File seems to be in wrong format");
             }
             buildInformation.url = buildElement.text();
+            buildInformation.filename = convertURLToFilename(buildInformation.url);
 
             // Push on vector
             buildInformationVector.push_back(buildInformation);
@@ -176,3 +177,8 @@ std::vector<BuildInformation> BuildXMLParser::getBuilds(QString platformOfIntere
 
     return buildInformationVector;
 }
+
+ QString BuildXMLParser::convertURLToFilename(const QString& url) {
+     QStringList tokens = url.split('/');
+     return tokens.last();
+ }
