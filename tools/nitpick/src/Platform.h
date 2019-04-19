@@ -15,6 +15,7 @@
 class Platform {
 public:
     static QString getGraphicsCardType();
+    static QString getPlatform();
 };
 
 #endif

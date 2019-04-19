@@ -11,6 +11,7 @@
 #ifndef hifi_testRunner_h
 #define hifi_testRunner_h
 
+#include "BuildXMLParser.h"
 #include "Downloader.h"
 
 #include <QCheckBox>
@@ -21,12 +22,6 @@
 #include <QTimeEdit>
 
 class Worker;
-
-class BuildInformation {
-public:
-    QString build;
-    QString url;
-};
 
 class TestRunner {
 public:
@@ -39,11 +34,8 @@ public:
         QCheckBox* runFullSuite,
         QLineEdit* scriptURL
     );
-
-    void setWorkingFolder(QLabel* workingFolderLabel);
  
-    void downloadBuildXml(void* caller);
-    void parseBuildInformation();
+    void downloadBuildXml();
     QString getInstallerNameFromURL(const QString& url);
 
     void appendLog(const QString& message);
@@ -61,9 +53,6 @@ protected:
 
     QString _workingFolder;
 
-    const QString DEV_BUILD_XML_URL{ "https://highfidelity.com/dev-builds.xml" };
-    const QString DEV_BUILD_XML_FILENAME{ "dev-builds.xml" };
-
     bool buildXMLDownloaded;
     BuildInformation _buildInformation;
 
@@ -77,8 +66,9 @@ protected:
 
     QDateTime _testStartDateTime;
 
-private:
     QFile _logFile;
+
+    BuildXMLParser _buildXMLParser;
 };
 
 class Worker : public QObject {

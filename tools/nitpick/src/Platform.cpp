@@ -119,3 +119,13 @@ QString Platform::getGraphicsCardType() {
 #endif
     return "";
 }
+
+QString Platform::getPlatform() {
+#ifdef Q_OS_WIN
+    return "WINDOWS";
+#elif defined Q_OS_MAC
+    return "MACOS";
+#else
+    return "UNKNOWN";
+#endif
+}

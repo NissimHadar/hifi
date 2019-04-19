@@ -188,6 +188,287 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Download Installer</string>
+     </attribute>
+     <widget class="QComboBox" name="platformComboBox">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>90</y>
+        <width>180</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>100</y>
+        <width>50</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Platform</string>
+      </property>
+     </widget>
+     <widget class="QTabWidget" name="tabWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>160</y>
+        <width>391</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_7">
+       <attribute name="title">
+        <string>Stable</string>
+       </attribute>
+       <widget class="QCheckBox" name="latestStableCheckBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>90</y>
+          <width>70</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Latest</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="workingFolderLabel_8">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>90</y>
+          <width>40</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Release</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="releaseComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>90</y>
+          <width>180</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="loadDataStablePushbutton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>40</y>
+          <width>160</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load Data</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_9">
+       <attribute name="title">
+        <string>Development</string>
+       </attribute>
+       <widget class="QComboBox" name="buildComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>90</y>
+          <width>180</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="latestBuildCheckBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>90</y>
+          <width>70</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Latest</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="workingFolderLabel_9">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>90</y>
+          <width>40</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Build</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="loadDataDevelopmentPushbutton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>40</y>
+          <width>160</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load Data</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_8">
+       <attribute name="title">
+        <string>PR</string>
+       </attribute>
+       <widget class="QComboBox" name="prComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>180</x>
+          <y>90</y>
+          <width>180</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+       </widget>
+       <widget class="QLabel" name="workingFolderLabel_10">
+        <property name="geometry">
+         <rect>
+          <x>120</x>
+          <y>90</y>
+          <width>60</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>PR number</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="loadDataPRPushbutton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>190</x>
+          <y>40</y>
+          <width>160</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load Data</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="workingFolderDownloadInstallerLabel">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>20</y>
+        <width>320</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>(not set...)</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="setWorkingFolderDownloadInstallerPushbutton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>160</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Set Working Folder</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="downloadInstallerPushbutton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>470</y>
+        <width>160</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Download Installer</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Test on Desktop</string>
@@ -1180,9 +1461,9 @@
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>60</y>
+      <y>70</y>
       <width>180</width>
-      <height>40</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="font">
@@ -1195,7 +1476,7 @@
     <property name="geometry">
      <rect>
       <x>505</x>
-      <y>40</y>
+      <y>50</y>
       <width>81</width>
       <height>16</height>
      </rect>

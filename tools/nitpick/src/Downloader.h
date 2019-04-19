@@ -19,7 +19,7 @@ Q_OBJECT
 public:
     Downloader();
 
-    void downloadFiles(const QStringList& URLs, const QString& directoryName, const QStringList& filenames, void *caller);
+    void downloadFiles(const QStringList& URLs, const QString& directoryName, const QStringList& filenames);
 
 private:
     QString _pythonCommand;

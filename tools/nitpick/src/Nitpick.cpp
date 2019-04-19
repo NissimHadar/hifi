@@ -41,6 +41,7 @@ Nitpick::Nitpick(QWidget* parent) : QMainWindow(parent) {
 
     setWindowTitle("Nitpick - " + nitpickVersion);
 
+    // Populate GPU vendor combo and set default value
     _GPUVendors << "Nvidia" << "AMD";
     _ui.gpuVendorComboBox->insertItems(0, _GPUVendors);
 
@@ -49,6 +50,17 @@ Nitpick::Nitpick(QWidget* parent) : QMainWindow(parent) {
         _ui.gpuVendorComboBox->setCurrentIndex(0);
     } else {
         _ui.gpuVendorComboBox->setCurrentIndex(1);
+    }
+
+    // Populate Platform combo and set default value
+    _platforms << "Windows" << "MacOS" << "Quest" << "Android";
+    _ui.platformComboBox->insertItems(0, _platforms);
+
+    QString platform = Platform::getPlatform();
+    if (platform.contains("WINDOWS")) {
+        _ui.platformComboBox->setCurrentIndex(0);
+    } else {
+        _ui.platformComboBox->setCurrentIndex(1);
     }
 }
 
@@ -63,6 +75,10 @@ Nitpick::~Nitpick() {
 
     if (_testRunnerMobile) {
         delete _testRunnerMobile;
+    }
+
+    if (_downloadInstaller) {
+        delete _downloadInstaller;
     }
 }
 
@@ -131,6 +147,12 @@ void Nitpick::setup() {
         _ui.scriptURLOnMobileLineEdit,
         _ui.statusLabelOnMobile
     );
+
+    // Create the installer downloader
+    if (_downloadInstaller) {
+        delete _downloadInstaller;
+    }
+    _downloadInstaller = new DownloadInstaller(_ui.workingFolderDownloadInstallerLabel, _ui.platformComboBox);
 }
 
 void Nitpick::startTestsEvaluation(
@@ -152,13 +174,22 @@ void Nitpick::on_tabWidget_currentChanged(int index) {
 #endif
         _ui.userLineEdit->setDisabled(false);
         _ui.branchLineEdit->setDisabled(false);
-        _ui.gpuVendorComboBox->setDisabled(false);
     } else {
         _ui.userLineEdit->setDisabled(true);
         _ui.branchLineEdit->setDisabled(true);
+    }
+
+// Enable GPU Vendor combo as required
+#ifdef Q_OS_WIN
+    if (index == 0 || index == 3 || index == 5) {
+#else
+    if (index == 0 || index == 2 || index == 4) {
+#endif
+        _ui.gpuVendorComboBox->setDisabled(false);
+    } else {
         _ui.gpuVendorComboBox->setDisabled(true);
     }
-}
+    }
 
 void Nitpick::on_createRecursiveScriptPushbutton_clicked() {
     _testCreator->createRecursiveScript();
@@ -198,6 +229,38 @@ void Nitpick::on_createTestRailTestCasesPushbutton_clicked() {
 
 void Nitpick::on_createTestRailRunButton_clicked() {
     _testCreator->createTestRailRun();
+}
+
+// Download Installer controls
+void Nitpick::on_setWorkingFolderDownloadInstallerPushbutton_clicked() {
+    _downloadInstaller->setWorkingFolder();
+
+    _ui.loadDataStablePushbutton->setEnabled(true);
+    _ui.loadDataDevelopmentPushbutton->setEnabled(true);
+    _ui.loadDataPRPushbutton->setEnabled(true);
+}
+
+void Nitpick::on_loadDataStablePushbutton_clicked() {
+    _downloadInstaller->loadReleases();
+    _ui.latestStableCheckBox->setEnabled(true);
+}
+
+void Nitpick::on_latestStableCheckBox_clicked() {
+    _ui.releaseComboBox->setEnabled(!_ui.latestStableCheckBox->isChecked());
+}
+
+void Nitpick::on_loadDataDevelopmentPushbutton_clicked() {
+    _downloadInstaller->loadBuilds();
+    _ui.latestBuildCheckBox->setEnabled(true);
+}
+
+void Nitpick::on_latestBuildCheckBox_clicked() {
+    _ui.buildComboBox->setEnabled(!_ui.latestBuildCheckBox->isChecked());
+}
+
+void Nitpick::on_loadDataPRPushbutton_clicked() {
+    _downloadInstaller->loadPRs();
+    _ui.prComboBox->setEnabled(true);
 }
 
 void Nitpick::on_setWorkingFolderRunOnDesktopPushbutton_clicked() {

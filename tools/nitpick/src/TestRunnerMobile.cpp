@@ -14,6 +14,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
 
+#include "PathUtils.h"
+
 #include "Nitpick.h"
 extern Nitpick* nitpick;
 
@@ -58,7 +60,9 @@ TestRunnerMobile::~TestRunnerMobile() {
 }
 
 void TestRunnerMobile::setWorkingFolderAndEnableControls() {
-    setWorkingFolder(_workingFolderLabel);
+    PathUtils::setWorkingFolder(_workingFolderLabel, _workingFolder
+    );
+    _logFile.setFileName(_workingFolder + "/log.txt");
 
     _connectDeviceButton->setEnabled(true);
     _downloadAPKPushbutton->setEnabled(true);
@@ -138,7 +142,7 @@ void TestRunnerMobile::connectDevice() {
 }
 
 void TestRunnerMobile::downloadAPK() {
-    downloadBuildXml((void*)this);
+    downloadBuildXml();
 
     downloadComplete();
 }
@@ -153,10 +157,10 @@ void TestRunnerMobile::downloadComplete() {
         QStringList urls;
         QStringList filenames;
         if (_runLatest->isChecked()) {
-            parseBuildInformation();
+            // TODO - the APKs are not directly referenced in the dev builds XML
+            _buildInformation = _buildXMLParser.getLatestBuild("windows", _workingFolder + "/" + DEV_BUILD_XML_FILENAME);
 
             _installerFilename = INSTALLER_FILENAME_LATEST;
-
 
             // Replace the `exe` extension with `apk`
             _installerFilename = _installerFilename.replace(_installerFilename.length() - 3, 3, "apk");
@@ -173,7 +177,7 @@ void TestRunnerMobile::downloadComplete() {
 
        _statusLabel->setText("Downloading installer");
 
-       _downloader->downloadFiles(urls, _workingFolder, filenames, (void*)this);
+       _downloader->downloadFiles(urls, _workingFolder, filenames);
     } else {
         _statusLabel->setText("Installer download complete");
     }

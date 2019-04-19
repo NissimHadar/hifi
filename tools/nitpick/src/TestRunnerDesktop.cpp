@@ -18,6 +18,8 @@
 #include <tlhelp32.h>
 #endif
 
+#include "PathUtils.h"
+
 #include "Nitpick.h"
 extern Nitpick* nitpick;
 
@@ -74,7 +76,8 @@ TestRunnerDesktop::~TestRunnerDesktop() {
 }
 
 void TestRunnerDesktop::setWorkingFolderAndEnableControls() {
-    setWorkingFolder(_workingFolderLabel);
+    PathUtils::setWorkingFolder(_workingFolderLabel, _workingFolder);
+    _logFile.setFileName(_workingFolder + "/log.txt");
 
 #ifdef Q_OS_WIN
     _installationFolder = _workingFolder + "/High Fidelity";
@@ -182,7 +185,7 @@ void TestRunnerDesktop::run() {
         installationComplete();
     } else {
         _statusLabel->setText("Downloading Build XML");
-        downloadBuildXml((void*)this);
+        downloadBuildXml();
 
         downloadComplete();
     }
@@ -197,7 +200,13 @@ void TestRunnerDesktop::downloadComplete() {
         QStringList urls;
         QStringList filenames;
         if (_runLatest->isChecked()) {
-            parseBuildInformation();
+            QString platformOfInterest;
+#ifdef Q_OS_WIN
+            platformOfInterest = "windows";
+#elif defined(Q_OS_MAC)
+            platformOfInterest = "mac";
+#endif
+            _buildInformation = _buildXMLParser.getLatestBuild(platformOfInterest, _workingFolder + "/" + DEV_BUILD_XML_FILENAME);
 
             _installerFilename = INSTALLER_FILENAME_LATEST;
 
@@ -212,7 +221,7 @@ void TestRunnerDesktop::downloadComplete() {
 
         _statusLabel->setText("Downloading installer");
 
-        _downloader->downloadFiles(urls, _workingFolder, filenames, (void*)this);
+        _downloader->downloadFiles(urls, _workingFolder, filenames);
 
         downloadComplete();
 
@@ -594,7 +603,7 @@ void TestRunnerDesktop::addBuildNumberToResults(const QString& zippedFolderName)
     if (!_runLatest->isChecked()) {
         augmentedFilename.replace("local", getPRNumberFromURL(_url->text()));
     } else {
-        augmentedFilename.replace("local", _buildInformation.build);
+        augmentedFilename.replace("local", _buildInformation.version);
     }
 
     if (!QFile::rename(zippedFolderName, augmentedFilename)) {
