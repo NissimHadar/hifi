@@ -168,9 +168,9 @@ void Nitpick::startTestsEvaluation(
 void Nitpick::on_tabWidget_currentChanged(int index) {
 // Enable the GitHub edit boxes as required
 #ifdef Q_OS_WIN
-    if (index == 0 || index == 2 || index == 3 || index == 4) {
+    if (index == 0 || index == 2 || index == 3 || index == 5) {
 #else
-    if (index == 0 || index == 1 || index == 2 || index == 3) {
+    if (index == 0 || index == 1 || index == 2 || index == 4) {
 #endif
         _ui.userLineEdit->setDisabled(false);
         _ui.branchLineEdit->setDisabled(false);
