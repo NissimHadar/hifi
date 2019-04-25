@@ -82,7 +82,7 @@ cd hifi/build
 
 Prepare makefiles:
 ```bash
-cmake -DQT_CMAKE_PREFIX_PATH=~/Qt/5.12.2/gcc_64/lib/cmake ..
+cmake -DQT_CMAKE_PREFIX_PATH=~/Qt/5.12.3/gcc_64/lib/cmake ..
 ```
 
 Start compilation of the server and get a cup of coffee:

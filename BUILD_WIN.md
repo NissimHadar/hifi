@@ -30,8 +30,12 @@ During installation, make sure to check "Add CMake to system PATH for all users"
 ### Step 3. Installing Qt
 
 Download and install the [Qt Open Source Online Installer](https://www.qt.io/download) - choose the Open Source option.  
-While installing, you only need to have the following components checked under Qt 5.12.3: "msvc2017 64-bit", "Qt WebEngine", and "Qt Script (Deprecated)".
+While installing, you only need to have the following components checked under Qt 5.12.3: "msvc2017 64-bit", "Qt WebEngine", and "Qt Script (Deprecated)".  
+#### Patching QT
+**This is needed for Visual Studio 2017, and is not required in 2019 (it is due to a known bug in VS 2017)**  
 
+The file **qfloat16.h** has to be copied to `C:\Qt\5.12.3\msvc2017_64\include\QtCore`.  
+If not - `bitset` will give compilation errors!
 Note: Installing the Sources is optional but recommended if you have room for them (~2GB).
 
 ### Step 4. Setting Qt Environment Variable
@@ -74,10 +78,11 @@ Note: You can also run Interface by launching it from command line or File Explo
 
 ## Troubleshooting
 
-For any problems after Step #7, first try this:
-* Delete your locally cloned copy of the highfidelity repository
-* Restart your computer
-* Redownload the [repository](https://github.com/highfidelity/hifi)
+For any problems after Step #7, first try this:  
+* Did you replace `qfloat16.h`?  
+* Delete your locally cloned copy of the highfidelity repository  
+* Restart your computer  
+* Redownload the [repository](https://github.com/highfidelity/hifi)  
 * Restart directions from Step #7
 
 #### CMake gives you the same error message repeatedly after the build fails
@@ -90,4 +95,4 @@ Remove `CMakeCache.txt` found in the `%HIFI_DIR%\build` directory.  Verify that 
 
 #### Qt is throwing an error
 
-Make sure you have the correct version (5.12.2) installed and `QT_CMAKE_PREFIX_PATH` environment variable is set correctly.
+Make sure you have the correct version (5.12.3) installed and `QT_CMAKE_PREFIX_PATH` environment variable is set correctly.
