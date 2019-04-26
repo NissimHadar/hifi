@@ -302,6 +302,17 @@ void TestCreator::startTestsEvaluation(
         return;
     }
 
+    // First, copy client platform file to the results folder
+    const QString clientPlatformFilename{ "clientPlatform.txt" };
+    QFile clientPlatformFile(_snapshotDirectory + "/" + clientPlatformFilename);
+    if (clientPlatformFile.exists() && !clientPlatformFile.copy(_testResultsFolderPath + "/" + clientPlatformFilename)) {
+        QMessageBox::critical(
+            0, 
+            "Internal error: " + QString(__FILE__) + ":" + QString::number(__LINE__), 
+            "Failed to copy " + clientPlatformFilename + " error: " + clientPlatformFile.errorString());
+        exit(-1);
+    }
+
     // Create two lists.  The first is the test results,  the second is the expected images
     // The expected images are represented as a URL to enable download from GitHub
     // Images that are in the wrong format are ignored.
