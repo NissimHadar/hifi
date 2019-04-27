@@ -208,6 +208,66 @@ void AWSInterface::writeTitle(QTextStream& stream, const QStringList& originalNa
 
     stream << "run on " << hostName << "</h1>\n";
 
+    // Platform data
+    // The clientPlatform.txt file is an object containing elements such as the following:
+    // {
+    //     "CPUBrand": "Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz",
+    //         "graphicsCardModelNumber" : 1080,
+    //         "graphicsCardType" : "nvidia geforce gtx 1080",
+    //         "graphicsCardVendor" : "nvidia",
+    //         "isGraphicsCardOK" : true,
+    //         "isHMDInUse" : false,
+    //         "isMemoryOK" : true,
+    //         "isRiftInUse" : false,
+    //         "isViveInUse" : false,
+    //         "operatingSystemType" : "WINDOWS",
+    //         "totalSystemMemoryMB" : 16283
+    // }
+    QFile file;
+    file.setFileName(_workingDirectory + "/" + clientPlatformFilename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::critical(0, "Internal error: " + QString(__FILE__) + ":" + QString::number(__LINE__),
+            "Failed to open file " + clientPlatformFilename);
+    }
+
+    QString value = file.readAll();
+    file.close();
+
+    QJsonDocument document = QJsonDocument::fromJson(value.toUtf8());
+    QJsonObject jsonObject = document.object();
+
+    QJsonValue cpuBrandValue = jsonObject.value("CPUBrand");
+    QString cpuBrand = cpuBrandValue.toString();
+
+    QJsonValue operatingSystemValue = jsonObject.value("operatingSystemType");
+    QString operatingSystem = operatingSystemValue.toString();
+
+    QJsonValue graphicsCardTypeValue = jsonObject.value("graphicsCardType");
+    QString graphicsCardType = graphicsCardTypeValue.toString();
+
+    QJsonValue memoryValue = jsonObject.value("totalSystemMemoryMB");
+    QString memory = memoryValue.toInt();
+
+    stream << "<h2>";
+    if (operatingSystem == "WINDOWS") {
+        stream << "run on Windows";
+    } else if (operatingSystem == "MACOS") {
+        stream << "run on MacOS";
+    } else {
+        stream << "run on unknown OS";
+    }
+
+    stream << " with " << memory << " MB of memory";
+    stream << ", CPU: " << cpuBrand;
+    stream << ", GPU: " << graphicsCardType;
+    stream << "</h2>";
+
+    // nitpick data
+    stream << "<h2>";
+    stream << "nitpick  " << nitpickVersion;
+    stream << ", tests from GitHub: " << _user << "/" << _branch;
+    stream << "</h2>";
+
     stream << "<h2>";
     stream << "nitpick  " << nitpickVersion;
     stream << ", tests from GitHub: " << _user << "/" << _branch;
@@ -433,7 +493,7 @@ void AWSInterface::createEntry(const int index, const QString& testResult, QText
         //        "result" : "pass"
         //    },
         //
-        // Failures are thos element that have "fail for the result
+        // Failures are those element that have "fail" for the result
 
         QJsonDocument document = QJsonDocument::fromJson(value.toUtf8());
         QJsonObject json = document.object();

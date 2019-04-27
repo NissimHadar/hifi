@@ -303,7 +303,6 @@ void TestCreator::startTestsEvaluation(
     }
 
     // First, copy client platform file to the results folder
-    const QString clientPlatformFilename{ "clientPlatform.txt" };
     QFile clientPlatformFile(_snapshotDirectory + "/" + clientPlatformFilename);
     if (clientPlatformFile.exists() && !clientPlatformFile.copy(_testResultsFolderPath + "/" + clientPlatformFilename)) {
         QMessageBox::critical(
